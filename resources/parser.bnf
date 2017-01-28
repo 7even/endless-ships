@@ -1,0 +1,17 @@
+ships = (ship | comment | empty-line)+
+ship = ship-name <newline> ship-attribute+
+ship-name = <'ship'> <whitespace> token <newline>?
+ship-attribute = <whitespace>* token (<whitespace> token)* <newline>
+
+comment = '#' #'.*' newline
+empty-line = whitespace* newline
+
+<token> = string | number
+string = word | quoted
+whitespace = #'\s+'
+newline = '\n'
+<quoted> = <'"'> #'[^"]*' <'"'>
+<word> = #'[a-zA-Z/]+'
+<number> = integer | float
+integer = #'-?[0-9]+'
+float = #'-?[0-9]*\.[0-9]+'
