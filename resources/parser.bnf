@@ -1,17 +1,19 @@
-ships = (ship | comment | empty-line)+
-ship = ship-name <newline> ship-attribute+
-ship-name = <'ship'> <whitespace> token <newline>?
-ship-attribute = <whitespace>* token (<whitespace> token)* <newline>
+ships = (ship | <comment> | <empty-line>)+
+ship = ship-name <newline> ship-details
+ship-name = <'ship'> (<whitespace> token)+
+ship-details = (attributes | weapon | outfits | ship-detail)+
+attributes = <whitespace>+ 'attributes' <newline> ship-details <newline>
+weapon = <whitespace>+ 'weapon' <newline> ship-details <newline>
+outfits = <whitespace>+ 'outfits' <newline> ship-details <newline>
+ship-detail = <whitespace>+ token (<whitespace> token)* <newline>
 
 comment = '#' #'.*' newline
 empty-line = whitespace* newline
 
 <token> = string | number
-string = word | quoted
+string = #'[a-zA-Z]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
 whitespace = #'\s+'
 newline = '\n'
-<quoted> = <'"'> #'[^"]*' <'"'>
-<word> = #'[a-zA-Z/]+'
 <number> = integer | float
 integer = #'-?[0-9]+'
-float = #'-?[0-9]*\.[0-9]+'
+float = #'-?[0-9]*[\.,][0-9]+'
