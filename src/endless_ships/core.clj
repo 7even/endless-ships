@@ -9,11 +9,11 @@
    :integer #(Integer/parseInt %)
    :float #(Float/parseFloat (str/replace % "," "."))})
 
-(defn parse [text]
+(defn parse [data]
   (let [parser (-> "parser.bnf"
                    resource
                    insta/parser)]
-    (->> (parser text)
+    (->> (parser data)
          (insta/transform transform-options))))
 
 (def files
@@ -23,3 +23,8 @@
        file
        file-seq
        (filter #(str/ends-with? % "ships.txt"))))
+
+(def data
+  (->> files
+       (map (comp rest parse slurp))
+       (apply concat)))
