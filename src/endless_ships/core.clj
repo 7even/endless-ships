@@ -17,4 +17,9 @@
          (insta/transform transform-options))))
 
 (def files
-  (-> "data" resource file file-seq))
+  "All files containing ships data."
+  (->> "game/data"
+       resource
+       file
+       file-seq
+       (filter #(str/ends-with? % "ships.txt"))))

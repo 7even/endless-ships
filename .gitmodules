@@ -1,0 +1,3 @@
+[submodule "resources/game"]
+	path = resources/game
+	url = git@github.com:endless-sky/endless-sky.git
