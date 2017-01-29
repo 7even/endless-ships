@@ -1,12 +1,20 @@
 (ns endless-ships.core
   (:require [clojure.java.io :refer [file resource]]
-            [instaparse.core :as insta]))
+            [clojure.string :as str]
+            [instaparse.core :as insta])
+  (:import [java.lang Float Integer]))
+
+(def transform-options
+  {:string identity
+   :integer #(Integer/parseInt %)
+   :float #(Float/parseFloat (str/replace % "," "."))})
 
 (defn parse [text]
   (let [parser (-> "parser.bnf"
                    resource
                    insta/parser)]
-    (parser text)))
+    (->> (parser text)
+         (insta/transform transform-options))))
 
 (def files
   (-> "data" resource file file-seq))

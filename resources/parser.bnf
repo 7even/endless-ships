@@ -1,19 +1,25 @@
-ships = (ship | <comment> | <empty-line>)+
-ship = ship-name <newline> ship-details
-ship-name = <'ship'> (<whitespace> token)+
-ship-details = (attributes | weapon | outfits | ship-detail)+
-attributes = <whitespace>+ 'attributes' <newline> ship-details <newline>
-weapon = <whitespace>+ 'weapon' <newline> ship-details <newline>
-outfits = <whitespace>+ 'outfits' <newline> ship-details <newline>
-ship-detail = <whitespace>+ token (<whitespace> token)* <newline>
+ships = (ship | <comment> | <newline>)+
+ship = ship-name 1-tab-detail+
+ship-name = <'ship'> (<space> token)+ <newline>
+<ship-detail> = any-detail | sprite | licenses | attributes | weapon | outfits
+sprite = <'sprite'> <space> string <newline> 2-tab-detail*
+licenses = <'licenses'> <newline> 2-tab-detail+
+attributes = <'attributes'> <newline> 2-tab-detail+
+weapon = <'weapon'> <newline> 3-tab-detail+
+outfits = <'outfits'> <newline> 2-tab-detail+
+any-detail = string (<space> token)* <newline>
+
+<1-tab-detail> = <tab> ship-detail | <newline>
+<2-tab-detail> = <tab> <tab> ship-detail | <newline>
+<3-tab-detail> = <tab> <tab> <tab> ship-detail | <newline>
 
 comment = '#' #'.*' newline
-empty-line = whitespace* newline
 
 <token> = string | number
 string = #'[a-zA-Z]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
-whitespace = #'\s+'
-newline = '\n'
+space = #'[ ]+'
+tab = '\t'
+newline = #'[ \t]*\n'
 <number> = integer | float
 integer = #'-?[0-9]+'
 float = #'-?[0-9]*[\.,][0-9]+'
