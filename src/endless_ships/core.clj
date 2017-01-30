@@ -28,3 +28,49 @@
   (->> files
        (map (comp rest parse slurp))
        (apply concat)))
+
+(defn all-with-key [key data]
+  (->> data
+       (filter #(= (first %) key))
+       (map (comp vec rest))))
+
+(defn first-with-key [key data]
+  (first (all-with-key key data)))
+
+(defn all-without-key [key data]
+  (->> data
+       (filter #(not= (first %) key))
+       (map (comp vec rest))))
+
+(defn transform-ship [[_ & ship-params]]
+  (let [all-attributes (first-with-key :attributes ship-params)
+        weapons (->> all-attributes
+                     (first-with-key :weapon)
+                     (map (comp vec rest))
+                     (into {}))
+        other-attributes (->> all-attributes
+                              (all-without-key :weapon)
+                              (into {}))]
+    {:ship-name (-> (first-with-key :ship-name ship-params) first)
+     :sprite (-> (first-with-key :sprite ship-params) first)
+     :attributes (merge {:weapons weapons} other-attributes)}))
+
+(comment (def desired
+           {:ship-name "blabla"
+            :sprite "blabla"
+            :attributes {"category" "Heavy Warship"
+                         "cost" 5900000
+                         "shields" 160000
+                         "hull" 50000
+                         :weapons {"blast radius" 250
+                                   "shield damage" 1000}}
+            :outfits {"Quarg Skylance" 2
+                      "Quarg Anti-Missile" 2}
+            :description "The Wardragon is used by Quarg"
+            :other {"engine" [[-14 47]
+                              [14 47]]
+                    "turret" [[-29 6 "Quarg Skylance"]
+                              [29 6 "Quarg Skylance"]]
+                    "explode" [["tiny explosion" 12]
+                               ["small explosion" 16]]
+                    "final explosion" "final explosion medium"}}))
