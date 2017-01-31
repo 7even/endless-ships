@@ -42,13 +42,12 @@
        (filter #(not= (first %) key))
        (map (comp vec rest))))
 
-(defn all-without-keys [keys data]
-  (->> data
-       (remove #((set keys) (first %)))
-       (map (comp vec rest))))
-
 (defn transform-ship [[_ & ship-params]]
-  (let [all-attributes (first-with-key :attributes ship-params)
+  (let [licenses (->> ship-params
+                      (first-with-key :licenses)
+                      (map #(get % 1))
+                      vec)
+        all-attributes (first-with-key :attributes ship-params)
         weapon (->> all-attributes
                     (first-with-key :weapon)
                     (map (comp vec rest))
@@ -62,14 +61,15 @@
                             [name (or quantity 1)]))
                      (into {}))
         other (->> ship-params
-                   (all-without-keys [:ship-name :sprite :attributes :outfits])
+                   (all-with-key :any-detail)
                    (reduce (fn [details [detail-name & detail]]
                              (update details
                                      detail-name
                                      #(conj (or % []) (vec detail))))
                            {}))]
-    {:ship-name (-> (first-with-key :ship-name ship-params) first)
-     :sprite (-> (first-with-key :sprite ship-params) first)
+    {:ship-name (first-with-key :ship-name ship-params)
+     :sprite (first-with-key :sprite ship-params)
+     :licenses licenses
      :attributes (merge {:weapon weapon} other-attributes)
      :outfits outfits
      :other other}))
