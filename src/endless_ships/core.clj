@@ -26,7 +26,16 @@
 
 (def data
   (->> files
-       (map (comp rest parse slurp))
+       (map (fn [file]
+              (let [filename (.getName file)
+                    race (if (= filename "ships.txt")
+                           "human"
+                           (-> filename (str/split #" ") first))
+                    ships (-> file
+                              slurp
+                              parse
+                              rest)]
+                (map #(conj % [:race race]) ships))))
        (apply concat)))
 
 (defn all-with-key [key data]
@@ -68,6 +77,7 @@
                                      #(conj (or % []) (vec detail))))
                            {}))]
     {:ship-name (first-with-key :ship-name ship-params)
+     :race (first (first-with-key :race ship-params))
      :sprite (first-with-key :sprite ship-params)
      :licenses licenses
      :attributes (merge {:weapon weapon} other-attributes)
