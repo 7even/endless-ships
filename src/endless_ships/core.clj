@@ -8,12 +8,12 @@
 (def ships-data
   (->> data
        (filter #(= (count (:ship-name %)) 1)) ; remove modifications
+       (map #(transform-keys ->camelCaseKeyword %))
        (map (fn [ship]
-              (merge {:name (first (:ship-name ship))
+              (merge {:name (first (:shipName ship))
                       :licenses (:licenses ship)
                       :race (:race ship)}
-                     (-> ship :attributes (dissoc :weapon)))))
-       (map #(transform-keys ->camelCaseKeyword %))))
+                     (-> ship :attributes (dissoc :weapon :heatDissipation :drag)))))))
 
 (defn generate-json [& {:keys [pretty] :or {pretty true}}]
   (let [json (generate-string ships-data {:pretty pretty})]
