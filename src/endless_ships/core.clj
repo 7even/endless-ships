@@ -1,15 +1,19 @@
 (ns endless-ships.core
-  (:require [endless-ships.parser :refer [data]]
-            [cheshire.core :refer [generate-string]]))
+  (:require [camel-snake-kebab
+             [core :refer [->camelCaseKeyword]]
+             [extras :refer [transform-keys]]]
+            [cheshire.core :refer [generate-string]]
+            [endless-ships.parser :refer [data]]))
 
 (def ships-data
   (->> data
        (filter #(= (count (:ship-name %)) 1)) ; remove modifications
        (map (fn [ship]
-              (merge {:ship-name (first (:ship-name ship))
+              (merge {:name (first (:ship-name ship))
                       :licenses (:licenses ship)
                       :race (:race ship)}
-                     (dissoc (:attributes ship) :weapon))))))
+                     (-> ship :attributes (dissoc :weapon)))))
+       (map #(transform-keys ->camelCaseKeyword %))))
 
 (defn generate-json [& {:keys [pretty] :or {pretty true}}]
   (let [json (generate-string ships-data {:pretty pretty})]
