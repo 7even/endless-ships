@@ -18,3 +18,14 @@
 (defn generate-json [& {:keys [pretty] :or {pretty true}}]
   (let [json (generate-string ships-data {:pretty pretty})]
     (spit "build/data.json" (str json "\n"))))
+
+;;; generate sample data for frontend development
+(comment
+  (let [ships (concat (->> ships-data (filter #(= (:race %) "human")) (take 3))
+                      (->> ships-data (filter #(= (:race %) "hai")) (take 2))
+                      (->> ships-data (filter #(= (:race %) "korath")) (take 2))
+                      (->> ships-data (filter #(= (:race %) "wanderer")) (take 2))
+                      (->> ships-data (filter #(= (:race %) "coalition")) (take 2))
+                      (->> ships-data (filter #(= (:race %) "quarg"))))
+        json (generate-string ships {:pretty true})]
+    (spit "frontend/public/data.json" (str json "\n"))))
