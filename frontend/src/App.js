@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Label } from 'react-bootstrap';
+import NumberFormat from 'react-number-format';
 import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
@@ -29,9 +30,9 @@ class App extends Component {
       <tr key={ship.name}>
         <td>{ship.name}</td>
         <td>{ship.race}</td>
-        <td>{ship.cost}</td>
-        <td>{ship.hull}</td>
-        <td>{ship.shields}</td>
+        <td><NumberFormat value={ship.cost} displayType={'text'} thousandSeparator={true} /></td>
+        <td><NumberFormat value={ship.hull} displayType={'text'} thousandSeparator={true} /></td>
+        <td><NumberFormat value={ship.shields} displayType={'text'} thousandSeparator={true} /></td>
         <td>{this.renderLicenses(ship)}</td>
       </tr>
     ));
