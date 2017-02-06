@@ -19,10 +19,34 @@ class App extends Component {
     });
   }
 
+  renderLabel(text) {
+    switch (text) {
+      case 'human':
+      case 'Navy':
+      case 'Carrier':
+      case 'Cruiser':
+      case 'Militia Carrier':
+        return (<Label bsStyle="info">{text}</Label>);
+      case 'hai':
+      case 'Unfettered Militia':
+        return (<Label bsStyle="primary">{text}</Label>);
+      case 'quarg':
+        return (<Label bsStyle="warning">{text}</Label>);
+      case 'korath':
+        return (<Label bsStyle="danger">{text}</Label>);
+      case 'wanderer':
+      case 'Wanderer':
+      case 'Wanderer Military':
+        return (<Label bsStyle="success">{text}</Label>);
+      case 'coalition':
+        return (<Label bsStyle="default">{text}</Label>);
+      default:
+        return (<Label>{text}</Label>);
+    }
+  }
+
   renderLicenses(ship) {
-    return ship.licenses.map(license => (
-      <Label key={license}>{license}</Label>
-    ));
+    return ship.licenses.map(license => this.renderLabel(license));
   }
 
   renderRows() {
@@ -30,7 +54,7 @@ class App extends Component {
       <tr key={ship.name}>
         <td className="text-left">{ship.name}</td>
         <td className="text-left">
-          <Label>{ship.race}</Label>
+          {this.renderLabel(ship.race)}
         </td>
         <td className="text-right">
           <NumberFormat value={ship.cost}
