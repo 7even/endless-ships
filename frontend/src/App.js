@@ -28,12 +28,28 @@ class App extends Component {
   renderRows() {
     return this.state.data.map(ship => (
       <tr key={ship.name}>
-        <td>{ship.name}</td>
-        <td>{ship.race}</td>
-        <td><NumberFormat value={ship.cost} displayType={'text'} thousandSeparator={true} /></td>
-        <td><NumberFormat value={ship.hull} displayType={'text'} thousandSeparator={true} /></td>
-        <td><NumberFormat value={ship.shields} displayType={'text'} thousandSeparator={true} /></td>
-        <td>{this.renderLicenses(ship)}</td>
+        <td className="text-left">{ship.name}</td>
+        <td className="text-left">
+          <Label>{ship.race}</Label>
+        </td>
+        <td className="text-right">
+          <NumberFormat value={ship.cost}
+                        displayType={'text'}
+                        thousandSeparator={true} />
+        </td>
+        <td className="text-right">
+          <NumberFormat value={ship.hull}
+                        displayType={'text'}
+                        thousandSeparator={true} />
+        </td>
+        <td className="text-right">
+          <NumberFormat value={ship.shields}
+                        displayType={'text'}
+                        thousandSeparator={true} />
+        </td>
+        <td className="text-left">
+          {this.renderLicenses(ship)}
+        </td>
       </tr>
     ));
   }
@@ -54,12 +70,12 @@ class App extends Component {
           <Table striped bordered condensed hover>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Race</th>
-                <th>Cost</th>
-                <th>Hull</th>
-                <th>Shields</th>
-                <th>Licenses</th>
+                <th className="text-center">Name</th>
+                <th className="text-center">Race</th>
+                <th className="text-center">Cost</th>
+                <th className="text-center">Hull</th>
+                <th className="text-center">Shields</th>
+                <th className="text-center">Licenses</th>
               </tr>
             </thead>
             <tbody>
