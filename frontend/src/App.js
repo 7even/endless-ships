@@ -20,29 +20,38 @@ class App extends Component {
   }
 
   renderLabel(text) {
+    let style;
+
     switch (text) {
       case 'human':
       case 'Navy':
       case 'Carrier':
       case 'Cruiser':
       case 'Militia Carrier':
-        return (<Label bsStyle="info">{text}</Label>);
+        style = 'info';
+        break;
       case 'hai':
       case 'Unfettered Militia':
-        return (<Label bsStyle="primary">{text}</Label>);
+        style = 'primary';
+        break;
       case 'quarg':
-        return (<Label bsStyle="warning">{text}</Label>);
+        style = 'warning';
+        break;
       case 'korath':
-        return (<Label bsStyle="danger">{text}</Label>);
+        style = 'danger';
+        break;
       case 'wanderer':
       case 'Wanderer':
       case 'Wanderer Military':
-        return (<Label bsStyle="success">{text}</Label>);
+        style = 'success';
+        break;
       case 'coalition':
-        return (<Label bsStyle="default">{text}</Label>);
+        style = 'default';
+        break;
       default:
-        return (<Label>{text}</Label>);
     }
+
+    return (<Label bsStyle={style} key={text}>{text}</Label>);
   }
 
   renderLicenses(ship) {
