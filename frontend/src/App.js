@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Label } from 'react-bootstrap';
+import { Grid, Row, Col, PageHeader, Table, Label } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
-import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.css';
-import './App.css';
 
 class App extends Component {
   state = {
@@ -87,35 +85,41 @@ class App extends Component {
     ));
   }
 
+  renderTable() {
+    return (
+      <Table striped bordered condensed hover>
+        <thead>
+          <tr>
+            <th className="text-center">Name</th>
+            <th className="text-center">Race</th>
+            <th className="text-center">Cost</th>
+            <th className="text-center">Hull</th>
+            <th className="text-center">Shields</th>
+            <th className="text-center">Licenses</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.renderRows()}
+        </tbody>
+      </Table>
+    );
+  }
+
   render() {
     if (this.state.isLoading) {
       return (<div className="App">Loading...</div>);
     } else {
       return (
-        <div className="App">
-          <div className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h2>Welcome to Endless Sky encyclopedia</h2>
-          </div>
-          <p className="App-intro">
-            Loaded {this.state.data.length} ships.
-          </p>
-          <Table striped bordered condensed hover>
-            <thead>
-              <tr>
-                <th className="text-center">Name</th>
-                <th className="text-center">Race</th>
-                <th className="text-center">Cost</th>
-                <th className="text-center">Hull</th>
-                <th className="text-center">Shields</th>
-                <th className="text-center">Licenses</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.renderRows()}
-            </tbody>
-          </Table>
-        </div>
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <PageHeader>
+                Welcome to Endless Sky encyclopedia!
+              </PageHeader>
+              {this.renderTable()}
+            </Col>
+          </Row>
+        </Grid>
       );
     }
   }
