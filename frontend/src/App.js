@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, PageHeader, Table, Label } from 'react-bootstrap';
+import { Grid, Row, Col, PageHeader, Table } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import 'bootstrap/dist/css/bootstrap.css';
+import './App.css';
 
 class App extends Component {
   state = {
@@ -26,30 +27,30 @@ class App extends Component {
       case 'Carrier':
       case 'Cruiser':
       case 'Militia Carrier':
-        style = 'info';
+        style = 'human';
         break;
       case 'hai':
       case 'Unfettered Militia':
-        style = 'primary';
+        style = 'hai';
         break;
       case 'quarg':
-        style = 'warning';
+        style = 'quarg';
         break;
       case 'korath':
-        style = 'danger';
+        style = 'korath';
         break;
       case 'wanderer':
       case 'Wanderer':
       case 'Wanderer Military':
-        style = 'success';
+        style = 'wanderer';
         break;
       case 'coalition':
-        style = 'default';
+        style = 'coalition';
         break;
       default:
     }
 
-    return (<Label bsStyle={style} key={text}>{text}</Label>);
+    return (<span className={'label label-' + style} key={text}>{text}</span>);
   }
 
   renderLicenses(ship) {
