@@ -4,6 +4,60 @@ import NumberFormat from 'react-number-format';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
+function Header(props) {
+  return (
+    <th className="text-center">
+      {props.children}
+    </th>
+  );
+}
+
+function TextCell(props) {
+  return (
+    <td className="text-left">
+      {props.text}
+    </td>
+  );
+}
+
+function RightCell(props) {
+  return (
+    <td className="text-right">
+      {props.children}
+    </td>
+  );
+}
+
+function FormattedNumber(props) {
+  return (
+    <NumberFormat value={props.number}
+                  displayType={'text'}
+                  thousandSeparator={true} />
+  );
+}
+
+function NumberCell(props) {
+  return (
+    <RightCell>
+      <FormattedNumber number={props.number} />
+    </RightCell>
+  );
+}
+
+function CrewAndBunks(props) {
+  if (props.crew > 0) {
+    return (
+      <RightCell>
+        <FormattedNumber number={props.crew} />
+        {' / '}
+        <FormattedNumber number={props.bunks} />
+      </RightCell>
+    );
+  } else {
+    return (<RightCell></RightCell>);
+  }
+}
+
 class App extends Component {
   state = {
     isLoading: true,
@@ -60,28 +114,20 @@ class App extends Component {
   renderRows() {
     return this.state.data.map(ship => (
       <tr key={ship.name}>
-        <td className="text-left">{ship.name}</td>
-        <td className="text-left">
-          {this.renderLabel(ship.race)}
-        </td>
-        <td className="text-right">
-          <NumberFormat value={ship.cost}
-                        displayType={'text'}
-                        thousandSeparator={true} />
-        </td>
-        <td className="text-right">
-          <NumberFormat value={ship.hull}
-                        displayType={'text'}
-                        thousandSeparator={true} />
-        </td>
-        <td className="text-right">
-          <NumberFormat value={ship.shields}
-                        displayType={'text'}
-                        thousandSeparator={true} />
-        </td>
-        <td className="text-left">
-          {this.renderLicenses(ship)}
-        </td>
+        <TextCell text={ship.name} />
+        <TextCell text={this.renderLabel(ship.race)} />
+        <NumberCell number={ship.cost} />
+        <TextCell text={ship.category} />
+        <NumberCell number={ship.hull} />
+        <NumberCell number={ship.shields} />
+        <NumberCell number={ship.mass} />
+        <NumberCell number={ship.engineCapacity} />
+        <NumberCell number={ship.weaponCapacity} />
+        <NumberCell number={ship.fuelCapacity} />
+        <NumberCell number={ship.outfitSpace} />
+        <NumberCell number={ship.cargoSpace} />
+        <CrewAndBunks crew={ship.requiredCrew} bunks={ship.bunks} />
+        <TextCell text={this.renderLicenses(ship)} />
       </tr>
     ));
   }
@@ -91,12 +137,20 @@ class App extends Component {
       <Table striped bordered condensed hover>
         <thead>
           <tr>
-            <th className="text-center">Name</th>
-            <th className="text-center">Race</th>
-            <th className="text-center">Cost</th>
-            <th className="text-center">Hull</th>
-            <th className="text-center">Shields</th>
-            <th className="text-center">Licenses</th>
+            <Header>Name</Header>
+            <Header>Race</Header>
+            <Header>Cost</Header>
+            <Header>Category</Header>
+            <Header>Hull</Header>
+            <Header>Shields</Header>
+            <Header>Mass</Header>
+            <Header>Engine<br />Capacity</Header>
+            <Header>Weapon<br />Capacity</Header>
+            <Header>Fuel<br />Capacity</Header>
+            <Header>Outfit<br />Space</Header>
+            <Header>Cargo<br />Space</Header>
+            <Header>Crew / bunks</Header>
+            <Header>Licenses</Header>
           </tr>
         </thead>
         <tbody>
