@@ -1,3 +1,7 @@
+.table-header {
+    cursor: pointer;
+}
+
 .label-human {
     background-color: #005b89;
 }

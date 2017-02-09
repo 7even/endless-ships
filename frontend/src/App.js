@@ -4,14 +4,6 @@ import NumberFormat from 'react-number-format';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
-function Header(props) {
-  return (
-    <th className="text-center">
-      {props.children}
-    </th>
-  );
-}
-
 function TextCell(props) {
   return (
     <td className="text-left">
@@ -61,7 +53,8 @@ function CrewAndBunks(props) {
 class App extends Component {
   state = {
     isLoading: true,
-    data: {}
+    data: {},
+    ordering: { columnName: null }
   }
 
   componentDidMount() {
@@ -69,6 +62,63 @@ class App extends Component {
       return response.json();
     }).then(data => {
       this.setState({ isLoading: false, data: data });
+    });
+  }
+
+  toggleOrdering = (columnName) => {
+    if (this.state.ordering.columnName === columnName) {
+      if (this.state.ordering.order === 'asc') {
+        this.setState({ ordering: { columnName: columnName, order: 'desc' } });
+      } else {
+        this.setState({ ordering: { columnName: null } });
+      }
+    } else {
+      this.setState({ ordering: { columnName: columnName, order: 'asc' } });
+    }
+  }
+
+  renderHeaders() {
+    const columns = [
+      ['Name', 'name'],
+      ['Race'],
+      ['Cost', 'cost'],
+      ['Category'],
+      ['Hull', 'hull'],
+      ['Shields', 'shields'],
+      ['Mass', 'mass'],
+      ['Engine cap.', 'engineCapacity'],
+      ['Weapon cap.', 'weaponCapacity'],
+      ['Fuel cap.', 'fuelCapacity'],
+      ['Outfit sp.', 'outfitSpace'],
+      ['Cargo sp.', 'cargoSpace'],
+      ['Crew / bunks', 'bunks'],
+      ['Licenses']
+    ]
+
+    return columns.map(([text, sortBy]) => {
+      let title, icon;
+
+      if (sortBy) {
+        title = <a className="table-header" onClick={() => this.toggleOrdering(sortBy)}>{text}</a>;
+
+        if (this.state.ordering.columnName === sortBy) {
+          if (this.state.ordering.order === 'asc') {
+            icon = <span className="glyphicon glyphicon-sort-by-attributes"></span>;
+          } else {
+            icon = <span className="glyphicon glyphicon-sort-by-attributes-alt"></span>;
+          }
+        }
+      } else {
+        title = text;
+      }
+
+      return (
+        <th className="text-center" key={text}>
+          {title}
+          {' '}
+          {icon}
+        </th>
+      );
     });
   }
 
@@ -142,20 +192,7 @@ class App extends Component {
       <Table striped bordered condensed hover>
         <thead>
           <tr>
-            <Header>Name</Header>
-            <Header>Race</Header>
-            <Header>Cost</Header>
-            <Header>Category</Header>
-            <Header>Hull</Header>
-            <Header>Shields</Header>
-            <Header>Mass</Header>
-            <Header>Engine<br />Capacity</Header>
-            <Header>Weapon<br />Capacity</Header>
-            <Header>Fuel<br />Capacity</Header>
-            <Header>Outfit<br />Space</Header>
-            <Header>Cargo<br />Space</Header>
-            <Header>Crew / bunks</Header>
-            <Header>Licenses</Header>
+            {this.renderHeaders()}
           </tr>
         </thead>
         <tbody>
@@ -170,7 +207,7 @@ class App extends Component {
       return (<div className="App">Loading...</div>);
     } else {
       return (
-        <Grid>
+        <Grid fluid={true}>
           <Row>
             <Col lg={12}>
               <PageHeader>
