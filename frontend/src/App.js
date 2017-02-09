@@ -108,7 +108,12 @@ class App extends Component {
   }
 
   renderLicenses(ship) {
-    return ship.licenses.map(license => this.renderLabel(license));
+    return ship.licenses.map(
+      license => this.renderLabel(license)
+    ).reduce(
+      (licenses, license) => (licenses === null ? [license] : [...licenses, ' ', license]),
+      null
+    );
   }
 
   renderRows() {
