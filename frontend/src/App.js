@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import R from 'ramda';
 import { Grid, Row, Col, PageHeader, Table } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -166,8 +167,16 @@ class App extends Component {
     );
   }
 
+  processedRows() {
+    const prop = R.propOr(0, this.state.ordering.columnName);
+    const sortedProp = (this.state.ordering.order === 'asc') ? R.ascend(prop) : R.descend(prop);
+    const comparator = R.sort(sortedProp);
+
+    return comparator(this.state.data);
+  }
+
   renderRows() {
-    return this.state.data.map(ship => (
+    return this.processedRows().map(ship => (
       <tr key={ship.name}>
         <TextCell text={ship.name} />
         <TextCell text={this.renderLabel(ship.race)} />
