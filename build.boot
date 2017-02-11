@@ -7,10 +7,6 @@
 
 (require '[endless-ships.core :refer [generate-json]])
 
-(deftask run
-  []
-  (println "Hello world!"))
-
 (deftask build
   "Build the site into build/ directory."
   []
