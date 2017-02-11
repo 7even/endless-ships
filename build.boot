@@ -10,3 +10,12 @@
 (deftask run
   []
   (println "Hello world!"))
+
+(deftask build
+  "Build the site into build/ directory."
+  []
+  (binding [*sh-dir* "./frontend"]
+    (dosh "yarn" "install")
+    (dosh "yarn" "run" "build"))
+  (dosh "mv" "./frontend/build" "./build")
+  (generate-json))
