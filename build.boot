@@ -10,6 +10,7 @@
 (deftask build
   "Build the site into build/ directory."
   []
+  (dosh "rm" "-rf" "./build")
   (binding [*sh-dir* "./frontend"]
     (dosh "yarn" "install")
     (dosh "yarn" "run" "build"))
