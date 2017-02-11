@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import R from 'ramda';
-import { Grid, Row, Col, PageHeader, Table } from 'react-bootstrap';
+import { Grid, Row, Col, PageHeader, ButtonGroup, Button, Table } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
@@ -55,7 +55,8 @@ class App extends Component {
   state = {
     isLoading: true,
     data: {},
-    ordering: { columnName: null }
+    ordering: { columnName: null },
+    raceFilter: 'all'
   }
 
   componentDidMount() {
@@ -65,6 +66,8 @@ class App extends Component {
       this.setState({ isLoading: false, data: data });
     });
   }
+
+  changeRaceFiltering = (race) => this.setState({ raceFilter: race });
 
   toggleOrdering = (columnName) => {
     if (this.state.ordering.columnName === columnName) {
@@ -76,6 +79,33 @@ class App extends Component {
     } else {
       this.setState({ ordering: { columnName: columnName, order: 'asc' } });
     }
+  }
+
+  renderFilters() {
+    const races = [
+      ['All races', 'all'],
+      ['Human', 'human'],
+      ['Hai', 'hai'],
+      ['Quarg', 'quarg'],
+      ['Korath', 'korath'],
+      ['Wanderer', 'wanderer'],
+      ['Coalition', 'coalition']
+    ];
+
+    const raceButtons = races.map(([text, filterBy]) => (
+      <Button bsSize="small"
+              active={this.state.raceFilter === filterBy}
+              key={text}
+              onClick={() => this.changeRaceFiltering(filterBy)}>
+        {text}
+      </Button>
+    ));
+
+    return (
+      <ButtonGroup>
+        {raceButtons}
+      </ButtonGroup>
+    );
   }
 
   renderHeaders() {
@@ -168,11 +198,13 @@ class App extends Component {
   }
 
   processedRows() {
+    const raceFilter = (this.state.raceFilter === 'all') ? R.T : R.propEq('race', this.state.raceFilter);
+
     const prop = R.propOr(0, this.state.ordering.columnName);
     const sortedProp = (this.state.ordering.order === 'asc') ? R.ascend(prop) : R.descend(prop);
     const comparator = R.sort(sortedProp);
 
-    return comparator(this.state.data);
+    return comparator(R.filter(raceFilter, this.state.data));
   }
 
   renderRows() {
@@ -198,7 +230,7 @@ class App extends Component {
 
   renderTable() {
     return (
-      <Table striped bordered condensed hover>
+      <Table striped bordered condensed hover className="data-table">
         <thead>
           <tr>
             {this.renderHeaders()}
@@ -222,6 +254,7 @@ class App extends Component {
               <PageHeader>
                 Welcome to Endless Sky encyclopedia!
               </PageHeader>
+              {this.renderFilters()}
               {this.renderTable()}
             </Col>
           </Row>
