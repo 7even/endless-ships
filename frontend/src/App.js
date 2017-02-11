@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import R from 'ramda';
-import { Grid, Row, Col, PageHeader, ButtonGroup, Button, Table } from 'react-bootstrap';
+import { Grid, Row, Col, PageHeader, Form, ButtonGroup, Button, Table } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
@@ -56,7 +56,8 @@ class App extends Component {
     isLoading: true,
     data: {},
     ordering: { columnName: null },
-    raceFilter: 'all'
+    raceFilter: 'all',
+    categoryFilter: 'all'
   }
 
   componentDidMount() {
@@ -68,6 +69,7 @@ class App extends Component {
   }
 
   changeRaceFiltering = (race) => this.setState({ raceFilter: race });
+  changeCagegoryFiltering = (category) => this.setState({ categoryFilter: category });
 
   toggleOrdering = (columnName) => {
     if (this.state.ordering.columnName === columnName) {
@@ -101,10 +103,37 @@ class App extends Component {
       </Button>
     ));
 
+    const categories = [
+      ['All ships', 'all'],
+      ['Transport', 'Transport'],
+      ['Light Freighter', 'Light Freighter'],
+      ['Heavy Freighter', 'Heavy Freighter'],
+      ['Interceptor', 'Interceptor'],
+      ['Light Warship', 'Light Warship'],
+      ['Medium Warship', 'Medium Warship'],
+      ['Heavy Warship', 'Heavy Warship'],
+      ['Fighter', 'Fighter'],
+      ['Drone', 'Drone']
+    ];
+
+    const categoryButtons = categories.map(([text, filterBy]) => (
+      <Button bsSize="small"
+              active={this.state.categoryFilter === filterBy}
+              key={text}
+              onClick={() => this.changeCagegoryFiltering(filterBy)}>
+        {text}
+      </Button>
+    ));
+
     return (
-      <ButtonGroup>
-        {raceButtons}
-      </ButtonGroup>
+      <Form inline>
+        <ButtonGroup className="filters-group">
+          {raceButtons}
+        </ButtonGroup>
+        <ButtonGroup className="filters-group">
+          {categoryButtons}
+        </ButtonGroup>
+      </Form>
     );
   }
 
@@ -198,13 +227,16 @@ class App extends Component {
   }
 
   processedRows() {
-    const raceFilter = (this.state.raceFilter === 'all') ? R.T : R.propEq('race', this.state.raceFilter);
+    const filters = [
+      (this.state.raceFilter === 'all') ? R.T : R.propEq('race', this.state.raceFilter),
+      (this.state.categoryFilter === 'all') ? R.T : R.propEq('category', this.state.categoryFilter)
+    ];
 
     const prop = R.propOr(0, this.state.ordering.columnName);
     const sortedProp = (this.state.ordering.order === 'asc') ? R.ascend(prop) : R.descend(prop);
     const comparator = R.sort(sortedProp);
 
-    return comparator(R.filter(raceFilter, this.state.data));
+    return comparator(R.filter(R.allPass(filters), this.state.data));
   }
 
   renderRows() {
@@ -230,7 +262,7 @@ class App extends Component {
 
   renderTable() {
     return (
-      <Table striped bordered condensed hover className="data-table">
+      <Table striped bordered condensed hover>
         <thead>
           <tr>
             {this.renderHeaders()}
