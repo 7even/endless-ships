@@ -6,7 +6,15 @@ The generator works by parsing the game's sources (specifically `data/*ships.txt
 
 ## Installation
 
-The generator uses [Boot](http://boot-clj.com/) so you need to [install](https://github.com/boot-clj/boot#install) it first (`brew install boot-clj` on OS X). It installs all the other Clojure dependencies upon first launch.
+First you need to clone the project and pull the game which is linked as a git submodule:
+
+``` sh
+$ git clone git@github.com:7even/endless-ships.git
+$ cd endless-ships
+$ git submodule update --init
+```
+
+The generator uses [Boot](http://boot-clj.com/) so you need to [install](https://github.com/boot-clj/boot#install) it (`brew install boot-clj` on OS X). It installs all the other Clojure dependencies upon first launch.
 
 The client-side part of the site is being compiled using [yarn](https://yarnpkg.com) so you need to [install](https://yarnpkg.com/en/docs/install) it as well (`brew install yarn` on OS X).
 
