@@ -15,4 +15,6 @@
     (dosh "yarn" "install")
     (dosh "yarn" "run" "build"))
   (dosh "mv" "./frontend/build" "./build")
-  (generate-json))
+  (generate-json)
+  (if (.exists (clojure.java.io/as-file "ga.json"))
+    (dosh "cp" "./ga.json" "./build")))
