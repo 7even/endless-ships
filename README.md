@@ -22,6 +22,17 @@ The client-side part of the site is being compiled using [yarn](https://yarnpkg.
 
 Just run the `boot build` command from the root directory of the application. It will put the generated files under the `build/` directory, ready to be deployed to the server.
 
+## Viewing the site locally
+
+If you don't want to deploy the site to the server you can view it locally - there's [a bunch of ways](https://gist.github.com/willurd/5720255) to start a simple HTTP server for serving static files. For example here's how one would do that with Ruby:
+
+``` sh
+$ cd build # the generated site will be available at build/
+$ ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => Dir.pwd).start'
+```
+
+Then point your browser to [http://localhost:8000](http://localhost:8000).
+
 ## Roadmap / what can be improved
 
 * add a separate page for detailed ship description (including the ship sprite from the game)
