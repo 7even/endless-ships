@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import R from 'ramda';
-import { Grid, Row, Col, PageHeader, Form, ButtonGroup, Button, Table } from 'react-bootstrap';
+import { Grid, Row, Col, PageHeader, Button, Collapse, Checkbox, Table } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
@@ -52,12 +52,41 @@ function CrewAndBunks(props) {
 }
 
 class App extends Component {
+  // TODO: refactor this bullshit
+  races = [
+    ['Human', 'human'],
+    ['Hai', 'hai'],
+    ['Quarg', 'quarg'],
+    ['Korath', 'korath'],
+    ['Wanderer', 'wanderer'],
+    ['Coalition', 'coalition']
+  ];
+
+  categories = [
+    ['Transport', 'Transport'],
+    ['Light Freighter', 'Light Freighter'],
+    ['Heavy Freighter', 'Heavy Freighter'],
+    ['Interceptor', 'Interceptor'],
+    ['Light Warship', 'Light Warship'],
+    ['Medium Warship', 'Medium Warship'],
+    ['Heavy Warship', 'Heavy Warship'],
+    ['Fighter', 'Fighter'],
+    ['Drone', 'Drone']
+  ];
+
   state = {
     isLoading: true,
     data: {},
+    filtersCollapsed: true,
     ordering: { columnName: null },
-    raceFilter: 'all',
-    categoryFilter: 'all'
+    raceFilter: this.races.reduce(
+      (races, [_, race]) => R.merge(races, { [race]: true }),
+      {}
+    ),
+    categoryFilter: this.categories.reduce(
+      (categories, [_, category]) => R.merge(categories, { [category]: true }),
+      {}
+    )
   }
 
   componentDidMount() {
@@ -68,8 +97,27 @@ class App extends Component {
     });
   }
 
-  changeRaceFiltering = (race) => this.setState({ raceFilter: race });
-  changeCagegoryFiltering = (category) => this.setState({ categoryFilter: category });
+  toggleFiltersVisibility = () => {
+    this.setState({ filtersCollapsed: !this.state.filtersCollapsed })
+  };
+
+  toggleRaceFiltering = (race) => {
+    this.setState({
+      raceFilter: R.merge(
+        this.state.raceFilter,
+        { [race]: !this.state.raceFilter[race] }
+      )
+    })
+  };
+
+  toggleCategoryFiltering = (category) => {
+    this.setState({
+      categoryFilter: R.merge(
+        this.state.categoryFilter,
+        { [category]: !this.state.categoryFilter[category] }
+      )
+    })
+  }
 
   toggleOrdering = (columnName) => {
     if (this.state.ordering.columnName === columnName) {
@@ -84,56 +132,36 @@ class App extends Component {
   }
 
   renderFilters() {
-    const races = [
-      ['All races', 'all'],
-      ['Human', 'human'],
-      ['Hai', 'hai'],
-      ['Quarg', 'quarg'],
-      ['Korath', 'korath'],
-      ['Wanderer', 'wanderer'],
-      ['Coalition', 'coalition']
-    ];
-
-    const raceButtons = races.map(([text, filterBy]) => (
-      <Button bsSize="small"
-              active={this.state.raceFilter === filterBy}
-              key={text}
-              onClick={() => this.changeRaceFiltering(filterBy)}>
+    const raceCheckboxes = this.races.map(([text, filterBy]) => (
+      <Checkbox key={text}
+                checked={this.state.raceFilter[filterBy]}
+                onChange={() => this.toggleRaceFiltering(filterBy)}>
         {text}
-      </Button>
+      </Checkbox>
     ));
 
-    const categories = [
-      ['All ships', 'all'],
-      ['Transport', 'Transport'],
-      ['Light Freighter', 'Light Freighter'],
-      ['Heavy Freighter', 'Heavy Freighter'],
-      ['Interceptor', 'Interceptor'],
-      ['Light Warship', 'Light Warship'],
-      ['Medium Warship', 'Medium Warship'],
-      ['Heavy Warship', 'Heavy Warship'],
-      ['Fighter', 'Fighter'],
-      ['Drone', 'Drone']
-    ];
-
-    const categoryButtons = categories.map(([text, filterBy]) => (
-      <Button bsSize="small"
-              active={this.state.categoryFilter === filterBy}
-              key={text}
-              onClick={() => this.changeCagegoryFiltering(filterBy)}>
+    const categoryCheckboxes = this.categories.map(([text, filterBy]) => (
+      <Checkbox key={text}
+                checked={this.state.categoryFilter[filterBy]}
+                onChange={() => this.toggleCategoryFiltering(filterBy)}>
         {text}
-      </Button>
+      </Checkbox>
     ));
 
     return (
-      <Form inline>
-        <ButtonGroup className="filters-group">
-          {raceButtons}
-        </ButtonGroup>
-        <ButtonGroup className="filters-group">
-          {categoryButtons}
-        </ButtonGroup>
-      </Form>
+      <div className="filters-group">
+        <Button onClick={() => this.toggleFiltersVisibility()}>
+          Show filters
+        </Button>
+        <Collapse in={!this.state.filtersCollapsed}>
+          <Grid fluid={true}>
+            <Row>
+              <Col lg={1}>{raceCheckboxes}</Col>
+              <Col lg={1}>{categoryCheckboxes}</Col>
+            </Row>
+          </Grid>
+        </Collapse>
+      </div>
     );
   }
 
@@ -228,8 +256,8 @@ class App extends Component {
 
   processedRows() {
     const filters = [
-      (this.state.raceFilter === 'all') ? R.T : R.propEq('race', this.state.raceFilter),
-      (this.state.categoryFilter === 'all') ? R.T : R.propEq('category', this.state.categoryFilter)
+      ship => this.state.raceFilter[ship.race],
+      ship => this.state.categoryFilter[ship.category]
     ];
 
     const prop = R.propOr(0, this.state.ordering.columnName);
