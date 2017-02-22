@@ -151,7 +151,7 @@ class App extends Component {
     return (
       <div className="filters-group">
         <Button onClick={() => this.toggleFiltersVisibility()}>
-          Show filters
+          {this.state.filtersCollapsed ? 'Show' : 'Hide'} filters
         </Button>
         <Collapse in={!this.state.filtersCollapsed}>
           <Grid fluid={true}>
