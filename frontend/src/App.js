@@ -145,12 +145,12 @@ class App extends Component {
   toggleOrdering = (columnName) => {
     if (this.state.ordering.columnName === columnName) {
       if (this.state.ordering.order === 'asc') {
-        this.setState({ ordering: { columnName: columnName, order: 'desc' } });
-      } else {
         this.setState({ ordering: { columnName: null } });
+      } else {
+        this.setState({ ordering: { columnName: columnName, order: 'asc' } });
       }
     } else {
-      this.setState({ ordering: { columnName: columnName, order: 'asc' } });
+      this.setState({ ordering: { columnName: columnName, order: 'desc' } });
     }
   }
 
