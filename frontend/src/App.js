@@ -74,6 +74,16 @@ class App extends Component {
     ['Drone', 'Drone']
   ];
 
+  licenses = {
+    'Navy':               'human',
+    'Carrier':            'human',
+    'Cruiser':            'human',
+    'Militia Carrier':    'human',
+    'Unfettered Militia': 'hai',
+    'Wanderer':           'wanderer',
+    'Wanderer Military':  'wanderer'
+  };
+
   state = {
     isLoading: true,
     data: {},
@@ -85,6 +95,10 @@ class App extends Component {
     ),
     categoryFilter: this.categories.reduce(
       (categories, [_, category]) => R.merge(categories, { [category]: true }),
+      {}
+    ),
+    licenseFilter: Object.keys(this.licenses).reduce(
+      (licenses, license) => R.merge(licenses, { [license]: true }),
       {}
     )
   }
@@ -119,6 +133,15 @@ class App extends Component {
     })
   }
 
+  toggleLicenseFiltering = (license) => {
+    this.setState({
+      licenseFilter: R.merge(
+        this.state.licenseFilter,
+        { [license]: !this.state.licenseFilter[license] }
+      )
+    })
+  }
+
   toggleOrdering = (columnName) => {
     if (this.state.ordering.columnName === columnName) {
       if (this.state.ordering.order === 'asc') {
@@ -148,6 +171,14 @@ class App extends Component {
       </Checkbox>
     ));
 
+    const licenseCheckboxes = Object.keys(this.licenses).map(license => (
+      <Checkbox key={license}
+                checked={this.state.licenseFilter[license]}
+                onChange={() => this.toggleLicenseFiltering(license)}>
+        {license}
+      </Checkbox>
+    ));
+
     let collapseIcon;
     if (this.state.filtersCollapsed) {
       collapseIcon = <span className="glyphicon glyphicon-menu-down" />;
@@ -162,6 +193,7 @@ class App extends Component {
             <Row>
               <Col lg={1}>{raceCheckboxes}</Col>
               <Col lg={1}>{categoryCheckboxes}</Col>
+              <Col lg={2}>{licenseCheckboxes}</Col>
             </Row>
           </Grid>
         </Collapse>
@@ -218,37 +250,7 @@ class App extends Component {
   }
 
   renderLabel(text) {
-    let style;
-
-    switch (text) {
-      case 'human':
-      case 'Navy':
-      case 'Carrier':
-      case 'Cruiser':
-      case 'Militia Carrier':
-        style = 'human';
-        break;
-      case 'hai':
-      case 'Unfettered Militia':
-        style = 'hai';
-        break;
-      case 'quarg':
-        style = 'quarg';
-        break;
-      case 'korath':
-        style = 'korath';
-        break;
-      case 'wanderer':
-      case 'Wanderer':
-      case 'Wanderer Military':
-        style = 'wanderer';
-        break;
-      case 'coalition':
-        style = 'coalition';
-        break;
-      default:
-    }
-
+    const style = this.licenses[text] || text;
     return (<span className={'label label-' + style} key={text}>{text}</span>);
   }
 
@@ -264,7 +266,8 @@ class App extends Component {
   processedRows() {
     const filters = [
       ship => this.state.raceFilter[ship.race],
-      ship => this.state.categoryFilter[ship.category]
+      ship => this.state.categoryFilter[ship.category],
+      ship => R.none(license => !this.state.licenseFilter[license])(ship.licenses)
     ];
 
     const prop = R.propOr(0, this.state.ordering.columnName);
