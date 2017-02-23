@@ -52,26 +52,26 @@ function CrewAndBunks(props) {
 }
 
 class App extends Component {
-  // TODO: refactor this bullshit
+  // TODO: compute this from this.state.data on the fly
   races = [
-    ['Human', 'human'],
-    ['Hai', 'hai'],
-    ['Quarg', 'quarg'],
-    ['Korath', 'korath'],
-    ['Wanderer', 'wanderer'],
-    ['Coalition', 'coalition']
+    'human',
+    'hai',
+    'quarg',
+    'korath',
+    'wanderer',
+    'coalition'
   ];
 
   categories = [
-    ['Transport', 'Transport'],
-    ['Light Freighter', 'Light Freighter'],
-    ['Heavy Freighter', 'Heavy Freighter'],
-    ['Interceptor', 'Interceptor'],
-    ['Light Warship', 'Light Warship'],
-    ['Medium Warship', 'Medium Warship'],
-    ['Heavy Warship', 'Heavy Warship'],
-    ['Fighter', 'Fighter'],
-    ['Drone', 'Drone']
+    'Transport',
+    'Light Freighter',
+    'Heavy Freighter',
+    'Interceptor',
+    'Light Warship',
+    'Medium Warship',
+    'Heavy Warship',
+    'Fighter',
+    'Drone'
   ];
 
   licenses = {
@@ -90,11 +90,11 @@ class App extends Component {
     filtersCollapsed: true,
     ordering: { columnName: null },
     raceFilter: this.races.reduce(
-      (races, [_, race]) => R.merge(races, { [race]: true }),
+      (races, race) => R.merge(races, { [race]: true }),
       {}
     ),
     categoryFilter: this.categories.reduce(
-      (categories, [_, category]) => R.merge(categories, { [category]: true }),
+      (categories, category) => R.merge(categories, { [category]: true }),
       {}
     ),
     licenseFilter: Object.keys(this.licenses).reduce(
@@ -154,20 +154,24 @@ class App extends Component {
     }
   }
 
+  capitalize([first, ...rest]) {
+    return first.toUpperCase() + rest.join('').toLowerCase();
+  }
+
   renderFilters() {
-    const raceCheckboxes = this.races.map(([text, filterBy]) => (
-      <Checkbox key={text}
-                checked={this.state.raceFilter[filterBy]}
-                onChange={() => this.toggleRaceFiltering(filterBy)}>
-        {text}
+    const raceCheckboxes = this.races.map(race => (
+      <Checkbox key={race}
+                checked={this.state.raceFilter[race]}
+                onChange={() => this.toggleRaceFiltering(race)}>
+        {this.capitalize(race)}
       </Checkbox>
     ));
 
-    const categoryCheckboxes = this.categories.map(([text, filterBy]) => (
-      <Checkbox key={text}
-                checked={this.state.categoryFilter[filterBy]}
-                onChange={() => this.toggleCategoryFiltering(filterBy)}>
-        {text}
+    const categoryCheckboxes = this.categories.map(category => (
+      <Checkbox key={category}
+                checked={this.state.categoryFilter[category]}
+                onChange={() => this.toggleCategoryFiltering(category)}>
+        {category}
       </Checkbox>
     ));
 
