@@ -191,9 +191,18 @@ class App extends Component {
         <Collapse in={!this.state.filtersCollapsed}>
           <Grid fluid={true}>
             <Row>
-              <Col lg={1}>{raceCheckboxes}</Col>
-              <Col lg={1}>{categoryCheckboxes}</Col>
-              <Col lg={2}>{licenseCheckboxes}</Col>
+              <Col lg={1}>
+                <strong>Race</strong>
+                {raceCheckboxes}
+              </Col>
+              <Col lg={1}>
+                <strong>Category</strong>
+                {categoryCheckboxes}
+              </Col>
+              <Col lg={2}>
+                <strong>License</strong>
+                {licenseCheckboxes}
+              </Col>
             </Row>
           </Grid>
         </Collapse>
