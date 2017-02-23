@@ -148,11 +148,15 @@ class App extends Component {
       </Checkbox>
     ));
 
+    let collapseIcon;
+    if (this.state.filtersCollapsed) {
+      collapseIcon = <span className="glyphicon glyphicon-menu-down" />;
+    } else {
+      collapseIcon = <span className="glyphicon glyphicon-menu-up" />;
+    }
+
     return (
       <div className="filters-group">
-        <Button onClick={() => this.toggleFiltersVisibility()}>
-          {this.state.filtersCollapsed ? 'Show' : 'Hide'} filters
-        </Button>
         <Collapse in={!this.state.filtersCollapsed}>
           <Grid fluid={true}>
             <Row>
@@ -161,6 +165,9 @@ class App extends Component {
             </Row>
           </Grid>
         </Collapse>
+        <Button onClick={() => this.toggleFiltersVisibility()}>
+          Filters {collapseIcon}
+        </Button>
       </div>
     );
   }
