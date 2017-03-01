@@ -70,6 +70,26 @@
     (->> (parser data)
          (insta/transform transform-options))))
 
+(defn- transform-block [[_ name & args] & child-blocks]
+  (vec (cons name
+             (concat args child-blocks))))
+
+(def transform-options2
+  {:0-indented-block transform-block
+   :1-indented-block transform-block
+   :2-indented-block transform-block
+   :3-indented-block transform-block
+   :string identity
+   :integer #(Integer/parseInt %)
+   :float #(Float/parseFloat (str/replace % "," "."))})
+
+(defn parse2 [data]
+  (let [parser (-> "new-parser.bnf"
+                   resource
+                   insta/parser)]
+    (->> (parser data)
+         (insta/transform transform-options2))))
+
 (def data
   (->> files
        (map (fn [file]
