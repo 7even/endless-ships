@@ -75,7 +75,8 @@
         sprite (first-with-key "sprite" ship-params)
         licenses (->> ship-params
                       (first-with-key "licenses")
-                      first)
+                      (apply concat)
+                      vec)
         all-attributes (first-with-key "attributes" ship-params)
         weapon (->> all-attributes
                     (first-with-key "weapon")
