@@ -1,19 +1,11 @@
-ships = (ship | <comment> | <newline>)+
-ship = ship-name 1-tab-detail+
-ship-name = <'ship'> (<space> token)+ <newline>
-<ship-detail> = any-detail | sprite | licenses | attributes | weapon | outfits
-sprite = <'sprite'> <space> string <newline> 2-tab-detail*
-licenses = <'licenses'> <newline> 2-tab-detail+
-attributes = <'attributes'> <newline> 2-tab-detail+
-weapon = <'weapon'> <newline> 3-tab-detail+
-outfits = <'outfits'> <newline> 2-tab-detail+
-any-detail = string (<space> token)* <newline>
+data = (0-indented-block | <newline> | <comment>)+
 
-<1-tab-detail> = <tab> ship-detail | <newline>
-<2-tab-detail> = <tab> <tab> ship-detail | <newline>
-<3-tab-detail> = <tab> <tab> <tab> ship-detail | <newline>
+0-indented-block = line (1-indented-block | <newline> | <comment>)*
+1-indented-block = <tab> line (2-indented-block | <newline> | <comment>)*
+2-indented-block = <tab> <tab> line (3-indented-block | <newline> | <comment>)*
+3-indented-block = <tab> <tab> <tab> line
 
-comment = '#' #'.*' newline
+line = string (<space> token)* <newline>
 
 <token> = string | number
 string = #'[a-zA-Z]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
@@ -22,4 +14,5 @@ tab = '\t'
 newline = #'[ \t]*\n'
 <number> = integer | float
 integer = #'-?[0-9]+'
-float = #'-?[0-9]*[\.,][0-9]+'
+float = #'-?[0-9]*[\.,][0-9]*'
+comment = '#' #'.*' newline

@@ -25,52 +25,7 @@
        (filter #(not= (first %) key))
        (map (comp vec rest))))
 
-(defn transform-ship [& ship-params]
-  (let [licenses (->> ship-params
-                      (first-with-key :licenses)
-                      (map #(get % 1))
-                      vec)
-        all-attributes (first-with-key :attributes ship-params)
-        weapon (->> all-attributes
-                    (first-with-key :weapon)
-                    (map (comp vec rest))
-                    (into {}))
-        other-attributes (->> all-attributes
-                              (all-without-key :weapon)
-                              (into {}))
-        outfits (->> ship-params
-                     (first-with-key :outfits)
-                     (map (fn [[_ name quantity]]
-                            [name (or quantity 1)]))
-                     (into {}))
-        other (->> ship-params
-                   (all-with-key :any-detail)
-                   (reduce (fn [details [detail-name & detail]]
-                             (update details
-                                     detail-name
-                                     #(conj (or % []) (vec detail))))
-                           {}))]
-    {:ship-name (first-with-key :ship-name ship-params)
-     :sprite (first-with-key :sprite ship-params)
-     :licenses licenses
-     :attributes (merge {:weapon weapon} other-attributes)
-     :outfits outfits
-     :other other}))
-
-(def transform-options
-  {:ship transform-ship
-   :string identity
-   :integer #(Integer/parseInt %)
-   :float #(Float/parseFloat (str/replace % "," "."))})
-
-(defn parse [data]
-  (let [parser (-> "parser.bnf"
-                   resource
-                   insta/parser)]
-    (->> (parser data)
-         (insta/transform transform-options))))
-
-(defn transform-ship2 [ship-params]
+(defn transform-ship [ship-params]
   (let [name (vec (remove vector? ship-params))
         sprite (first-with-key "sprite" ship-params)
         licenses (->> ship-params
@@ -111,14 +66,14 @@
 
 (defn- transform-data [& data]
   (map #(if (= (first %) "ship")
-          (-> % rest transform-ship2)
+          (-> % rest transform-ship)
           (first %)) data))
 
 (defn- transform-block [[_ name & args] & child-blocks]
   (vec (cons name
              (concat args child-blocks))))
 
-(def transform-options2
+(def transform-options
   {:data transform-data
    :0-indented-block transform-block
    :1-indented-block transform-block
@@ -128,12 +83,12 @@
    :integer #(Integer/parseInt %)
    :float #(Float/parseFloat (str/replace % "," "."))})
 
-(defn parse2 [data]
-  (let [parser (-> "new-parser.bnf"
+(defn parse [data]
+  (let [parser (-> "parser.bnf"
                    resource
                    insta/parser)]
     (->> (parser data)
-         (insta/transform transform-options2))))
+         (insta/transform transform-options))))
 
 (defn- get-race-of-file [file]
   (let [filename (.getName file)]
@@ -145,5 +100,5 @@
   (->> files
        (mapcat (fn [file]
                  (let [race (get-race-of-file file)
-                       ships (-> file slurp parse2)]
+                       ships (-> file slurp parse)]
                    (map #(assoc % :race race) ships))))))
