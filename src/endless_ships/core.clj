@@ -30,6 +30,7 @@
                       (->> ships-data (filter #(= (:race %) "korath")) (take 2))
                       (->> ships-data (filter #(= (:race %) "wanderer")) (take 2))
                       (->> ships-data (filter #(= (:race %) "coalition")) (take 2))
+                      (->> ships-data (filter #(= (:race %) "pug")) (take 2))
                       (->> ships-data (filter #(= (:race %) "quarg"))))
         json (generate-string ships {:pretty true})]
     (spit "frontend/public/data.json" (str json "\n")))

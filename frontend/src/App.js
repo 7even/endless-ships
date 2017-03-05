@@ -59,7 +59,8 @@ class App extends Component {
     'quarg',
     'korath',
     'wanderer',
-    'coalition'
+    'coalition',
+    'pug'
   ];
 
   categories = [

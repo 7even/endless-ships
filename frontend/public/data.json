@@ -160,6 +160,38 @@
   "cargoSpace" : 310,
   "shields" : 3400
 }, {
+  "category" : "Light Warship",
+  "mass" : 240,
+  "engineCapacity" : 76,
+  "race" : "pug",
+  "name" : "Pug Zibruka",
+  "licenses" : [ ],
+  "fuelCapacity" : 600,
+  "hull" : 1000,
+  "weaponCapacity" : 68,
+  "bunks" : 6,
+  "requiredCrew" : 4,
+  "cost" : 1900000,
+  "outfitSpace" : 180,
+  "cargoSpace" : 20,
+  "shields" : 4000
+}, {
+  "category" : "Medium Warship",
+  "mass" : 410,
+  "engineCapacity" : 106,
+  "race" : "pug",
+  "name" : "Pug Enfolta",
+  "licenses" : [ ],
+  "fuelCapacity" : 600,
+  "hull" : 1700,
+  "weaponCapacity" : 184,
+  "bunks" : 27,
+  "requiredCrew" : 19,
+  "cost" : 6300000,
+  "outfitSpace" : 360,
+  "cargoSpace" : 40,
+  "shields" : 6800
+}, {
   "category" : "Heavy Warship",
   "mass" : 460,
   "engineCapacity" : 120,
