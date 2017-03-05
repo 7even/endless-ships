@@ -7,7 +7,8 @@
 
 (def ships-data
   (->> data
-       (filter #(= (count (:ship-name %)) 1)) ; remove modifications
+       (filter #(= (count (:ship-name %)) 1))             ; remove modifications & non-ships
+       (remove #(= (:ship-name %) ["Unknown Ship Type"])) ; remove "unknown" kestrel
        (map #(transform-keys ->camelCaseKeyword %))
        (map (fn [ship]
               (merge {:name (first (:shipName ship))

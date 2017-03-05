@@ -6,11 +6,17 @@
 
 (def files
   "All files containing ships data."
-  (->> "game/data"
-       resource
-       file
-       file-seq
-       (filter #(str/ends-with? % "ships.txt"))))
+  (let [filenames ["ships.txt"
+                   "hai ships.txt"
+                   "quarg ships.txt"
+                   "korath ships.txt"
+                   "wanderer ships.txt"
+                   "coalition ships.txt"
+                   "kestrel.txt"]]
+    (map #(-> (str "game/data/" %)
+              resource
+              file)
+         filenames)))
 
 (defn first-with-key [key data]
   (->> data
@@ -60,7 +66,8 @@
 (defn- transform-data [& data]
   (map #(if (= (first %) "ship")
           (-> % rest transform-ship)
-          (first %)) data))
+          {:type (first %)})
+       data))
 
 (defn- transform-block [[_ name & args] & child-blocks]
   (vec (cons name
@@ -85,8 +92,9 @@
 
 (defn- get-race-of-file [file]
   (let [filename (.getName file)]
-    (if (= filename "ships.txt")
-      "human"
+    (case filename
+      "ships.txt" "human"
+      "kestrel.txt" "human"
       (-> filename (str/split #" ") first))))
 
 (def data
