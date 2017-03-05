@@ -10,7 +10,7 @@ data = (0-indented-block | <newline> | <comment>)+
 line = string (<space> token)* <newline>
 
 <token> = string | number
-string = #'[a-zA-Z>/]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
+string = #'[a-zA-Z0-9=?></]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
 space = #'[ ]+'
 tab = '\t'
 newline = #'[ \t]*\n'

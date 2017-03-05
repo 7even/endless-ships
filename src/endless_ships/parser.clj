@@ -12,7 +12,8 @@
                    "korath ships.txt"
                    "wanderer ships.txt"
                    "coalition ships.txt"
-                   "kestrel.txt"]]
+                   "kestrel.txt"
+                   "pug.txt"]]
     (map #(-> (str "game/data/" %)
               resource
               file)
@@ -95,6 +96,7 @@
     (case filename
       "ships.txt" "human"
       "kestrel.txt" "human"
+      "pug.txt" "pug"
       (-> filename (str/split #" ") first))))
 
 (def data
