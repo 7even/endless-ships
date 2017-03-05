@@ -12,18 +12,11 @@
        file-seq
        (filter #(str/ends-with? % "ships.txt"))))
 
-(defn all-with-key [key data]
+(defn first-with-key [key data]
   (->> data
        (filter #(= (first %) key))
-       (map (comp vec rest))))
-
-(defn first-with-key [key data]
-  (first (all-with-key key data)))
-
-(defn all-without-key [key data]
-  (->> data
-       (filter #(not= (first %) key))
-       (map (comp vec rest))))
+       (map (comp vec rest))
+       first))
 
 (defn transform-ship [ship-params]
   (let [name (vec (remove vector? ship-params))
