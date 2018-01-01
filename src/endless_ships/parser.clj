@@ -28,16 +28,16 @@
 (defn transform-ship [ship-params]
   (let [name (vec (remove vector? ship-params))
         sprite (first-with-key "sprite" ship-params)
-        licenses (->> ship-params
-                      (first-with-key "licenses")
-                      (apply concat)
-                      vec)
         all-attributes (first-with-key "attributes" ship-params)
         weapon (->> all-attributes
                     (first-with-key "weapon")
                     (into {}))
+        licenses (->> all-attributes
+                      (first-with-key "licenses")
+                      (apply concat)
+                      vec)
         other-attributes (->> all-attributes
-                              (filter #(not= (first %) "weapon"))
+                              (remove #(#{"weapon" "licenses"} (first %)))
                               (into {}))
         outfits (->> ship-params
                      (first-with-key "outfits")
@@ -48,7 +48,6 @@
                    (filter (fn [el]
                              (and (vector? el)
                                   (not (#{"sprite"
-                                          "licenses"
                                           "attributes"
                                           "outfits"}
                                         (first el))))))

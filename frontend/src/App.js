@@ -82,7 +82,9 @@ class App extends Component {
     'Militia Carrier':    'human',
     'Unfettered Militia': 'hai',
     'Wanderer':           'wanderer',
-    'Wanderer Military':  'wanderer'
+    'Wanderer Military':  'wanderer',
+    'Coalition':          'coalition',
+    'Heliarch':           'coalition'
   };
 
   state = {
