@@ -7,19 +7,11 @@
 
 (def files
   "All files containing ships data."
-  (let [filenames ["ships.txt"
-                   "hai ships.txt"
-                   "quarg ships.txt"
-                   "korath ships.txt"
-                   "wanderer ships.txt"
-                   "coalition ships.txt"
-                   "kestrel.txt"
-                   "pug.txt"
-                   "outfits.txt"]]
-    (map #(-> (str "game/data/" %)
-              resource
-              file)
-         filenames)))
+  (->> "game/data"
+       resource
+       file
+       file-seq
+       (filter #(.endsWith (.getName %) ".txt"))))
 
 (defn first-with-key [key data]
   (->> data
@@ -43,6 +35,8 @@
    :1-indented-block transform-block
    :2-indented-block transform-block
    :3-indented-block transform-block
+   :4-indented-block transform-block
+   :5-indented-block transform-block
    :string identity
    :integer #(Integer/parseInt %)
    :float #(Float/parseFloat (str/replace % "," "."))})
@@ -64,11 +58,13 @@
       (-> filename (str/split #" ") first))))
 
 (def data
-  (->> files
-       (mapcat (fn [file]
-                 (let [race (get-race-of-file file)
-                       ships (-> file slurp parse)]
-                   (map #(assoc-in % [2 "race"] race) ships))))))
+  (time
+   (->> files
+        (mapcat (fn [file]
+                  (let [race (get-race-of-file file)
+                        ships (-> file slurp parse)]
+                    (map #(assoc-in % [2 "race"] race) ships))))
+        doall)))
 
 (comment
   (->> data
