@@ -13,12 +13,6 @@
        file-seq
        (filter #(.endsWith (.getName %) ".txt"))))
 
-(defn first-with-key [key data]
-  (->> data
-       (filter #(= (first %) key))
-       (map (comp vec rest))
-       first))
-
 (defn- transform-block [[_ name & args] & child-blocks]
   (let [processed-children (reduce (fn [children [child-name & child-contents]]
                                      (update children
@@ -37,6 +31,7 @@
    :3-indented-block transform-block
    :4-indented-block transform-block
    :5-indented-block transform-block
+   :6-indented-block transform-block
    :string identity
    :integer #(Integer/parseInt %)
    :float #(Float/parseFloat (str/replace % "," "."))})
