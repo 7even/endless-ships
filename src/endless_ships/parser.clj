@@ -43,27 +43,38 @@
     (->> (parser data)
          (insta/transform transform-options))))
 
-(defn- get-race-of-file [file]
-  (let [filename (.getName file)]
-    (case filename
-      "ships.txt" "human"
-      "kestrel.txt" "human"
-      "pug.txt" "pug"
-      "outfits.txt" "human"
-      (-> filename (str/split #" ") first))))
-
 (def data
   (time
    (->> files
         (mapcat (fn [file]
-                  (let [race (get-race-of-file file)
+                  (let [filename (.getName file)
                         ships (-> file slurp parse)]
-                    (map #(assoc-in % [2 "race"] race) ships))))
+                    (map #(assoc-in % [2 "file"] filename) ships))))
         doall)))
 
 (comment
+  ;; object counts by type
   (->> data
        (map first)
+       (reduce (fn [counts object]
+                 (update counts object #(inc (or % 0))))
+               {})
+       (sort-by last >))
+
+  ;; ship counts by file
+  (->> data
+       (filter #(and (= (first %) "ship") (= (count (second %)) 1)))
+       (remove #(= (second %) ["Unknown Ship Type"]))
+       (map #(get-in % [2 "file"]))
+       (reduce (fn [counts object]
+                 (update counts object #(inc (or % 0))))
+               {})
+       (sort-by last >))
+
+  ;; outfit counts by file
+  (->> data
+       (filter #(= (first %) "outfit"))
+       (map #(get-in % [2 "file"]))
        (reduce (fn [counts object]
                  (update counts object #(inc (or % 0))))
                {})
