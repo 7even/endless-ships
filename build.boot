@@ -7,6 +7,13 @@
 
 (require '[endless-ships.core :refer [generate-json]])
 
+(deftask dev
+  "Starts an nREPL server."
+  []
+  (comp
+   (wait)
+   (repl :server true)))
+
 (deftask build
   "Build the site into build/ directory."
   []
