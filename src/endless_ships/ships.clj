@@ -14,14 +14,28 @@
 
 (def ships
   (->> data
-       (filter #(= (-> % second count) 1))
-       (map #(let [attrs (get-in % [2 "attributes" 0 1])
-                   licenses (-> attrs
-                                (get-in ["licenses" 0 1])
-                                keys
-                                vec)
-                   weapon-attrs (get-in attrs ["weapon" 0 1])]
-               (merge (->map attrs)
-                      {:name (get-in % [1 0])
-                       :licenses licenses
-                       :weapon (->map weapon-attrs)})))))
+       (filter #(and (= (first %) "ship")
+                     (= (-> % second count) 1)
+                     (not= (second %) ["Unknown Ship Type"])))
+       (map (fn [[_
+                  [ship-name]
+                  {[[[sprite]]] "sprite"
+                   [[_ {[[_ license-attrs]] "licenses"
+                        [[_ weapon-attrs]] "weapon"
+                        :as attrs}]] "attributes"
+                   [[_ outfit-attrs]] "outfits"
+                   description-attrs "description"}]]
+              (merge (->map attrs)
+                     {:name ship-name
+                      :sprite sprite
+                      :licenses (-> license-attrs keys vec)
+                      :weapon (->map weapon-attrs)
+                      :outfits (reduce (fn [outfit-quantities [outfit-name [[[quantity]]]]]
+                                         (assoc outfit-quantities
+                                                outfit-name
+                                                (or quantity 1)))
+                                       {}
+                                       outfit-attrs)
+                      :description (->> description-attrs
+                                        (map #(get-in % [0 0]))
+                                        vec)})))))
