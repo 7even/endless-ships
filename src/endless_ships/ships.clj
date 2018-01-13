@@ -24,7 +24,8 @@
                         [[_ weapon-attrs]] "weapon"
                         :as attrs}]] "attributes"
                    [[_ outfit-attrs]] "outfits"
-                   description-attrs "description"}]]
+                   description-attrs "description"
+                   file "file"}]]
               (merge (->map attrs)
                      {:name ship-name
                       :sprite sprite
@@ -38,4 +39,5 @@
                                        outfit-attrs)
                       :description (->> description-attrs
                                         (map #(get-in % [0 0]))
-                                        vec)})))))
+                                        vec)
+                      :file file})))))

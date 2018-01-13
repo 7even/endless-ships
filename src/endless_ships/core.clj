@@ -3,21 +3,35 @@
              [core :refer [->camelCaseKeyword]]
              [extras :refer [transform-keys]]]
             [cheshire.core :refer [generate-string]]
-            [endless-ships.parser :refer [data]]))
+            [endless-ships
+             [parser :refer [data]]
+             [ships :refer [ships]]]))
+
+(def file->race
+  {"kestrel.txt" :human
+   "hai ships.txt" :hai
+   "pug.txt" :pug
+   "wanderer ships.txt" :wanderer
+   "quarg ships.txt" :quarg
+   "remnant ships.txt" :remnant
+   "korath ships.txt" :korath
+   "marauders.txt" :pirate
+   "coalition ships.txt" :coalition
+   "drak.txt" :drak
+   "ships.txt" :human})
 
 (def ships-data
-  (->> data
-       (filter #(= (count (:ship-name %)) 1))             ; remove modifications & non-ships
-       (remove #(= (:ship-name %) ["Unknown Ship Type"])) ; remove "unknown" kestrel
-       (map #(transform-keys ->camelCaseKeyword %))
-       (map (fn [ship]
-              (merge {:name (first (:shipName ship))
-                      :licenses (:licenses ship)
-                      :race (:race ship)}
-                     (-> ship :attributes (select-keys [:cost :category :hull :shields :mass
-                                                        :engineCapacity :weaponCapacity :fuelCapacity
-                                                        :outfitSpace :cargoSpace
-                                                        :requiredCrew :bunks])))))))
+  (->> ships
+       (filter #(some? (file->race (:file %))))
+       (map #(-> %
+                 (select-keys [:name :licenses :file
+                               :cost :category :hull :shields :mass
+                               :engine-capacity :weapon-capacity :fuel-capacity
+                               :outfit-space :cargo-space
+                               :required-crew :bunks])
+                 (assoc :race (get file->race (:file %) :other))
+                 (dissoc :file)))
+       (map #(transform-keys ->camelCaseKeyword %))))
 
 (defn generate-json [& {:keys [pretty] :or {pretty true}}]
   (let [json (generate-string ships-data {:pretty pretty})]
@@ -38,4 +52,11 @@
   (->> ships-data
        (map keys)
        (apply concat)
-       (into #{})))
+       (into #{}))
+  ;; get ship counts by race
+  (->> ships-data
+       (map :race)
+       (reduce (fn [counts object]
+                 (update counts object #(inc (or % 0))))
+               {})
+       (sort-by last >)))
