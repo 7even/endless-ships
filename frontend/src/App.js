@@ -60,7 +60,10 @@ class App extends Component {
     'korath',
     'wanderer',
     'coalition',
-    'pug'
+    'pug',
+    'pirate',
+    'remnant',
+    'drak'
   ];
 
   categories = [
@@ -84,7 +87,8 @@ class App extends Component {
     'Wanderer':           'wanderer',
     'Wanderer Military':  'wanderer',
     'Coalition':          'coalition',
-    'Heliarch':           'coalition'
+    'Heliarch':           'coalition',
+    'Remnant':            'remnant'
   };
 
   state = {

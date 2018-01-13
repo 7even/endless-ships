@@ -38,15 +38,8 @@
     (spit "build/data.json" (str json "\n"))))
 
 (comment
-  ;; generate sample data for frontend development
-  (let [ships (concat (->> ships-data (filter #(= (:race %) "human")) (take 3))
-                      (->> ships-data (filter #(= (:race %) "hai")) (take 2))
-                      (->> ships-data (filter #(= (:race %) "korath")) (take 2))
-                      (->> ships-data (filter #(= (:race %) "wanderer")) (take 2))
-                      (->> ships-data (filter #(= (:race %) "coalition")) (take 2))
-                      (->> ships-data (filter #(= (:race %) "pug")) (take 2))
-                      (->> ships-data (filter #(= (:race %) "quarg"))))
-        json (generate-string ships {:pretty true})]
+  ;; generate data for frontend development
+  (let [json (generate-string ships-data {:pretty true})]
     (spit "frontend/public/data.json" (str json "\n")))
   ;; get a list of all possible attribute names
   (->> ships-data
