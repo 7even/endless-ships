@@ -1,16 +1,5 @@
 (ns endless-ships.ships
-  (:require [camel-snake-kebab
-             [core :refer [->kebab-case-keyword]]
-             [extras :refer [transform-keys]]]
-            [endless-ships.parser :refer [data]]))
-
-(defn- ->map [m]
-  (reduce (fn [data [attr-name attr-value]]
-            (assoc data
-                   (->kebab-case-keyword attr-name)
-                   (get-in attr-value [0 0 0])))
-          {}
-          m))
+  (:require [endless-ships.parser :refer [->map data]]))
 
 (def ships
   (->> data

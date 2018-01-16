@@ -1,5 +1,5 @@
 (ns endless-ships.parser
-  (:require [camel-snake-kebab.core :refer [->kebab-case]]
+  (:require [camel-snake-kebab.core :refer [->kebab-case-keyword]]
             [clojure.java.io :refer [file resource]]
             [clojure.string :as str]
             [instaparse.core :as insta])
@@ -51,6 +51,14 @@
                         ships (-> file slurp parse)]
                     (map #(assoc-in % [2 "file"] filename) ships))))
         doall)))
+
+(defn ->map [m]
+  (reduce (fn [data [attr-name attr-value]]
+            (assoc data
+                   (->kebab-case-keyword attr-name)
+                   (get-in attr-value [0 0 0])))
+          {}
+          m))
 
 (comment
   ;; object counts by type
