@@ -7,10 +7,14 @@
        (map (fn [[_
                   [name]
                   {description-attrs "description"
+                   weapon-attrs "weapon"
                    file "file"
                    :as attrs}]]
               (merge (->map attrs)
                      {:name name
+                      :weapon (-> weapon-attrs
+                                  (get-in [0 1])
+                                  ->map)
                       :description (->> description-attrs
                                         (map #(get-in % [0 0]))
                                         vec)
