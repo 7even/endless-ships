@@ -4,7 +4,7 @@ import App from './App';
 import './index.css';
 import 'github-fork-ribbon-css/gh-fork-ribbon.css';
 
-fetch('ga.json').then(response => response.json()).then(gaSettings => {
+fetch('/ga.json').then(response => response.json()).then(gaSettings => {
   if (gaSettings.gaId) { // eslint-disable-next-line
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ // eslint-disable-next-line
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

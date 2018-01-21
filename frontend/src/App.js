@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import R from 'ramda';
 import { Grid, Row, Col, PageHeader, Button, Collapse, Checkbox, Table } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
+import ShipPage from './ShipPage';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
+
+function LinkCell(props) {
+  return (
+    <td className="text-left">
+      <Link to={`/ships/${props.text}`}>{props.text}</Link>
+    </td>
+  );
+}
 
 function TextCell(props) {
   return (
@@ -111,7 +121,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch('data.json').then(response => {
+    fetch('/data.json').then(response => {
       return response.json();
     }).then(data => {
       this.setState({ isLoading: false, data: data });
@@ -300,7 +310,7 @@ class App extends Component {
   renderRows() {
     return this.processedRows().map(ship => (
       <tr key={ship.name}>
-        <TextCell text={ship.name} />
+        <LinkCell text={ship.name} />
         <TextCell text={this.renderLabel(ship.race)} />
         <NumberCell number={ship.cost} />
         <TextCell text={ship.category} />
@@ -344,8 +354,20 @@ class App extends Component {
               <PageHeader>
                 Welcome to Endless Sky encyclopedia!
               </PageHeader>
-              {this.renderFilters()}
-              {this.renderTable()}
+              <Router>
+                <div>
+                  <Route exact={true} path="/" render={() => (
+                    <div>
+                      <ol className="breadcrumb"><li className="active">Ships</li></ol>
+                      {this.renderFilters()}
+                      {this.renderTable()}
+                    </div>
+                  )}/>
+                  <Route path="/ships/:shipName" render={({ match }) => (
+                    <ShipPage ship={this.state.data.find(ship => ship.name === match.params.shipName)}/>
+                  )}/>
+                </div>
+              </Router>
             </Col>
           </Row>
         </Grid>

@@ -29,7 +29,7 @@
                                :cost :category :hull :shields :mass
                                :engine-capacity :weapon-capacity :fuel-capacity
                                :outfit-space :cargo-space
-                               :required-crew :bunks])
+                               :required-crew :bunks :description])
                  (assoc :race (get file->race (:file %) :other))
                  (dissoc :file)))
        (map #(transform-keys ->camelCaseKeyword %))))
