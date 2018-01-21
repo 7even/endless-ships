@@ -7,11 +7,16 @@
        (map (fn [[_
                   [name]
                   {description-attrs "description"
+                   license-attrs "licenses"
                    weapon-attrs "weapon"
                    file "file"
                    :as attrs}]]
               (merge (->map attrs)
                      {:name name
+                      :licenses (->> license-attrs
+                                     (map #(-> % (get 1) keys))
+                                     (apply concat)
+                                     vec)
                       :weapon (-> weapon-attrs
                                   (get-in [0 1])
                                   ->map)

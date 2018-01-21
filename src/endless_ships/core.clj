@@ -4,6 +4,7 @@
              [extras :refer [transform-keys]]]
             [cheshire.core :refer [generate-string]]
             [endless-ships
+             [outfits :refer [outfits]]
              [parser :refer [data]]
              [ships :refer [ships]]]))
 
