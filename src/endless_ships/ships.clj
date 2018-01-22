@@ -8,7 +8,7 @@
                      (not= (second %) ["Unknown Ship Type"])))
        (map (fn [[_
                   [ship-name]
-                  {[[[sprite]]] "sprite"
+                  {[[[sprite] animation]] "sprite"
                    [[_ {[[_ license-attrs]] "licenses"
                         [[_ weapon-attrs]] "weapon"
                         :as attrs}]] "attributes"
@@ -17,7 +17,7 @@
                    file "file"}]]
               (merge (->map attrs)
                      {:name ship-name
-                      :sprite sprite
+                      :sprite [sprite (not (empty? animation))]
                       :licenses (-> license-attrs keys vec)
                       :weapon (->map weapon-attrs)
                       :outfits (reduce (fn [outfit-quantities [outfit-name [[[quantity]]]]]

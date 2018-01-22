@@ -13,6 +13,22 @@ function FormattedNumber(props) {
 }
 
 class ShipPage extends Component {
+  imageURL() {
+    var filename;
+
+    if (this.props.ship.name === "Shuttle") {
+      // for some crazy reason Shuttle has different sprite filenames
+      filename = "ship/shuttle=0.png";
+    } else if (this.props.ship.sprite[1]) {
+      filename = window.encodeURI(this.props.ship.sprite[0]) + "-0.png";
+    } else {
+      filename = window.encodeURI(this.props.ship.sprite[0]) + ".png";
+    }
+
+    // probably not a good idea to hotlink to github to the master branch
+    return "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" + filename;
+  }
+
   formatDescription() {
     return this.props.ship.description.map((line, index) => (
       <p key={`${this.props.ship.name}-description-${index}`}>{line}</p>
@@ -53,7 +69,7 @@ class ShipPage extends Component {
                     </div>
 
                     <div className="media-right">
-                      <Image src="https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/ship/bactrian.png?raw=true" className="ship-sprite" />
+                      <Image src={this.imageURL()} className="ship-sprite" />
                     </div>
                   </div>
                 </Panel.Body>
