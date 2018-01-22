@@ -35,8 +35,30 @@ class ShipPage extends Component {
     ));
   }
 
+  outfitItems() {
+    return this.props.ship.outfits.map(({ name, quantity }) => {
+      var key = `${this.props.ship.name}-${name}`;
+
+      if (quantity === 1) {
+        return (
+          <li className="list-group-item" key={key}>
+            {name}
+          </li>
+        );
+      } else {
+        return (
+          <li className="list-group-item" key={key}>
+            <span className="badge">{quantity}</span>
+            {name}
+          </li>
+        );
+      }
+    });
+  }
+
   render() {
     console.log(this.props.ship);
+
     return (
       <div className="app">
         <ol className="breadcrumb">
@@ -72,6 +94,18 @@ class ShipPage extends Component {
                       <Image src={this.imageURL()} className="ship-sprite" />
                     </div>
                   </div>
+                </Panel.Body>
+              </Panel>
+            </Col>
+
+            <Col md={6}>
+              <Panel>
+                <Panel.Heading>Default outfits</Panel.Heading>
+
+                <Panel.Body>
+                  <ul className="list-group">
+                    {this.outfitItems()}
+                  </ul>
                 </Panel.Body>
               </Panel>
             </Col>
