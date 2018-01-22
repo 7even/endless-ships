@@ -25,11 +25,16 @@
   (->> ships
        (filter #(some? (file->race (:file %))))
        (map #(-> %
-                 (select-keys [:name :licenses :file
+                 (select-keys [:name :sprite :licenses :file
                                :cost :category :hull :shields :mass
                                :engine-capacity :weapon-capacity :fuel-capacity
                                :outfit-space :cargo-space
                                :required-crew :bunks :description])
+                 (assoc :outfits (->> (:outfits %)
+                                      (map (fn [[name quantity]]
+                                             {:name name
+                                              :quantity quantity}))
+                                      vec))
                  (assoc :race (get file->race (:file %) :other))
                  (dissoc :file)))
        (map #(transform-keys ->camelCaseKeyword %))))
