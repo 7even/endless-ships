@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import R from 'ramda';
-import { Grid, Row, Col, PageHeader, Button, Collapse, Checkbox, Table } from 'react-bootstrap';
+import { Grid, Row, Col, Button, Collapse, Checkbox, Table } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import ShipPage from './ShipPage';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -345,32 +345,27 @@ class App extends Component {
 
   render() {
     if (this.state.isLoading) {
-      return (<div className="App">Loading...</div>);
+      return (<div className="app">Loading...</div>);
     } else {
       return (
-        <Grid fluid={true}>
-          <Row>
-            <Col lg={12}>
-              <PageHeader>
-                Welcome to Endless Sky encyclopedia!
-              </PageHeader>
-              <Router>
-                <div>
-                  <Route exact={true} path="/" render={() => (
-                    <div>
-                      <ol className="breadcrumb"><li className="active">Ships</li></ol>
-                      {this.renderFilters()}
-                      {this.renderTable()}
-                    </div>
-                  )}/>
-                  <Route path="/ships/:shipName" render={({ match }) => (
-                    <ShipPage ship={this.state.data.find(ship => ship.name === match.params.shipName)}/>
-                  )}/>
-                </div>
-              </Router>
-            </Col>
-          </Row>
-        </Grid>
+        <Router>
+          <Grid fluid={true}>
+            <Row>
+              <Col lg={12}>
+                <Route exact={true} path="/" render={() => (
+                  <div className="app">
+                    <ol className="breadcrumb"><li className="active">Ships</li></ol>
+                    {this.renderFilters()}
+                    {this.renderTable()}
+                  </div>
+                )}/>
+                <Route path="/ships/:shipName" render={({ match }) => (
+                  <ShipPage ship={this.state.data.find(ship => ship.name === match.params.shipName)}/>
+                )}/>
+              </Col>
+            </Row>
+          </Grid>
+        </Router>
       );
     }
   }

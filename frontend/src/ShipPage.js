@@ -14,7 +14,7 @@ function FormattedNumber(props) {
 const ShipPage = ({ ship }) => {
   console.log(ship);
   return (
-    <div>
+    <div className="app">
       <ol className="breadcrumb">
         <li><Link to="/">Ships</Link></li>
         <li className="active">{ship.name}</li>
