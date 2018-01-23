@@ -12,6 +12,28 @@ function FormattedNumber(props) {
   );
 }
 
+function intersperse(arr, sep) {
+  if (arr.length === 0) {
+    return [];
+  } else {
+    return arr.slice(1).reduce((xs, x, idx) => xs.concat([sep(idx), x]), [arr[0]]);
+  }
+}
+
+class ShipDescription extends Component {
+  render() {
+    return (
+      <Row>
+        <Col md={12}>
+          <div className="well">
+            {intersperse(this.props.description, (idx) => <span key={idx}><br/><br/></span>)}
+          </div>
+        </Col>
+      </Row>
+    );
+  }
+}
+
 class ShipPage extends Component {
   imageURL() {
     var filename;
@@ -111,13 +133,7 @@ class ShipPage extends Component {
             </Col>
           </Row>
 
-          <Row>
-            <Col md={12}>
-              <Panel>
-                <Panel.Body>{this.formatDescription()}</Panel.Body>
-              </Panel>
-            </Col>
-          </Row>
+          {this.props.ship.description.length > 0 && <ShipDescription description={this.props.ship.description}/>}
         </Grid>
       </div>
     );
