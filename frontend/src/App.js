@@ -7,10 +7,12 @@ import ShipPage from './ShipPage';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
+const kebabCase = string => string.replace(/\s+/g, '-').toLowerCase()
+
 function LinkCell(props) {
   return (
     <td className="text-left">
-      <Link to={`/ships/${props.text}`}>{props.text}</Link>
+      <Link to={`/ships/${kebabCase(props.text)}`}>{props.text}</Link>
     </td>
   );
 }
@@ -360,7 +362,7 @@ class App extends Component {
                   </div>
                 )}/>
                 <Route path="/ships/:shipName" render={({ match }) => (
-                  <ShipPage ship={this.state.data.find(ship => ship.name === match.params.shipName)}/>
+                  <ShipPage ship={this.state.data.find(ship => kebabCase(ship.name) === match.params.shipName)}/>
                 )}/>
               </Col>
             </Row>
