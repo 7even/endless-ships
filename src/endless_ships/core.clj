@@ -29,7 +29,8 @@
                                :cost :category :hull :shields :mass
                                :engine-capacity :weapon-capacity :fuel-capacity
                                :outfit-space :cargo-space
-                               :required-crew :bunks :description])
+                               :required-crew :bunks :description
+                               :guns :turrets :drones :fighters])
                  (assoc :outfits (->> (:outfits %)
                                       (map (fn [[name quantity]]
                                              {:name name

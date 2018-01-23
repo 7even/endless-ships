@@ -109,6 +109,10 @@ class ShipPage extends Component {
                         <li>outfit space: <FormattedNumber number={this.props.ship.outfitSpace} /></li>
                         <li>weapon capacity: <FormattedNumber number={this.props.ship.weaponCapacity} /></li>
                         <li>engine capacity: <FormattedNumber number={this.props.ship.engineCapacity} /></li>
+                        <li>guns: <FormattedNumber number={this.props.ship.guns} /></li>
+                        <li>turrets: <FormattedNumber number={this.props.ship.turrets} /></li>
+                        {this.props.ship.drones > 0 && <li>drones: <FormattedNumber number={this.props.ship.drones} /></li>}
+                        {this.props.ship.fighters > 0 && <li>fighters: <FormattedNumber number={this.props.ship.fighters} /></li>}
                       </ul>
                     </div>
 
