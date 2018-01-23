@@ -13,6 +13,10 @@
                         [[_ weapon-attrs]] "weapon"
                         :as attrs}]] "attributes"
                    [[_ outfit-attrs]] "outfits"
+                   gun-points "gun"
+                   turret-points "turret"
+                   drone-points "drone"
+                   fighter-points "fighter"
                    description-attrs "description"
                    file "file"}]]
               (merge (->map attrs)
@@ -26,6 +30,10 @@
                                                 (or quantity 1)))
                                        {}
                                        outfit-attrs)
+                      :guns (count gun-points)
+                      :turrets (count turret-points)
+                      :drones (count drone-points)
+                      :fighters (count fighter-points)
                       :description (->> description-attrs
                                         (map #(get-in % [0 0]))
                                         vec)
