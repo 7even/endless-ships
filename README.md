@@ -2,7 +2,7 @@
 
 This is a tool for generating a website with reference information about the [Endless Sky](https://endless-sky.github.io/) game. Currently the generated site only includes the ships data.
 
-The generator works by parsing the game's sources (specifically `data/*ships.txt` files) to get all ships' attributes so the information always stays up-to-date.
+The generator works by parsing the game's sources (specifically `data/*.txt` files) to get all game data so the information always stays up-to-date.
 
 ## Installation
 
@@ -35,5 +35,4 @@ Then point your browser to [http://localhost:8000](http://localhost:8000).
 
 ## Roadmap / what can be improved
 
-* add a separate page for detailed ship description (including the ship sprite from the game)
-* parse outfits as well to generate an outfit table
+* add a page with outfit tables (one table per category) and separate pages describing each outfit in detail
