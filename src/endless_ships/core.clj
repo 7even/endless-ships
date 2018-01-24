@@ -59,4 +59,18 @@
        (reduce (fn [counts object]
                  (update counts object #(inc (or % 0))))
                {})
-       (sort-by last >)))
+       (sort-by last >))
+  ;; get government colors in CSS format
+  (->> data
+       (filter #(= (first %) "government"))
+       (map (fn [[_ [name] {[[colors]] "color"}]]
+              [name colors]))
+       (filter #(some? (second %)))
+       (map (fn [[government colors]]
+              [government (->> colors
+                               (map (partial * 255))
+                               (map int)
+                               (map (partial format "%02x"))
+                               clojure.string/join
+                               (str "#"))]))
+       (into {})))
