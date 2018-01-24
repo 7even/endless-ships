@@ -1,0 +1,11 @@
+server {
+	listen 80;
+	server_name endless-sky.7vn.io;
+
+	root /var/www/endless_ships;
+	index index.html;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}
