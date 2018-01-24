@@ -35,6 +35,14 @@ class ShipDescription extends Component {
 }
 
 class ShipPage extends Component {
+  licenses() {
+    if (this.props.ship.licenses.length === 2) {
+      return (<p className="licenses">This ship requires {this.props.ship.licenses[0]} and {this.props.ship.licenses[1]} licenses.</p>);
+    } else {
+      return (<p className="licenses">This ship requires a {this.props.ship.licenses[0]} license.</p>);
+    }
+  }
+
   imageURL() {
     var filename;
 
@@ -114,6 +122,8 @@ class ShipPage extends Component {
                         {this.props.ship.drones > 0 && <li>drones: <FormattedNumber number={this.props.ship.drones} /></li>}
                         {this.props.ship.fighters > 0 && <li>fighters: <FormattedNumber number={this.props.ship.fighters} /></li>}
                       </ul>
+
+                      {this.props.ship.licenses.length > 0 && this.licenses()}
                     </div>
 
                     <div className="media-right">
