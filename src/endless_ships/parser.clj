@@ -6,7 +6,7 @@
   (:import [java.lang Float Integer]))
 
 (def files
-  "All files containing ships data."
+  "All files containing game data."
   (->> "game/data"
        resource
        file
@@ -48,8 +48,8 @@
    (->> files
         (mapcat (fn [file]
                   (let [filename (.getName file)
-                        ships (-> file slurp parse)]
-                    (map #(assoc-in % [2 "file"] filename) ships))))
+                        objects (-> file slurp parse)]
+                    (map #(assoc-in % [2 "file"] filename) objects))))
         doall)))
 
 (defn ->map [m]
