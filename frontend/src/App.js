@@ -4,10 +4,11 @@ import R from 'ramda';
 import { Grid, Row, Col, Button, Collapse, Checkbox, Table } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import ShipPage from './ShipPage';
+import OutfitsList from './OutfitsList';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
-const kebabCase = string => string.replace(/\s+/g, '-').toLowerCase()
+const kebabCase = string => string.replace(/\s+/g, '-').toLowerCase();
 
 function LinkCell(props) {
   return (
@@ -356,7 +357,17 @@ class App extends Component {
               <Col lg={12}>
                 <Route exact={true} path="/" render={() => (
                   <div className="app">
-                    <ol className="breadcrumb"><li className="active">Ships</li></ol>
+                    <ul className="nav nav-tabs">
+                      <li role="presentation" className="active">
+                        <Link to="/">Ships</Link>
+                      </li>
+                      <li role="presentation">
+                        <Link to="/outfits">Outfits</Link>
+                      </li>
+                    </ul>
+
+                    <ol className="breadcrumb top20"><li className="active">Ships</li></ol>
+
                     {this.renderFilters()}
                     {this.renderTable()}
                   </div>
@@ -364,6 +375,7 @@ class App extends Component {
                 <Route path="/ships/:shipName" render={({ match }) => (
                   <ShipPage ship={this.state.data.find(ship => kebabCase(ship.name) === match.params.shipName)}/>
                 )}/>
+                <Route path="/outfits" component={OutfitsList} />
               </Col>
             </Row>
           </Grid>
