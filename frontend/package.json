@@ -8,12 +8,12 @@
   "dependencies": {
     "bootstrap": "3",
     "github-fork-ribbon-css": "simonwhitaker/github-fork-ribbon-css#gh-pages",
-    "ramda": "^0.23.0",
-    "react": "^15.4.2",
-    "react-bootstrap": "0.32.0",
-    "react-dom": "^15.4.2",
-    "react-number-format": "^1.0.2",
-    "react-router-dom": "^4.2.2"
+    "ramda": "0.25.0",
+    "react": "16.2.0",
+    "react-bootstrap": "0.32.1",
+    "react-dom": "16.2.0",
+    "react-number-format": "3.1.3",
+    "react-router-dom": "4.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
