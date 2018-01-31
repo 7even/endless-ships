@@ -4,27 +4,23 @@ import { Grid, Row, Col, Panel, Image } from 'react-bootstrap';
 import { FormattedNumber } from './common';
 import './ShipPage.css';
 
-function intersperse(arr, sep) {
+const intersperse = (arr, sep) => {
   if (arr.length === 0) {
     return [];
   } else {
     return arr.slice(1).reduce((xs, x, idx) => xs.concat([sep(idx), x]), [arr[0]]);
   }
-}
+};
 
-class ShipDescription extends Component {
-  render() {
-    return (
-      <Row>
-        <Col md={12}>
-          <div className="well">
-            {intersperse(this.props.description, (idx) => <span key={idx}><br/><br/></span>)}
-          </div>
-        </Col>
-      </Row>
-    );
-  }
-}
+const ShipDescription = ({ description }) => (
+  <Row>
+    <Col md={12}>
+      <div className="well">
+        {intersperse(description, (index) => <span key={index}><br/><br/></span>)}
+      </div>
+    </Col>
+  </Row>
+);
 
 class ShipPage extends Component {
   licenses() {

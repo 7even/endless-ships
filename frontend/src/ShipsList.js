@@ -6,51 +6,39 @@ import R from 'ramda';
 
 const kebabCase = string => string.replace(/\s+/g, '-').toLowerCase();
 
-function LinkCell(props) {
-  return (
-    <td className="text-left">
-      <Link to={`/ships/${kebabCase(props.text)}`}>{props.text}</Link>
-    </td>
-  );
-}
+const LinkCell = ({ text }) => (
+  <td className="text-left">
+    <Link to={`/ships/${kebabCase(text)}`}>{text}</Link>
+  </td>
+);
 
-function TextCell(props) {
-  return (
-    <td className="text-left">
-      {props.text}
-    </td>
-  );
-}
+const TextCell = ({ text }) => (
+  <td className="text-left">{text}</td>
+);
 
-function RightCell(props) {
-  return (
-    <td className="text-right">
-      {props.children}
-    </td>
-  );
-}
+const RightCell = ({ children }) => (
+  <td className="text-right">{children}</td>
+);
 
-function NumberCell(props) {
-  return (
-    <RightCell>
-      <FormattedNumber number={props.number} />
-    </RightCell>
-  );
-}
+const NumberCell = ({ number }) => (
+  <RightCell>
+    <FormattedNumber number={number} />
+  </RightCell>
+);
 
-function CrewAndBunks(props) {
-  if (props.crew > 0) {
+const CrewAndBunks = ({ crew, bunks }) => {
+  if (crew > 0) {
     return (
       <RightCell>
-        <FormattedNumber number={props.crew} />
+        <FormattedNumber number={crew} />
         {' / '}
-        <FormattedNumber number={props.bunks} />
+        <FormattedNumber number={bunks} />
       </RightCell>
     );
   } else {
-    return (<RightCell></RightCell>);
+    return (<RightCell />);
   }
-}
+};
 
 class ShipsList extends Component {
   capitalize([first, ...rest]) {
