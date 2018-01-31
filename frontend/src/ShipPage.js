@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col, Panel, Image } from 'react-bootstrap';
-import NumberFormat from 'react-number-format';
+import { FormattedNumber } from './common';
 import './ShipPage.css';
-
-function FormattedNumber(props) {
-  return (
-    <NumberFormat value={props.number}
-                  displayType={'text'}
-                  thousandSeparator={true} />
-  );
-}
 
 function intersperse(arr, sep) {
   if (arr.length === 0) {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import NumberFormat from 'react-number-format';
+import { FormattedNumber } from './common';
 import { Grid, Row, Col, Button, Collapse, Checkbox, Table } from 'react-bootstrap';
 import R from 'ramda';
 
@@ -27,14 +27,6 @@ function RightCell(props) {
     <td className="text-right">
       {props.children}
     </td>
-  );
-}
-
-function FormattedNumber(props) {
-  return (
-    <NumberFormat value={props.number}
-                  displayType={'text'}
-                  thousandSeparator={true} />
   );
 }
 
