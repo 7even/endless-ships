@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import endlessShips from './reducers';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import R from 'ramda';
 
+import Reference from './components/Reference';
 import ShipsList from './ShipsList';
 import ShipPage from './ShipPage';
 import OutfitsList from './OutfitsList';
@@ -160,4 +164,18 @@ class App extends Component {
   }
 }
 
-export default App;
+class App2 extends Component {
+  render() {
+    return (
+      <Provider store={createStore(endlessShips)}>
+        <div className="app">
+          <Reference>
+            Hello!
+          </Reference>
+        </div>
+      </Provider>
+    );
+  }
+};
+
+export default App2;
