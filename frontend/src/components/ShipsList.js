@@ -1,7 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import R from 'ramda';
 import { kebabCase } from '../common';
+
+const licenses = {
+  'Navy':               'human',
+  'Carrier':            'human',
+  'Cruiser':            'human',
+  'Militia Carrier':    'human',
+  'Unfettered Militia': 'hai',
+  'Wanderer':           'wanderer',
+  'Wanderer Military':  'wanderer',
+  'Coalition':          'coalition',
+  'Heliarch':           'coalition',
+  'Remnant':            'remnant'
+};
 
 const ShipsList = ({ ships }) => {
   return (
@@ -19,7 +33,9 @@ const ShipsList = ({ ships }) => {
 
 const mapStateToProps = (state) => {
   return {
-    ships: state.data
+    ships: state.data,
+    races: R.uniq(state.data.map(ship => ship.race)),
+    categories: R.uniq(state.data.map(ship => ship.category))
   };
 };
 
