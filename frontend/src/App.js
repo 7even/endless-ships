@@ -7,8 +7,8 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import R from 'ramda';
 
 import Reference from './components/Reference';
-import ShipsList from './ShipsList';
-import ShipPage from './ShipPage';
+import ShipsList from './components/ShipsList';
+import ShipPage from './components/ShipPage';
 import OutfitsList from './OutfitsList';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -170,7 +170,16 @@ class App2 extends Component {
       <Provider store={createStore(endlessShips)}>
         <div className="app">
           <Reference>
-            Hello!
+            <Router>
+              <Grid fluid={true}>
+                <Row>
+                  <Col lg={12}>
+                    <Route exact={true} path="/" component={ShipsList} />
+                    <Route path="/ships/:shipName" component={ShipPage} />
+                  </Col>
+                </Row>
+              </Grid>
+            </Router>
           </Reference>
         </div>
       </Provider>
