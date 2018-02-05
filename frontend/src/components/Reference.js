@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class Reference extends Component {
@@ -10,7 +10,7 @@ class Reference extends Component {
 
   render() {
     if (this.props.isLoading) {
-      return "Loading...";
+      return <div className="app">Loading...</div>;
     } else {
       return this.props.children;
     }

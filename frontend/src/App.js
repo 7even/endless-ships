@@ -164,27 +164,23 @@ class App extends Component {
   }
 }
 
-class App2 extends Component {
-  render() {
-    return (
-      <Provider store={createStore(endlessShips)}>
-        <div className="app">
+const App2 = () => (
+  <Provider store={createStore(endlessShips)}>
+    <Grid fluid={true}>
+      <Row>
+        <Col lg={12}>
           <Reference>
             <Router>
-              <Grid fluid={true}>
-                <Row>
-                  <Col lg={12}>
-                    <Route exact={true} path="/" component={ShipsList} />
-                    <Route path="/ships/:shipName" component={ShipPage} />
-                  </Col>
-                </Row>
-              </Grid>
+              <div className="app">
+                <Route exact={true} path="/" component={ShipsList} />
+                <Route path="/ships/:shipName" component={ShipPage} />
+              </div>
             </Router>
           </Reference>
-        </div>
-      </Provider>
-    );
-  }
-};
+        </Col>
+      </Row>
+    </Grid>
+  </Provider>
+);
 
 export default App2;
