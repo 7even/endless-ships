@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import VisibleSortedShips from './VisibleSortedShips';
+import ShipsFilter from './ShipsFilter';
 
 const licenses = {
   'Navy':               'human',
@@ -17,14 +18,23 @@ const licenses = {
   'Remnant':            'remnant'
 };
 
-const ShipsList = () => {
-  return <VisibleSortedShips licenses={licenses} />;
+const ShipsList = ({ races, categories, filtersCollapsed }) => {
+  return (
+    <div className="app">
+      <ShipsFilter races={races}
+                   categories={categories}
+                   licenses={Object.keys(licenses)}
+                   filtersCollapsed={filtersCollapsed} />
+      <VisibleSortedShips licenses={licenses} />
+    </div>
+  );
 };
 
 const mapStateToProps = (state) => {
   return {
     races: R.uniq(state.data.map(ship => ship.race)),
-    categories: R.uniq(state.data.map(ship => ship.category))
+    categories: R.uniq(state.data.map(ship => ship.category)),
+    filtersCollapsed: state.filtersCollapsed
   };
 };
 

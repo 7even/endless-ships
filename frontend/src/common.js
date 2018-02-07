@@ -3,6 +3,8 @@ import NumberFormat from 'react-number-format';
 
 const kebabCase = string => string.replace(/\s+/g, '-').toLowerCase();
 
+const capitalize = ([first, ...rest]) => first.toUpperCase() + rest.join('').toLowerCase();
+
 const FormattedNumber = ({ number }) => {
   return (
     <NumberFormat value={number}
@@ -11,4 +13,4 @@ const FormattedNumber = ({ number }) => {
   );
 };
 
-export { FormattedNumber, kebabCase };
+export { FormattedNumber, kebabCase, capitalize };
