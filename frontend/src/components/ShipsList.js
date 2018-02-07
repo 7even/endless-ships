@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import R from 'ramda';
-import { kebabCase } from '../common';
+
+import VisibleSortedShips from './VisibleSortedShips';
 
 const licenses = {
   'Navy':               'human',
@@ -17,23 +17,12 @@ const licenses = {
   'Remnant':            'remnant'
 };
 
-const ShipsList = ({ ships }) => {
-  return (
-    <ul>
-      {ships.map(ship => (
-        <li key={ship.name}>
-          <Link to={`/ships/${kebabCase(ship.name)}`}>
-            {ship.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
+const ShipsList = () => {
+  return <VisibleSortedShips licenses={licenses} />;
 };
 
 const mapStateToProps = (state) => {
   return {
-    ships: state.data,
     races: R.uniq(state.data.map(ship => ship.race)),
     categories: R.uniq(state.data.map(ship => ship.category))
   };

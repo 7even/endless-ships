@@ -1,4 +1,6 @@
+import { connect } from 'react-redux';
 import R from 'ramda';
+import ShipsTable from './ShipsTable';
 
 const filterShips = (ships, raceFilter, categoryFilter, licenseFilter) => {
   const filters = [
@@ -23,6 +25,9 @@ const mapStateToProps = (state) => {
     ships: sortShips(
       filterShips(state.data, state.raceFilter, state.categoryFilter, state.licenseFilter),
       state.ordering
-    )
+    ),
+    ordering: state.ordering
   };
 };
+
+export default connect(mapStateToProps)(ShipsTable);
