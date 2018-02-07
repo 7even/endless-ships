@@ -30,4 +30,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(ShipsTable);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    toggleOrdering: (columnName) => {
+      dispatch({ type: 'toggle-ordering', columnName: columnName });
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShipsTable);

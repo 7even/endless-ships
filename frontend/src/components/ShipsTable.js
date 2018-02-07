@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap';
 
 import ShipRow from './ShipRow';
 
-const ShipsTableHeaders = (ordering, toggleOrdering) => {
+const ShipsTableHeaders = ({ ordering, toggleOrdering }) => {
   const columns = [
     ['Name', 'name'],
     ['Race'],
@@ -48,12 +48,12 @@ const ShipsTableHeaders = (ordering, toggleOrdering) => {
   });
 };
 
-const ShipsTable = ({ ships, ordering, licenses }) => {
+const ShipsTable = ({ ships, ordering, licenses, toggleOrdering }) => {
   return (
     <Table striped bordered condensed hover>
       <thead>
         <tr>
-          <ShipsTableHeaders ordering={ordering} toggleOrdering={() => {}} />
+          <ShipsTableHeaders ordering={ordering} toggleOrdering={toggleOrdering} />
         </tr>
       </thead>
       <tbody>

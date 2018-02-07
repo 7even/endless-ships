@@ -64,6 +64,16 @@ const endlessShips = (state = initialState, action) => {
   switch (action.type) {
   case 'load-data':
     return { ...state, isLoading: false, data: action.data };
+  case 'toggle-ordering':
+    if (state.ordering.columnName === action.columnName) {
+      if (state.ordering.order === 'asc') {
+        return { ...state, ordering: { columnName: null } };
+      } else {
+        return { ...state, ordering: { columnName: action.columnName, order: 'asc' } };
+      }
+    } else {
+      return { ...state, ordering: { columnName: action.columnName, order: 'desc' } };
+    }
   default:
     return state;
   }
