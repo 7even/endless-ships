@@ -48,7 +48,7 @@ const ShipsTableHeaders = ({ ordering, toggleOrdering }) => {
   });
 };
 
-const ShipsTable = ({ ships, ordering, licenses, toggleOrdering }) => {
+const ShipsTable = ({ ships, ordering, toggleOrdering }) => {
   return (
     <Table striped bordered condensed hover>
       <thead>
@@ -57,7 +57,7 @@ const ShipsTable = ({ ships, ordering, licenses, toggleOrdering }) => {
         </tr>
       </thead>
       <tbody>
-        {ships.map(ship => <ShipRow ship={ship} licenses={licenses} key={ship.name} />)}
+        {ships.map(ship => <ShipRow ship={ship} key={ship.name} />)}
       </tbody>
     </Table>
   );
