@@ -76,6 +76,12 @@ const endlessShips = (state = initialState, action) => {
     }
   case 'toggle-filters-visibility':
     return { ...state, filtersCollapsed: !state.filtersCollapsed };
+  case 'toggle-race-filtering':
+    return { ...state, raceFilter: { ...state.raceFilter, [action.race]: !state.raceFilter[action.race] } };
+  case 'toggle-category-filtering':
+    return { ...state, categoryFilter: { ...state.categoryFilter, [action.category]: !state.categoryFilter[action.category] } };
+  case 'toggle-license-filtering':
+    return { ...state, licenseFilter: { ...state.licenseFilter, [action.license]: !state.licenseFilter[action.license] } };
   default:
     return state;
   }

@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col, Button, Collapse, Checkbox } from 'react-bootstrap';
 import { capitalize } from '../common';
 
-const ShipsFilter = ({ raceFilter, categoryFilter, licenseFilter, filtersCollapsed, toggleFiltersVisibility }) => {
+const ShipsFilter = ({ raceFilter, categoryFilter, licenseFilter, filtersCollapsed,
+                       toggleFiltersVisibility, toggleRaceFiltering, toggleCategoryFiltering, toggleLicenseFiltering }) => {
   const raceCheckboxes = Object.keys(raceFilter).map(race => (
     <Checkbox key={race}
               checked={raceFilter[race]}
-              onChange={() => this.props.toggleRaceFiltering(race)}>
+              onChange={() => toggleRaceFiltering(race)}>
       {capitalize(race)}
     </Checkbox>
   ));
@@ -15,7 +16,7 @@ const ShipsFilter = ({ raceFilter, categoryFilter, licenseFilter, filtersCollaps
   const categoryCheckboxes = Object.keys(categoryFilter).map(category => (
     <Checkbox key={category}
               checked={categoryFilter[category]}
-              onChange={() => this.props.toggleCategoryFiltering(category)}>
+              onChange={() => toggleCategoryFiltering(category)}>
       {category}
     </Checkbox>
   ));
@@ -23,7 +24,7 @@ const ShipsFilter = ({ raceFilter, categoryFilter, licenseFilter, filtersCollaps
   const licenseCheckboxes = Object.keys(licenseFilter).map(license => (
     <Checkbox key={license}
               checked={licenseFilter[license]}
-              onChange={() => this.props.toggleLicenseFiltering(license)}>
+              onChange={() => toggleLicenseFiltering(license)}>
       {license}
     </Checkbox>
   ));
@@ -73,7 +74,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleFiltersVisibility: () => dispatch({ type: 'toggle-filters-visibility' })
+    toggleFiltersVisibility: ()         => dispatch({ type: 'toggle-filters-visibility' }),
+    toggleRaceFiltering:     (race)     => dispatch({ type: 'toggle-race-filtering',     race: race }),
+    toggleCategoryFiltering: (category) => dispatch({ type: 'toggle-category-filtering', category: category }),
+    toggleLicenseFiltering:  (license)  => dispatch({ type: 'toggle-license-filtering',  license: license })
   };
 };
 
