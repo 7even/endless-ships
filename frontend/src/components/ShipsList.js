@@ -1,9 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import R from 'ramda';
 
-import VisibleSortedShips from './VisibleSortedShips';
 import ShipsFilter from './ShipsFilter';
+import VisibleSortedShips from './VisibleSortedShips';
 
 const licenses = {
   'Navy':               'human',
@@ -18,24 +16,13 @@ const licenses = {
   'Remnant':            'remnant'
 };
 
-const ShipsList = ({ races, categories, filtersCollapsed }) => {
+const ShipsList = () => {
   return (
     <div className="app">
-      <ShipsFilter races={races}
-                   categories={categories}
-                   licenses={Object.keys(licenses)}
-                   filtersCollapsed={filtersCollapsed} />
+      <ShipsFilter />
       <VisibleSortedShips licenses={licenses} />
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    races: R.uniq(state.data.map(ship => ship.race)),
-    categories: R.uniq(state.data.map(ship => ship.category)),
-    filtersCollapsed: state.filtersCollapsed
-  };
-};
-
-export default connect(mapStateToProps)(ShipsList);
+export default ShipsList;

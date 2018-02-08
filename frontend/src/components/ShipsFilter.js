@@ -1,27 +1,28 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Grid, Row, Col, Button, Collapse, Checkbox } from 'react-bootstrap';
 import { capitalize } from '../common';
 
-const ShipsFilter = ({ races, categories, licenses, filtersCollapsed }) => {
-  const raceCheckboxes = races.map(race => (
+const ShipsFilter = ({ raceFilter, categoryFilter, licenseFilter, filtersCollapsed, toggleFiltersVisibility }) => {
+  const raceCheckboxes = Object.keys(raceFilter).map(race => (
     <Checkbox key={race}
-              // checked={this.props.raceFilter[race]}
+              checked={raceFilter[race]}
               onChange={() => this.props.toggleRaceFiltering(race)}>
       {capitalize(race)}
     </Checkbox>
   ));
 
-  const categoryCheckboxes = categories.map(category => (
+  const categoryCheckboxes = Object.keys(categoryFilter).map(category => (
     <Checkbox key={category}
-              // checked={this.props.categoryFilter[category]}
+              checked={categoryFilter[category]}
               onChange={() => this.props.toggleCategoryFiltering(category)}>
       {category}
     </Checkbox>
   ));
 
-  const licenseCheckboxes = licenses.map(license => (
+  const licenseCheckboxes = Object.keys(licenseFilter).map(license => (
     <Checkbox key={license}
-              // checked={this.props.licenseFilter[license]}
+              checked={licenseFilter[license]}
               onChange={() => this.props.toggleLicenseFiltering(license)}>
       {license}
     </Checkbox>
@@ -54,12 +55,26 @@ const ShipsFilter = ({ races, categories, licenses, filtersCollapsed }) => {
           </Row>
         </Grid>
       </Collapse>
-      <Button // onClick={() => this.props.toggleFiltersVisibility()}
-        >
+      <Button onClick={() => toggleFiltersVisibility()}>
         Filters {collapseIcon}
       </Button>
     </div>
   );
 };
 
-export default ShipsFilter;
+const mapStateToProps = (state) => {
+  return {
+    raceFilter:       state.raceFilter,
+    categoryFilter:   state.categoryFilter,
+    licenseFilter:    state.licenseFilter,
+    filtersCollapsed: state.filtersCollapsed
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    toggleFiltersVisibility: () => dispatch({ type: 'toggle-filters-visibility' })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShipsFilter);

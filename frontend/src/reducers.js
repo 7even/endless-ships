@@ -74,6 +74,8 @@ const endlessShips = (state = initialState, action) => {
     } else {
       return { ...state, ordering: { columnName: action.columnName, order: 'desc' } };
     }
+  case 'toggle-filters-visibility':
+    return { ...state, filtersCollapsed: !state.filtersCollapsed };
   default:
     return state;
   }
