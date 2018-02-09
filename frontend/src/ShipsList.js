@@ -225,7 +225,9 @@ class ShipsList extends Component {
           </li>
         </ul>
 
-        <ol className="breadcrumb top20"><li className="active">Ships</li></ol>
+        <ol className="breadcrumb top20">
+          <li className="active">Ships</li>
+        </ol>
 
         {this.renderFilters()}
         {this.renderTable()}

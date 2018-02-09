@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Grid, Row, Col, Panel, Image } from 'react-bootstrap';
 import { FormattedNumber, kebabCase } from '../common';
 
@@ -59,59 +60,66 @@ const ShipDescription = ({ description }) => (
 );
 
 const ShipPage = ({ ship }) => (
-  <Grid>
-    <Row>
-      <Col md={6}>
-        <Panel>
-          <Panel.Heading>{ship.name}</Panel.Heading>
+  <div className="app">
+    <ol className="breadcrumb">
+      <li><Link to="/">Ships</Link></li>
+      <li className="active">{ship.name}</li>
+    </ol>
 
-          <Panel.Body>
-            <div className="media">
-              <div className="media-body">
-                <ul>
-                  <li>cost: <FormattedNumber number={ship.cost} /></li>
-                  <li>shields: <FormattedNumber number={ship.shields} /></li>
-                  <li>hull: <FormattedNumber number={ship.hull} /></li>
-                  <li>mass: <FormattedNumber number={ship.mass} /></li>
-                  <li>cargo space: <FormattedNumber number={ship.cargoSpace} /></li>
-                  <li>required crew: <FormattedNumber number={ship.requiredCrew} /></li>
-                  <li>bunks: <FormattedNumber number={ship.bunks} /></li>
-                  <li>fuel capacity: <FormattedNumber number={ship.fuelCapacity} /></li>
-                  <li>outfit space: <FormattedNumber number={ship.outfitSpace} /></li>
-                  <li>weapon capacity: <FormattedNumber number={ship.weaponCapacity} /></li>
-                  <li>engine capacity: <FormattedNumber number={ship.engineCapacity} /></li>
-                  <li>guns: <FormattedNumber number={ship.guns} /></li>
-                  <li>turrets: <FormattedNumber number={ship.turrets} /></li>
-                  {ship.drones > 0 && <li>drones: <FormattedNumber number={ship.drones} /></li>}
-                  {ship.fighters > 0 && <li>fighters: <FormattedNumber number={ship.fighters} /></li>}
-                </ul>
+    <Grid>
+      <Row>
+        <Col md={6}>
+          <Panel>
+            <Panel.Heading>{ship.name}</Panel.Heading>
 
-                {ship.licenses.length > 0 && <ShipLicenses licenses={ship.licenses} />}
+            <Panel.Body>
+              <div className="media">
+                <div className="media-body">
+                  <ul>
+                    <li>cost: <FormattedNumber number={ship.cost} /></li>
+                    <li>shields: <FormattedNumber number={ship.shields} /></li>
+                    <li>hull: <FormattedNumber number={ship.hull} /></li>
+                    <li>mass: <FormattedNumber number={ship.mass} /></li>
+                    <li>cargo space: <FormattedNumber number={ship.cargoSpace} /></li>
+                    <li>required crew: <FormattedNumber number={ship.requiredCrew} /></li>
+                    <li>bunks: <FormattedNumber number={ship.bunks} /></li>
+                    <li>fuel capacity: <FormattedNumber number={ship.fuelCapacity} /></li>
+                    <li>outfit space: <FormattedNumber number={ship.outfitSpace} /></li>
+                    <li>weapon capacity: <FormattedNumber number={ship.weaponCapacity} /></li>
+                    <li>engine capacity: <FormattedNumber number={ship.engineCapacity} /></li>
+                    <li>guns: <FormattedNumber number={ship.guns} /></li>
+                    <li>turrets: <FormattedNumber number={ship.turrets} /></li>
+                    {ship.drones > 0 && <li>drones: <FormattedNumber number={ship.drones} /></li>}
+                    {ship.fighters > 0 && <li>fighters: <FormattedNumber number={ship.fighters} /></li>}
+                  </ul>
+
+                  {ship.licenses.length > 0 && <ShipLicenses licenses={ship.licenses} />}
+                </div>
+
+                <div className="media-right">
+                  <Image src={imageURL(ship)} className="ship-sprite" />
+                </div>
               </div>
+            </Panel.Body>
+          </Panel>
+        </Col>
 
-              <div className="media-right">
-                <Image src={imageURL(ship)} className="ship-sprite" />
-              </div>
-            </div>
-          </Panel.Body>
-        </Panel>
-      </Col>
+        <Col md={6}>
+          <Panel>
+            <Panel.Heading>Default outfits</Panel.Heading>
 
-      <Col md={6}>
-        <Panel>
-          <Panel.Heading>Default outfits</Panel.Heading>
+            <Panel.Body>
+              <ul className="list-group">
+                {ship.outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
+              </ul>
+            </Panel.Body>
+          </Panel>
+        </Col>
+      </Row>
 
-          <Panel.Body>
-            <ul className="list-group">
-              {ship.outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
-            </ul>
-          </Panel.Body>
-        </Panel>
-      </Col>
-    </Row>
-
-    {ship.description.length > 0 && <ShipDescription description={ship.description}/>}
-  </Grid>
+      {ship.description.length > 0 && <ShipDescription description={ship.description}/>}
+    </Grid>
+  </div>
 );
 
 const mapStateToProps = (state, { match: { params: { shipName } } }) => {
