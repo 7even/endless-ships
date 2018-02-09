@@ -7,6 +7,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import R from 'ramda';
 
 import Reference from './components/Reference';
+import Navigation from './components/Navigation';
 import ShipsList from './components/ShipsList';
 import ShipPage from './components/ShipPage';
 import OutfitsList from './OutfitsList';
@@ -172,6 +173,7 @@ const App2 = () => (
           <Reference>
             <Router>
               <div className="app">
+                <Navigation />
                 <Route exact={true} path="/" component={ShipsList} />
                 <Route path="/ships/:shipName" component={ShipPage} />
               </div>
