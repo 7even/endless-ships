@@ -1,0 +1,10 @@
+img.ship-sprite {
+    max-width:  220px;
+    max-height: 220px;
+    width:      auto;
+    height:     auto;
+}
+
+p.licenses {
+    font-style: italic;
+}

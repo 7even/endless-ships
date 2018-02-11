@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col, Panel, Image } from 'react-bootstrap';
 import { FormattedNumber, kebabCase } from '../common';
+import './ShipPage.css';
 
 const intersperse = (arr, sep) => {
   if (arr.length === 0) {
