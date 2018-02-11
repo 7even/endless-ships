@@ -23,7 +23,7 @@ const sortShips = (ships, { columnName, order }) => {
 const mapStateToProps = (state) => {
   return {
     ships: sortShips(
-      filterShips(state.data, state.raceFilter, state.categoryFilter, state.licenseFilter),
+      filterShips(state.ships, state.raceFilter, state.categoryFilter, state.licenseFilter),
       state.ordering
     ),
     ordering: state.ordering

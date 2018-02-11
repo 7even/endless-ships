@@ -125,7 +125,7 @@ const ShipPage = ({ ship }) => (
 
 const mapStateToProps = (state, { match: { params: { shipName } } }) => {
   return {
-    ship: state.data.find(ship => kebabCase(ship.name) === shipName)
+    ship: state.ships.find(ship => kebabCase(ship.name) === shipName)
   };
 };
 

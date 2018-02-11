@@ -40,14 +40,23 @@
                  (dissoc :file)))
        (map #(transform-keys ->camelCaseKeyword %))))
 
-(defn generate-json [& {:keys [pretty] :or {pretty true}}]
-  (let [json (generate-string ships-data {:pretty pretty})]
-    (spit "build/data.json" (str json "\n"))))
+(def outfits-data
+  (->> outfits
+       (map #(dissoc % :file))
+       (map #(transform-keys ->camelCaseKeyword %))))
+
+(defn generate-json
+  ([]
+   (generate-json "build/data.json"))
+  ([path]
+   (let [data {:ships ships-data
+               :outfits outfits-data}
+         json (generate-string data {:pretty true})]
+     (spit path (str json "\n")))))
 
 (comment
   ;; generate data for frontend development
-  (let [json (generate-string ships-data {:pretty true})]
-    (spit "frontend/public/data.json" (str json "\n")))
+  (generate-json "frontend/public/data.json")
   ;; get a list of all possible attribute names
   (->> ships-data
        (map keys)
