@@ -1,0 +1,55 @@
+.app {
+    margin-top: 10px;
+}
+
+.top20 {
+    margin-top: 20px;
+}
+
+.filters-group {
+    margin-bottom: 20px;
+}
+
+.table-header {
+    cursor: pointer;
+}
+
+.label-human {
+    background-color: #0068b5;
+}
+
+.label-hai {
+    background-color: #d66bce;
+}
+
+.label-quarg {
+    background-color: #e0c400;
+}
+
+.label-korath {
+    background-color: #cc7f19;
+}
+
+.label-wanderer {
+    background-color: #b2e81e;
+}
+
+.label-coalition {
+    background-color: #ff99b2;
+}
+
+.label-pug {
+    background-color: #fce2b2;
+}
+
+.label-pirate {
+    background-color: #c60000;
+}
+
+.label-remnant {
+    background-color: #e2609e;
+}
+
+.label-drak {
+    background-color: #000;
+}
