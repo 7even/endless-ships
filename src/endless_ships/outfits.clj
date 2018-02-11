@@ -1,6 +1,14 @@
 (ns endless-ships.outfits
   (:require [endless-ships.parser :refer [->map data]]))
 
+(defn- update-if-present [m k f]
+  (if (contains? m k)
+    (update m k f)
+    m))
+
+(defn- round-to-int [num]
+  (-> num double Math/round))
+
 (def outfits
   (->> data
        (filter #(= (first %) "outfit"))
@@ -23,7 +31,21 @@
                       :description (->> description-attrs
                                         (map #(get-in % [0 0]))
                                         vec)
-                      :file file})))))
+                      :file file})))
+       (map (fn [outfit]
+              (-> outfit
+                  (update-if-present :thrust #(round-to-int (* % 3600)))
+                  (update-if-present :reverse-thrust #(round-to-int (* % 3600)))
+                  (update-if-present :afterburner-thrust #(round-to-int (* % 3600)))
+                  (update-if-present :turn #(round-to-int (* % 60)))
+                  (update-if-present :thrusting-energy #(round-to-int (* % 60)))
+                  (update-if-present :thrusting-heat #(round-to-int (* % 60)))
+                  (update-if-present :reverse-thrusting-energy #(round-to-int (* % 60)))
+                  (update-if-present :reverse-thrusting-heat #(round-to-int (* % 60)))
+                  (update-if-present :turning-energy #(round-to-int (* % 60)))
+                  (update-if-present :turning-heat #(round-to-int (* % 60)))
+                  (update-if-present :afterburner-fuel #(round-to-int (* % 60)))
+                  (update-if-present :afterburner-heat #(round-to-int (* % 60))))))))
 
 (comment
   ;; outfit counts by category
