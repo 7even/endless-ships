@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedNumber, kebabCase, nbsp, nbspize } from '../common';
 
-const licenses = {
+const licenseLabelStyles = {
   'Navy':               'human',
   'Carrier':            'human',
   'Cruiser':            'human',
@@ -55,7 +55,7 @@ const renderLabel = (text, style = text) => (
 
 const renderLicenses = (ship) => {
   return ship.licenses.map(
-    license => renderLabel(license, licenses[license])
+    license => renderLabel(license, licenseLabelStyles[license])
   ).reduce(
     (licenses, license) => (licenses === null ? [license] : [...licenses, ' ', license]),
     null
