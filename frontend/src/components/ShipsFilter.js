@@ -41,15 +41,15 @@ const ShipsFilter = ({ raceFilter, categoryFilter, licenseFilter, filtersCollaps
       <Collapse in={!filtersCollapsed}>
         <Grid fluid={true}>
           <Row>
-            <Col lg={1}>
+            <Col lg={2} md={3}>
               <strong>Race</strong>
               {raceCheckboxes}
             </Col>
-            <Col lg={1}>
+            <Col lg={2} md={3}>
               <strong>Category</strong>
               {categoryCheckboxes}
             </Col>
-            <Col lg={2}>
+            <Col lg={2} md={3}>
               <strong>License</strong>
               {licenseCheckboxes}
             </Col>
