@@ -5,6 +5,10 @@ const kebabCase = string => string.replace(/\s+/g, '-').toLowerCase();
 
 const capitalize = ([first, ...rest]) => first.toUpperCase() + rest.join('').toLowerCase();
 
+const nbsp = '\u00a0';
+
+const nbspize = string => string.replace(/ /g, '\u00a0');
+
 const FormattedNumber = ({ number }) => {
   return (
     <NumberFormat value={number}
@@ -13,4 +17,4 @@ const FormattedNumber = ({ number }) => {
   );
 };
 
-export { FormattedNumber, kebabCase, capitalize };
+export { FormattedNumber, kebabCase, capitalize, nbsp, nbspize };

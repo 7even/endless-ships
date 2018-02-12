@@ -16,7 +16,7 @@ import './App.css';
 
 const App = () => (
   <Provider store={createStore(endlessShips)}>
-    <Grid fluid={true}>
+    <Grid>
       <Row>
         <Col lg={12}>
           <Reference>

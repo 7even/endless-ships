@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FormattedNumber, kebabCase } from '../common';
+import { FormattedNumber, kebabCase, nbsp, nbspize } from '../common';
 
 const licenses = {
   'Navy':               'human',
@@ -40,7 +40,7 @@ const CrewAndBunks = ({ crew, bunks }) => {
     return (
       <RightCell>
         <FormattedNumber number={crew} />
-        {' / '}
+        {nbsp + '/' + nbsp}
         <FormattedNumber number={bunks} />
       </RightCell>
     );
@@ -64,10 +64,10 @@ const renderLicenses = (ship) => {
 
 const ShipRow = ({ ship }) => (
   <tr>
-    <LinkCell text={ship.name} />
+    <LinkCell text={nbspize(ship.name)} />
     <TextCell text={renderLabel(ship.race)} />
     <NumberCell number={ship.cost} />
-    <TextCell text={ship.category} />
+    <TextCell text={nbspize(ship.category)} />
     <NumberCell number={ship.hull} />
     <NumberCell number={ship.shields} />
     <NumberCell number={ship.mass} />
