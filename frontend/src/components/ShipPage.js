@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Row, Col, Panel, Image } from 'react-bootstrap';
 import { FormattedNumber, kebabCase } from '../common';
 import './ShipPage.css';
@@ -62,11 +61,6 @@ const ShipDescription = ({ description }) => (
 
 const ShipPage = ({ ship }) => (
   <div className="app">
-    <ol className="breadcrumb">
-      <li><Link to="/">Ships</Link></li>
-      <li className="active">{ship.name}</li>
-    </ol>
-
     <Row>
       <Col md={6}>
         <Panel>
