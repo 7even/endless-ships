@@ -23,17 +23,17 @@ const sortShips = (ships, { columnName, order }) => {
 const mapStateToProps = (state) => {
   return {
     ships: sortShips(
-      filterShips(state.ships, state.raceFilter, state.categoryFilter, state.licenseFilter),
-      state.ordering
+      filterShips(state.ships, state.shipSettings.raceFilter, state.shipSettings.categoryFilter, state.shipSettings.licenseFilter),
+      state.shipSettings.ordering
     ),
-    ordering: state.ordering
+    ordering: state.shipSettings.ordering
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     toggleOrdering: (columnName) => {
-      dispatch({ type: 'toggle-ordering', columnName: columnName });
+      dispatch({ type: 'toggle-ships-ordering', columnName: columnName });
     }
   };
 };

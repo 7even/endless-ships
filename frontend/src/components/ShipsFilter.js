@@ -65,19 +65,19 @@ const ShipsFilter = ({ raceFilter, categoryFilter, licenseFilter, filtersCollaps
 
 const mapStateToProps = (state) => {
   return {
-    raceFilter:       state.raceFilter,
-    categoryFilter:   state.categoryFilter,
-    licenseFilter:    state.licenseFilter,
-    filtersCollapsed: state.filtersCollapsed
+    raceFilter:       state.shipSettings.raceFilter,
+    categoryFilter:   state.shipSettings.categoryFilter,
+    licenseFilter:    state.shipSettings.licenseFilter,
+    filtersCollapsed: state.shipSettings.filtersCollapsed
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleFiltersVisibility: ()         => dispatch({ type: 'toggle-filters-visibility' }),
-    toggleRaceFiltering:     (race)     => dispatch({ type: 'toggle-race-filtering',     race: race }),
-    toggleCategoryFiltering: (category) => dispatch({ type: 'toggle-category-filtering', category: category }),
-    toggleLicenseFiltering:  (license)  => dispatch({ type: 'toggle-license-filtering',  license: license })
+    toggleFiltersVisibility: ()         => dispatch({ type: 'toggle-ship-filters-visibility' }),
+    toggleRaceFiltering:     (race)     => dispatch({ type: 'toggle-ships-race-filtering',     race: race }),
+    toggleCategoryFiltering: (category) => dispatch({ type: 'toggle-ships-category-filtering', category: category }),
+    toggleLicenseFiltering:  (license)  => dispatch({ type: 'toggle-ships-license-filtering',  license: license })
   };
 };
 

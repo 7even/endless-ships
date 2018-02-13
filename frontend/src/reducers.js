@@ -2,8 +2,10 @@ import R from 'ramda';
 
 const initialState = {
   isLoading: true,
-  filtersCollapsed: true,
-  ordering: { columnName: null }
+  shipSettings: {
+    filtersCollapsed: true,
+    ordering: { columnName: null }
+  }
 };
 
 const initialRaceFilter = (ships) => R.uniq(ships.map(ship => ship.race)).reduce(
@@ -32,56 +34,68 @@ const endlessShips = (state = initialState, action) => {
       isLoading:      false,
       ships:          action.data.ships,
       outfits:        action.data.outfits,
-      raceFilter:     initialRaceFilter(action.data.ships),
-      categoryFilter: initialCategoryFilter(action.data.ships),
-      licenseFilter:  initialLicenseFilter(action.data.ships)
+      shipSettings: {
+        ...state.shipSettings,
+        raceFilter:     initialRaceFilter(action.data.ships),
+        categoryFilter: initialCategoryFilter(action.data.ships),
+        licenseFilter:  initialLicenseFilter(action.data.ships)
+      }
     };
-  case 'toggle-ordering':
-    if (state.ordering.columnName === action.columnName) {
-      if (state.ordering.order === 'asc') {
+  case 'toggle-ships-ordering':
+    if (state.shipSettings.ordering.columnName === action.columnName) {
+      if (state.shipSettings.ordering.order === 'asc') {
         return {
           ...state,
-          ordering: { columnName: null }
+          shipSettings: { ...state.shipSettings, ordering: { columnName: null } }
         };
       } else {
         return {
           ...state,
-          ordering: { columnName: action.columnName, order: 'asc' }
+          shipSettings: { ...state.shipSettings, ordering: { columnName: action.columnName, order: 'asc' } }
         };
       }
     } else {
       return {
         ...state,
-        ordering: { columnName: action.columnName, order: 'desc' }
+        shipSettings: { ...state.shipSettings, ordering: { columnName: action.columnName, order: 'desc' } }
       };
     }
-  case 'toggle-filters-visibility':
+  case 'toggle-ship-filters-visibility':
     return {
       ...state,
-      filtersCollapsed: !state.filtersCollapsed
+      shipSettings: { ...state.shipSettings, filtersCollapsed: !state.shipSettings.filtersCollapsed }
     };
-  case 'toggle-race-filtering':
+  case 'toggle-ships-race-filtering':
     return {
       ...state,
-      raceFilter: {
-        ...state.raceFilter,
-        [action.race]: !state.raceFilter[action.race]
+      shipSettings: {
+        ...state.shipSettings,
+        raceFilter: {
+          ...state.shipSettings.raceFilter,
+          [action.race]: !state.shipSettings.raceFilter[action.race]
+        }
       }
     };
-  case 'toggle-category-filtering':
+  case 'toggle-ships-category-filtering':
     return {
       ...state,
-      categoryFilter: {
-        ...state.categoryFilter,
-        [action.category]: !state.categoryFilter[action.category]
+      shipSettings: {
+        ...state.shipSettings,
+        categoryFilter: {
+          ...state.shipSettings.categoryFilter,
+          [action.category]: !state.shipSettings.categoryFilter[action.category]
+        }
       }
     };
-  case 'toggle-license-filtering':
+  case 'toggle-ships-license-filtering':
     return {
       ...state,
-      licenseFilter: {
-        ...state.licenseFilter,
-        [action.license]: !state.licenseFilter[action.license]
+      shipSettings: {
+        ...state.shipSettings,
+        licenseFilter: {
+          ...state.shipSettings.licenseFilter,
+          [action.license]: !state.shipSettings.licenseFilter[action.license]
+        }
       }
     };
   default:
