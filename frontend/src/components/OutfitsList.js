@@ -3,15 +3,27 @@ import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import R from 'ramda';
 
+import { FormattedNumber } from '../common';
+
+const TextCell = ({ text }) => (
+  <td className="text-left">{text}</td>
+);
+
+const NumberCell = ({ number }) => (
+  <td className="text-right">
+    <FormattedNumber number={number} />
+  </td>
+);
+
 const ThrusterRow = ({ thruster }) => (
   <tr>
-    <td>{thruster.name}</td>
-    <td>{thruster.cost}</td>
-    <td>{-thruster.outfitSpace}</td>
-    <td>{thruster.thrust}</td>
-    <td>{thruster.thrustingEnergy}</td>
-    <td>{thruster.thrustingHeat}</td>
-    <td>{thruster.licenses}</td>
+    <TextCell text={thruster.name} />
+    <NumberCell number={thruster.cost} />
+    <NumberCell number={-thruster.outfitSpace} />
+    <NumberCell number={thruster.thrust} />
+    <NumberCell number={thruster.thrustingEnergy} />
+    <NumberCell number={thruster.thrustingHeat} />
+    <TextCell text={thruster.licenses} />
   </tr>
 );
 
@@ -49,13 +61,13 @@ ThrustersTable = connect(mapThrustersStateToProps)(ThrustersTable);
 
 const SteeringRow = ({ steering }) => (
   <tr>
-    <td>{steering.name}</td>
-    <td>{steering.cost}</td>
-    <td>{-steering.outfitSpace}</td>
-    <td>{steering.turn}</td>
-    <td>{steering.turningEnergy}</td>
-    <td>{steering.turningHeat}</td>
-    <td>{steering.licenses}</td>
+    <TextCell text={steering.name} />
+    <NumberCell number={steering.cost} />
+    <NumberCell number={-steering.outfitSpace} />
+    <NumberCell number={steering.turn} />
+    <NumberCell number={steering.turningEnergy} />
+    <NumberCell number={steering.turningHeat} />
+    <TextCell text={steering.licenses} />
   </tr>
 );
 
