@@ -17,6 +17,34 @@ const sortOutfits = (outfits, { columnName, order }) => {
   }
 };
 
+const TableHeaders = ({ columns, ordering, toggleOrdering }) => {
+  return columns.map(([text, sortBy]) => {
+    let title, icon;
+
+    if (sortBy) {
+      title = <a className="table-header" onClick={() => toggleOrdering(sortBy)}>{text}</a>;
+
+      if (ordering.columnName === sortBy) {
+        if (ordering.order === 'asc') {
+          icon = <span className="glyphicon glyphicon-sort-by-attributes"></span>;
+        } else {
+          icon = <span className="glyphicon glyphicon-sort-by-attributes-alt"></span>;
+        }
+      }
+    } else {
+      title = text;
+    }
+
+    return (
+      <th className="text-center" key={text}>
+        {title}
+        {' '}
+        {icon}
+      </th>
+    );
+  });
+};
+
 const TextCell = ({ text }) => (
   <td className="text-left">{text}</td>
 );
@@ -39,17 +67,23 @@ const ThrusterRow = ({ thruster }) => (
   </tr>
 );
 
-let ThrustersTable = ({ thrusters }) => (
+const thrustersHeaderColumns = [
+  ['Name', 'name'],
+  ['Cost', 'cost'],
+  ['Outfit sp.', 'outfitSpace'],
+  ['Thrust', 'thrust'],
+  ['Thr. energy', 'thrustingEnergy'],
+  ['Thr. heat', 'thrustingHeat'],
+  ['Licenses']
+];
+
+let ThrustersTable = ({ thrusters, ordering, toggleOrdering }) => (
   <Table striped bordered condensed hover>
     <thead>
       <tr>
-        <th className="text-center">Name</th>
-        <th className="text-center">Cost</th>
-        <th className="text-center">Outfit sp.</th>
-        <th className="text-center">Thrust</th>
-        <th className="text-center">Thr. energy</th>
-        <th className="text-center">Thr. heat</th>
-        <th className="text-center">Licenses</th>
+        <TableHeaders columns={thrustersHeaderColumns}
+                      ordering={ordering}
+                      toggleOrdering={toggleOrdering} />
       </tr>
     </thead>
     <tbody>
@@ -58,16 +92,25 @@ let ThrustersTable = ({ thrusters }) => (
   </Table>
 );
 
-const mapThrustersStateToProps = (state) => {
+const mapStateToThrustersProps = (state) => {
   return {
     thrusters: sortOutfits(
       R.filter(R.has('thrust'), state.outfits),
       state.outfitSettings.thrustersOrdering
-    )
+    ),
+    ordering: state.outfitSettings.thrustersOrdering
   };
 };
 
-ThrustersTable = connect(mapThrustersStateToProps)(ThrustersTable);
+const mapDispatchToThrustersProps = (dispatch) => {
+  return {
+    toggleOrdering: (columnName) => {
+      dispatch({ type: 'toggle-thrusters-ordering', columnName });
+    }
+  };
+};
+
+ThrustersTable = connect(mapStateToThrustersProps, mapDispatchToThrustersProps)(ThrustersTable);
 
 const SteeringRow = ({ steering }) => (
   <tr>
@@ -81,17 +124,23 @@ const SteeringRow = ({ steering }) => (
   </tr>
 );
 
-let SteeringsTable = ({ steerings }) => (
+const steeringsHeaderColumns = [
+  ['Name', 'name'],
+  ['Cost', 'cost'],
+  ['Outfit sp.', 'outfitSpace'],
+  ['Turn', 'turn'],
+  ['Turn. energy', 'turningEnergy'],
+  ['Turn. heat', 'turningHeat'],
+  ['Licenses']
+];
+
+let SteeringsTable = ({ steerings, ordering, toggleOrdering }) => (
   <Table striped bordered condensed hover>
     <thead>
       <tr>
-        <th className="text-center">Name</th>
-        <th className="text-center">Cost</th>
-        <th className="text-center">Outfit sp.</th>
-        <th className="text-center">Turn</th>
-        <th className="text-center">Turn. energy</th>
-        <th className="text-center">Turn. heat</th>
-        <th className="text-center">Licenses</th>
+        <TableHeaders columns={steeringsHeaderColumns}
+                      ordering={ordering}
+                      toggleOrdering={toggleOrdering} />
       </tr>
     </thead>
     <tbody>
@@ -100,16 +149,25 @@ let SteeringsTable = ({ steerings }) => (
   </Table>
 );
 
-const mapSteeringsStateToProps = (state) => {
+const mapStateToSteeringsProps = (state) => {
   return {
     steerings: sortOutfits(
       R.filter(R.has('turn'), state.outfits),
       state.outfitSettings.steeringsOrdering
-    )
+    ),
+    ordering: state.outfitSettings.steeringsOrdering
   };
 };
 
-SteeringsTable = connect(mapSteeringsStateToProps)(SteeringsTable);
+const mapDispatchToSteeringsProps = (dispatch) => {
+  return {
+    toggleOrdering: (columnName) => {
+      dispatch({ type: 'toggle-steerings-ordering', columnName });
+    }
+  };
+};
+
+SteeringsTable = connect(mapStateToSteeringsProps, mapDispatchToSteeringsProps)(SteeringsTable);
 
 const OutfitsList = () => (
   <div className="app">
