@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import R from 'ramda';
+
 import ShipsTable from './ShipsTable';
+import { sortByColumn } from '../ordering';
 
 const filterShips = (ships, raceFilter, categoryFilter, licenseFilter) => {
   const filters = [
@@ -12,18 +14,15 @@ const filterShips = (ships, raceFilter, categoryFilter, licenseFilter) => {
   return R.filter(R.allPass(filters), ships);
 };
 
-const sortShips = (ships, { columnName, order }) => {
-  const prop = R.propOr(0, columnName);
-  const sortedProp = (order === 'asc') ? R.ascend(prop) : R.descend(prop);
-  const comparator = R.sort(sortedProp);
-
-  return comparator(ships);
-};
-
 const mapStateToProps = (state) => {
   return {
-    ships: sortShips(
-      filterShips(state.ships, state.shipSettings.raceFilter, state.shipSettings.categoryFilter, state.shipSettings.licenseFilter),
+    ships: sortByColumn(
+      filterShips(
+        state.ships,
+        state.shipSettings.raceFilter,
+        state.shipSettings.categoryFilter,
+        state.shipSettings.licenseFilter
+      ),
       state.shipSettings.ordering
     ),
     ordering: state.shipSettings.ordering

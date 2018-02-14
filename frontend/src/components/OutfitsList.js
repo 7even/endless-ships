@@ -4,46 +4,7 @@ import { Table } from 'react-bootstrap';
 import R from 'ramda';
 
 import { FormattedNumber } from '../common';
-
-const sortOutfits = (outfits, { columnName, order }) => {
-  if (columnName) {
-    const prop = R.propOr(0, columnName);
-    const sortedProp = (order === 'asc') ? R.ascend(prop) : R.descend(prop);
-    const comparator = R.sort(sortedProp);
-
-    return comparator(outfits);
-  } else {
-    return outfits;
-  }
-};
-
-const TableHeaders = ({ columns, ordering, toggleOrdering }) => {
-  return columns.map(([text, sortBy]) => {
-    let title, icon;
-
-    if (sortBy) {
-      title = <a className="table-header" onClick={() => toggleOrdering(sortBy)}>{text}</a>;
-
-      if (ordering.columnName === sortBy) {
-        if (ordering.order === 'asc') {
-          icon = <span className="glyphicon glyphicon-sort-by-attributes"></span>;
-        } else {
-          icon = <span className="glyphicon glyphicon-sort-by-attributes-alt"></span>;
-        }
-      }
-    } else {
-      title = text;
-    }
-
-    return (
-      <th className="text-center" key={text}>
-        {title}
-        {' '}
-        {icon}
-      </th>
-    );
-  });
-};
+import { TableHeaders, sortByColumn } from '../ordering';
 
 const TextCell = ({ text }) => (
   <td className="text-left">{text}</td>
@@ -94,7 +55,7 @@ let ThrustersTable = ({ thrusters, ordering, toggleOrdering }) => (
 
 const mapStateToThrustersProps = (state) => {
   return {
-    thrusters: sortOutfits(
+    thrusters: sortByColumn(
       R.filter(R.has('thrust'), state.outfits),
       state.outfitSettings.thrustersOrdering
     ),
@@ -151,7 +112,7 @@ let SteeringsTable = ({ steerings, ordering, toggleOrdering }) => (
 
 const mapStateToSteeringsProps = (state) => {
   return {
-    steerings: sortOutfits(
+    steerings: sortByColumn(
       R.filter(R.has('turn'), state.outfits),
       state.outfitSettings.steeringsOrdering
     ),
