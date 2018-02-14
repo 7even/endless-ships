@@ -7,7 +7,7 @@ const capitalize = ([first, ...rest]) => first.toUpperCase() + rest.join('').toL
 
 const nbsp = '\u00a0';
 
-const nbspize = string => string.replace(/ /g, '\u00a0');
+const nbspize = string => string.replace(/ /g, nbsp);
 
 const FormattedNumber = ({ number }) => {
   return (
