@@ -4,6 +4,18 @@ import R from 'ramda';
 const toggleFilter  = (filter = {}, value) => ({ ...filter, [value]: !filter[value] });
 const initialFilter = (values) => R.uniq(R.flatten(values)).reduce(toggleFilter, {});
 
+const toggleOrdering = (ordering, columnName) => {
+  if (ordering.columnName === columnName) {
+    if (ordering.order === 'asc') {
+      return { columnName: null };
+    } else {
+      return { columnName, order: 'asc' };
+    }
+  } else {
+    return { columnName, order: 'desc' };
+  }
+};
+
 const isLoading = (state = true, action) => (action.type === 'load-data') ? false : state;
 const ships     = (state = [],   action) => (action.type === 'load-data') ? action.data.ships : state;
 const outfits   = (state = [],   action) => (action.type === 'load-data') ? action.data.outfits : state;
@@ -16,17 +28,9 @@ const filtersCollapsed = (state = true, action) => {
   }
 };
 
-const ordering = (state = { columnName: null }, action) => {
+const shipsOrdering = (state = { columnName: null }, action) => {
   if (action.type === 'toggle-ships-ordering') {
-    if (state.columnName === action.columnName) {
-      if (state.order === 'asc') {
-        return { columnName: null };
-      } else {
-        return { columnName: action.columnName, order: 'asc' };
-      }
-    } else {
-      return { columnName: action.columnName, order: 'desc' };
-    }
+    return toggleOrdering(state, action.columnName);
   } else {
     return state;
   }
@@ -65,15 +69,35 @@ const licenseFilter = (state = {}, action) => {
   }
 };
 
+const thrustersOrdering = (state = { columnName: null }, action) => {
+  if (action.type === 'toggle-thrusters-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
+const steeringsOrdering = (state = { columnName: null }, action) => {
+  if (action.type === 'toggle-steerings-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
   outfits,
   shipSettings: combineReducers({
     filtersCollapsed,
-    ordering,
+    ordering: shipsOrdering,
     raceFilter,
     categoryFilter,
     licenseFilter
+  }),
+  outfitSettings: combineReducers({
+    thrustersOrdering,
+    steeringsOrdering
   })
 });
