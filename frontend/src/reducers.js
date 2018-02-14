@@ -1,106 +1,79 @@
+import { combineReducers } from 'redux';
 import R from 'ramda';
 
-const initialState = {
-  isLoading: true,
-  shipSettings: {
-    filtersCollapsed: true,
-    ordering: { columnName: null }
+const toggleFilter  = (filter = {}, value) => ({ ...filter, [value]: !filter[value] });
+const initialFilter = (values) => R.uniq(R.flatten(values)).reduce(toggleFilter, {});
+
+const isLoading = (state = true, action) => (action.type === 'load-data') ? false : state;
+const ships     = (state = [],   action) => (action.type === 'load-data') ? action.data.ships : state;
+const outfits   = (state = [],   action) => (action.type === 'load-data') ? action.data.outfits : state;
+
+const filtersCollapsed = (state = true, action) => {
+  if (action.type === 'toggle-ship-filters-visibility') {
+    return !state;
+  } else {
+    return state;
   }
 };
 
-const initialRaceFilter = (ships) => R.uniq(ships.map(ship => ship.race)).reduce(
-  (races, race) => R.merge(races, { [race]: true }),
-  {}
-);
-
-const initialCategoryFilter = (ships) => R.uniq(ships.map(ship => ship.category)).reduce(
-  (categories, category) => R.merge(categories, { [category]: true }),
-  {}
-);
-
-const initialLicenseFilter = (ships) => R.uniq(R.flatten(ships.map(ship => ship.licenses))).reduce(
-  (licenses, license) => R.merge(licenses, { [license]: true }),
-  {}
-);
-
-const endlessShips = (state = initialState, action) => {
-  console.log(`Received action:`);
-  console.log(action);
-
-  switch (action.type) {
-  case 'load-data':
-    return {
-      ...state,
-      isLoading:      false,
-      ships:          action.data.ships,
-      outfits:        action.data.outfits,
-      shipSettings: {
-        ...state.shipSettings,
-        raceFilter:     initialRaceFilter(action.data.ships),
-        categoryFilter: initialCategoryFilter(action.data.ships),
-        licenseFilter:  initialLicenseFilter(action.data.ships)
-      }
-    };
-  case 'toggle-ships-ordering':
-    if (state.shipSettings.ordering.columnName === action.columnName) {
-      if (state.shipSettings.ordering.order === 'asc') {
-        return {
-          ...state,
-          shipSettings: { ...state.shipSettings, ordering: { columnName: null } }
-        };
+const ordering = (state = { columnName: null }, action) => {
+  if (action.type === 'toggle-ships-ordering') {
+    if (state.columnName === action.columnName) {
+      if (state.order === 'asc') {
+        return { columnName: null };
       } else {
-        return {
-          ...state,
-          shipSettings: { ...state.shipSettings, ordering: { columnName: action.columnName, order: 'asc' } }
-        };
+        return { columnName: action.columnName, order: 'asc' };
       }
     } else {
-      return {
-        ...state,
-        shipSettings: { ...state.shipSettings, ordering: { columnName: action.columnName, order: 'desc' } }
-      };
+      return { columnName: action.columnName, order: 'desc' };
     }
-  case 'toggle-ship-filters-visibility':
-    return {
-      ...state,
-      shipSettings: { ...state.shipSettings, filtersCollapsed: !state.shipSettings.filtersCollapsed }
-    };
+  } else {
+    return state;
+  }
+};
+
+const raceFilter = (state = {}, action) => {
+  switch (action.type) {
+  case 'load-data':
+    return initialFilter(action.data.ships.map(ship => ship.race));
   case 'toggle-ships-race-filtering':
-    return {
-      ...state,
-      shipSettings: {
-        ...state.shipSettings,
-        raceFilter: {
-          ...state.shipSettings.raceFilter,
-          [action.race]: !state.shipSettings.raceFilter[action.race]
-        }
-      }
-    };
-  case 'toggle-ships-category-filtering':
-    return {
-      ...state,
-      shipSettings: {
-        ...state.shipSettings,
-        categoryFilter: {
-          ...state.shipSettings.categoryFilter,
-          [action.category]: !state.shipSettings.categoryFilter[action.category]
-        }
-      }
-    };
-  case 'toggle-ships-license-filtering':
-    return {
-      ...state,
-      shipSettings: {
-        ...state.shipSettings,
-        licenseFilter: {
-          ...state.shipSettings.licenseFilter,
-          [action.license]: !state.shipSettings.licenseFilter[action.license]
-        }
-      }
-    };
+    return toggleFilter(state, action.race);
   default:
     return state;
   }
 };
 
-export default endlessShips;
+const categoryFilter = (state = {}, action) => {
+  switch (action.type) {
+  case 'load-data':
+    return initialFilter(action.data.ships.map(ship => ship.category));
+  case 'toggle-ships-category-filtering':
+    return toggleFilter(state, action.category);
+  default:
+    return state;
+  }
+};
+
+const licenseFilter = (state = {}, action) => {
+  switch (action.type) {
+  case 'load-data':
+    return initialFilter(action.data.ships.map(ship => ship.licenses));
+  case 'toggle-ships-license-filtering':
+    return toggleFilter(state, action.license);
+  default:
+    return state;
+  }
+};
+
+export default combineReducers({
+  isLoading,
+  ships,
+  outfits,
+  shipSettings: combineReducers({
+    filtersCollapsed,
+    ordering,
+    raceFilter,
+    categoryFilter,
+    licenseFilter
+  })
+});
