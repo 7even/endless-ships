@@ -69,7 +69,7 @@ const licenseFilter = (state = {}, action) => {
   }
 };
 
-const thrustersOrdering = (state = { columnName: null }, action) => {
+const thrustersOrdering = (state = { columnName: 'thrust', order: 'desc' }, action) => {
   if (action.type === 'toggle-thrusters-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -77,7 +77,7 @@ const thrustersOrdering = (state = { columnName: null }, action) => {
   }
 };
 
-const steeringsOrdering = (state = { columnName: null }, action) => {
+const steeringsOrdering = (state = { columnName: 'turn', order: 'desc' }, action) => {
   if (action.type === 'toggle-steerings-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {

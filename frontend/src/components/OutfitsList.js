@@ -5,6 +5,18 @@ import R from 'ramda';
 
 import { FormattedNumber } from '../common';
 
+const sortOutfits = (outfits, { columnName, order }) => {
+  if (columnName) {
+    const prop = R.propOr(0, columnName);
+    const sortedProp = (order === 'asc') ? R.ascend(prop) : R.descend(prop);
+    const comparator = R.sort(sortedProp);
+
+    return comparator(outfits);
+  } else {
+    return outfits;
+  }
+};
+
 const TextCell = ({ text }) => (
   <td className="text-left">{text}</td>
 );
@@ -47,13 +59,11 @@ let ThrustersTable = ({ thrusters }) => (
 );
 
 const mapThrustersStateToProps = (state) => {
-  const thrusters = R.filter(
-    outfit => R.has('thrust')(outfit),
-    state.outfits
-  );
-
   return {
-    thrusters: thrusters
+    thrusters: sortOutfits(
+      R.filter(R.has('thrust'), state.outfits),
+      state.outfitSettings.thrustersOrdering
+    )
   };
 };
 
@@ -91,13 +101,11 @@ let SteeringsTable = ({ steerings }) => (
 );
 
 const mapSteeringsStateToProps = (state) => {
-  const steerings = R.filter(
-    outfit => R.has('turn')(outfit),
-    state.outfits
-  );
-
   return {
-    steerings: steerings
+    steerings: sortOutfits(
+      R.filter(R.has('turn'), state.outfits),
+      state.outfitSettings.steeringsOrdering
+    )
   };
 };
 
