@@ -1,19 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FormattedNumber, kebabCase, nbsp, nbspize } from '../common';
 
-const licenseLabelStyles = {
-  'Navy':               'human',
-  'Carrier':            'human',
-  'Cruiser':            'human',
-  'Militia Carrier':    'human',
-  'Unfettered Militia': 'hai',
-  'Wanderer':           'wanderer',
-  'Wanderer Military':  'wanderer',
-  'Coalition':          'coalition',
-  'Heliarch':           'coalition',
-  'Remnant':            'remnant'
-};
+import { FormattedNumber, kebabCase, nbsp, nbspize, renderLicenses } from '../common';
 
 const LinkCell = ({ text }) => (
   <td className="text-left">
@@ -53,15 +41,6 @@ const renderLabel = (text, style = text) => (
   <span className={'label label-' + style} key={text}>{text}</span>
 );
 
-const renderLicenses = (ship) => {
-  return ship.licenses.map(
-    license => renderLabel(license, licenseLabelStyles[license])
-  ).reduce(
-    (licenses, license) => (licenses === null ? [license] : [...licenses, ' ', license]),
-    null
-  );
-};
-
 const ShipRow = ({ ship }) => (
   <tr>
     <LinkCell text={nbspize(ship.name)} />
@@ -77,7 +56,7 @@ const ShipRow = ({ ship }) => (
     <NumberCell number={ship.outfitSpace} />
     <NumberCell number={ship.cargoSpace} />
     <CrewAndBunks crew={ship.requiredCrew} bunks={ship.bunks} />
-    <TextCell text={renderLicenses(ship)} />
+    <TextCell text={renderLicenses(ship.licenses)} />
   </tr>
 );
 

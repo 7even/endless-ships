@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import R from 'ramda';
 
-import { FormattedNumber } from '../common';
+import { FormattedNumber, renderLicenses } from '../common';
 import { TableHeaders, sortByColumn } from '../ordering';
 
 const TextCell = ({ text }) => (
@@ -24,7 +24,7 @@ const ThrusterRow = ({ thruster }) => (
     <NumberCell number={thruster.thrust} />
     <NumberCell number={thruster.thrustingEnergy} />
     <NumberCell number={thruster.thrustingHeat} />
-    <TextCell text={thruster.licenses} />
+    <TextCell text={renderLicenses(thruster.licenses)} />
   </tr>
 );
 
@@ -81,7 +81,7 @@ const SteeringRow = ({ steering }) => (
     <NumberCell number={steering.turn} />
     <NumberCell number={steering.turningEnergy} />
     <NumberCell number={steering.turningHeat} />
-    <TextCell text={steering.licenses} />
+    <TextCell text={renderLicenses(steering.licenses)} />
   </tr>
 );
 
