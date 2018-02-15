@@ -20,7 +20,7 @@ const ThrusterRow = ({ thruster }) => (
   <tr>
     <TextCell text={thruster.name} />
     <NumberCell number={thruster.cost} />
-    <NumberCell number={-thruster.outfitSpace} />
+    <NumberCell number={thruster.outfitSpace} />
     <NumberCell number={thruster.thrust} />
     <NumberCell number={thruster.thrustingEnergy} />
     <NumberCell number={thruster.thrustingHeat} />
@@ -77,7 +77,7 @@ const SteeringRow = ({ steering }) => (
   <tr>
     <TextCell text={steering.name} />
     <NumberCell number={steering.cost} />
-    <NumberCell number={-steering.outfitSpace} />
+    <NumberCell number={steering.outfitSpace} />
     <NumberCell number={steering.turn} />
     <NumberCell number={steering.turningEnergy} />
     <NumberCell number={steering.turningHeat} />

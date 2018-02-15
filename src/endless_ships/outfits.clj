@@ -34,6 +34,7 @@
                       :file file})))
        (map (fn [outfit]
               (-> outfit
+                  (update-if-present :outfit-space -)
                   (update-if-present :thrust #(round-to-int (* % 3600)))
                   (update-if-present :reverse-thrust #(round-to-int (* % 3600)))
                   (update-if-present :afterburner-thrust #(round-to-int (* % 3600)))
