@@ -2,29 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table from './Table';
-import { FormattedNumber, renderLicenses } from '../common';
+import Table, { TextCell, NumberCell } from './Table';
+import { renderLicenses } from '../common';
 import { sortByColumn } from '../ordering';
-
-const TextCell = ({ text }) => (
-  <td className="text-left">{text}</td>
-);
-
-const NumberCell = ({ number }) => (
-  <td className="text-right">
-    <FormattedNumber number={number} />
-  </td>
-);
 
 const ThrusterRow = ({ thruster }) => (
   <tr>
-    <TextCell text={thruster.name} />
+    <TextCell>{thruster.name}</TextCell>
     <NumberCell number={thruster.cost} />
     <NumberCell number={thruster.outfitSpace} />
     <NumberCell number={thruster.thrust} />
     <NumberCell number={thruster.thrustingEnergy} />
     <NumberCell number={thruster.thrustingHeat} />
-    <TextCell text={renderLicenses(thruster.licenses)} />
+    <TextCell>{renderLicenses(thruster.licenses)}</TextCell>
   </tr>
 );
 
@@ -68,13 +58,13 @@ ThrustersTable = connect(mapStateToThrustersProps, mapDispatchToThrustersProps)(
 
 const SteeringRow = ({ steering }) => (
   <tr>
-    <TextCell text={steering.name} />
+    <TextCell>{steering.name}</TextCell>
     <NumberCell number={steering.cost} />
     <NumberCell number={steering.outfitSpace} />
     <NumberCell number={steering.turn} />
     <NumberCell number={steering.turningEnergy} />
     <NumberCell number={steering.turningHeat} />
-    <TextCell text={renderLicenses(steering.licenses)} />
+    <TextCell>{renderLicenses(steering.licenses)}</TextCell>
   </tr>
 );
 

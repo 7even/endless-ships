@@ -2,25 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { FormattedNumber, kebabCase, nbsp, nbspize, renderLicenses } from '../common';
+import { TextCell, RightCell, NumberCell } from './Table';
 
 const LinkCell = ({ text }) => (
-  <td className="text-left">
+  <TextCell>
     <Link to={`/ships/${kebabCase(text)}`}>{text}</Link>
-  </td>
-);
-
-const TextCell = ({ text }) => (
-  <td className="text-left">{text}</td>
-);
-
-const RightCell = ({ children }) => (
-  <td className="text-right">{children}</td>
-);
-
-const NumberCell = ({ number }) => (
-  <RightCell>
-    <FormattedNumber number={number} />
-  </RightCell>
+  </TextCell>
 );
 
 const CrewAndBunks = ({ crew, bunks }) => {
@@ -44,9 +31,9 @@ const renderLabel = (text, style = text) => (
 const ShipRow = ({ ship }) => (
   <tr>
     <LinkCell text={nbspize(ship.name)} />
-    <TextCell text={renderLabel(ship.race)} />
+    <TextCell>{renderLabel(ship.race)}</TextCell>
     <NumberCell number={ship.cost} />
-    <TextCell text={nbspize(ship.category)} />
+    <TextCell>{nbspize(ship.category)}</TextCell>
     <NumberCell number={ship.hull} />
     <NumberCell number={ship.shields} />
     <NumberCell number={ship.mass} />
@@ -56,7 +43,7 @@ const ShipRow = ({ ship }) => (
     <NumberCell number={ship.outfitSpace} />
     <NumberCell number={ship.cargoSpace} />
     <CrewAndBunks crew={ship.requiredCrew} bunks={ship.bunks} />
-    <TextCell text={renderLicenses(ship.licenses)} />
+    <TextCell>{renderLicenses(ship.licenses)}</TextCell>
   </tr>
 );
 
