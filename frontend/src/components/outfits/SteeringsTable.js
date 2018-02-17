@@ -18,7 +18,7 @@ const Row = ({ steering }) => (
   </tr>
 );
 
-const steeringsHeaderColumns = [
+const headerColumns = [
   ['Name', 'name'],
   ['Cost', 'cost'],
   ['Outfit sp.', 'outfitSpace'],
@@ -28,15 +28,15 @@ const steeringsHeaderColumns = [
   ['Licenses']
 ];
 
-let SteeringsTable = ({ steerings, ordering, toggleOrdering }) => (
-  <Table headerColumns={steeringsHeaderColumns}
+const SteeringsTable = ({ steerings, ordering, toggleOrdering }) => (
+  <Table headerColumns={headerColumns}
          ordering={ordering}
          toggleOrdering={toggleOrdering}>
     {steerings.map(steering => <Row steering={steering} key={steering.name} />)}
   </Table>
 );
 
-const mapStateToSteeringsProps = (state) => {
+const mapStateToProps = (state) => {
   return {
     steerings: sortByColumn(
       R.filter(R.has('turn'), state.outfits),
@@ -46,7 +46,7 @@ const mapStateToSteeringsProps = (state) => {
   };
 };
 
-const mapDispatchToSteeringsProps = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     toggleOrdering: (columnName) => {
       dispatch({ type: 'toggle-steerings-ordering', columnName });
@@ -54,7 +54,4 @@ const mapDispatchToSteeringsProps = (dispatch) => {
   };
 };
 
-export default connect(
-  mapStateToSteeringsProps,
-  mapDispatchToSteeringsProps
-)(SteeringsTable);
+export default connect(mapStateToProps, mapDispatchToProps)(SteeringsTable);

@@ -18,7 +18,7 @@ const Row = ({ thruster }) => (
   </tr>
 );
 
-const thrustersHeaderColumns = [
+const headerColumns = [
   ['Name', 'name'],
   ['Cost', 'cost'],
   ['Outfit sp.', 'outfitSpace'],
@@ -29,14 +29,14 @@ const thrustersHeaderColumns = [
 ];
 
 const ThrustersTable = ({ thrusters, ordering, toggleOrdering }) => (
-  <Table headerColumns={thrustersHeaderColumns}
+  <Table headerColumns={headerColumns}
          ordering={ordering}
          toggleOrdering={toggleOrdering}>
     {thrusters.map(thruster => <Row thruster={thruster} key={thruster.name} />)}
   </Table>
 );
 
-const mapStateToThrustersProps = (state) => {
+const mapStateToProps = (state) => {
   return {
     thrusters: sortByColumn(
       R.filter(R.has('thrust'), state.outfits),
@@ -46,7 +46,7 @@ const mapStateToThrustersProps = (state) => {
   };
 };
 
-const mapDispatchToThrustersProps = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     toggleOrdering: (columnName) => {
       dispatch({ type: 'toggle-thrusters-ordering', columnName });
@@ -54,7 +54,4 @@ const mapDispatchToThrustersProps = (dispatch) => {
   };
 };
 
-export default connect(
-  mapStateToThrustersProps,
-  mapDispatchToThrustersProps
-)(ThrustersTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ThrustersTable);
