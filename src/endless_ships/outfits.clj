@@ -57,4 +57,17 @@
        (reduce (fn [counts object]
                  (update counts object #(inc (or % 0))))
                {})
+       (sort-by last >))
+  ;; attribute counts among outfits having a given attribute
+  (->> outfits
+       (filter #(some? (:energy-capacity %)))
+       (map keys)
+       (reduce (fn [counts outfit-attributes]
+                 (merge-with +
+                             counts
+                             (reduce (fn [attribute-counts attr-name]
+                                       (update attribute-counts attr-name #(inc (or % 0))))
+                                     {}
+                                     outfit-attributes)))
+               {})
        (sort-by last >)))
