@@ -85,6 +85,14 @@ const steeringsOrdering = (state = { columnName: 'turn', order: 'desc' }, action
   }
 };
 
+const reactorsOrdering = (state = { columnName: 'energyGeneration', order: 'desc' }, action) => {
+  if (action.type === 'toggle-reactors-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -98,6 +106,7 @@ export default combineReducers({
   }),
   outfitSettings: combineReducers({
     thrustersOrdering,
-    steeringsOrdering
+    steeringsOrdering,
+    reactorsOrdering
   })
 });
