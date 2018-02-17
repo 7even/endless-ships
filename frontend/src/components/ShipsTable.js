@@ -1,8 +1,7 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
 
+import Table from './Table';
 import ShipRow from './ShipRow';
-import { TableHeaders } from '../ordering';
 
 const shipsHeaderColumns = [
   ['Name', 'name'],
@@ -21,21 +20,12 @@ const shipsHeaderColumns = [
   ['Licenses']
 ];
 
-const ShipsTable = ({ ships, ordering, toggleOrdering }) => {
-  return (
-    <Table striped bordered condensed hover>
-      <thead>
-        <tr>
-          <TableHeaders columns={shipsHeaderColumns}
-                        ordering={ordering}
-                        toggleOrdering={toggleOrdering} />
-        </tr>
-      </thead>
-      <tbody>
-        {ships.map(ship => <ShipRow ship={ship} key={ship.name} />)}
-      </tbody>
-    </Table>
-  );
-};
+const ShipsTable = ({ ships, ordering, toggleOrdering }) => (
+  <Table headerColumns={shipsHeaderColumns}
+         ordering={ordering}
+         toggleOrdering={toggleOrdering}>
+    {ships.map(ship => <ShipRow ship={ship} key={ship.name} />)}
+  </Table>
+);
 
 export default ShipsTable;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Table } from 'react-bootstrap';
 import R from 'ramda';
 
+import Table from './Table';
 import { FormattedNumber, renderLicenses } from '../common';
-import { TableHeaders, sortByColumn } from '../ordering';
+import { sortByColumn } from '../ordering';
 
 const TextCell = ({ text }) => (
   <td className="text-left">{text}</td>
@@ -39,17 +39,10 @@ const thrustersHeaderColumns = [
 ];
 
 let ThrustersTable = ({ thrusters, ordering, toggleOrdering }) => (
-  <Table striped bordered condensed hover>
-    <thead>
-      <tr>
-        <TableHeaders columns={thrustersHeaderColumns}
-                      ordering={ordering}
-                      toggleOrdering={toggleOrdering} />
-      </tr>
-    </thead>
-    <tbody>
-      {thrusters.map(thruster => <ThrusterRow thruster={thruster} key={thruster.name} />)}
-    </tbody>
+  <Table headerColumns={thrustersHeaderColumns}
+         ordering={ordering}
+         toggleOrdering={toggleOrdering}>
+    {thrusters.map(thruster => <ThrusterRow thruster={thruster} key={thruster.name} />)}
   </Table>
 );
 
@@ -96,17 +89,10 @@ const steeringsHeaderColumns = [
 ];
 
 let SteeringsTable = ({ steerings, ordering, toggleOrdering }) => (
-  <Table striped bordered condensed hover>
-    <thead>
-      <tr>
-        <TableHeaders columns={steeringsHeaderColumns}
-                      ordering={ordering}
-                      toggleOrdering={toggleOrdering} />
-      </tr>
-    </thead>
-    <tbody>
-      {steerings.map(steering => <SteeringRow steering={steering} key={steering.name} />)}
-    </tbody>
+  <Table headerColumns={steeringsHeaderColumns}
+         ordering={ordering}
+         toggleOrdering={toggleOrdering}>
+    {steerings.map(steering => <SteeringRow steering={steering} key={steering.name} />)}
   </Table>
 );
 
