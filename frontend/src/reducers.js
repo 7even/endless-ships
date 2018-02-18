@@ -101,6 +101,14 @@ const batteriesOrdering = (state = { columnName: 'energyCapacity', order: 'desc'
   }
 };
 
+const coolersOrdering = (state = { columnName: 'cooling', order: 'desc' }, action) => {
+  if (action.type === 'toggle-coolers-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -116,6 +124,7 @@ export default combineReducers({
     thrustersOrdering,
     steeringsOrdering,
     reactorsOrdering,
-    batteriesOrdering
+    batteriesOrdering,
+    coolersOrdering
   })
 });

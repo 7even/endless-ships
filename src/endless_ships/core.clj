@@ -42,6 +42,7 @@
 
 (def outfits-data
   (->> outfits
+       (remove #(= (:file %) "deprecated outfits.txt"))
        (map #(dissoc % :file))
        (map #(transform-keys ->camelCaseKeyword %))))
 

@@ -4,6 +4,7 @@ import ThrustersTable from './outfits/ThrustersTable';
 import SteeringsTable from './outfits/SteeringsTable';
 import ReactorsTable from './outfits/ReactorsTable';
 import BatteriesTable from './outfits/BatteriesTable';
+import CoolersTable from './outfits/CoolersTable';
 
 const OutfitsList = () => (
   <div className="app">
@@ -19,6 +20,9 @@ const OutfitsList = () => (
 
     <h2>Batteries</h2>
     <BatteriesTable />
+
+    <h2>Coolers</h2>
+    <CoolersTable />
   </div>
 );
 

@@ -48,7 +48,10 @@
                   (update-if-present :afterburner-fuel #(round-to-int (* % 60)))
                   (update-if-present :afterburner-heat #(round-to-int (* % 60)))
                   (update-if-present :energy-generation #(round-to-int (* % 60)))
-                  (update-if-present :heat-generation #(round-to-int (* % 60))))))))
+                  (update-if-present :heat-generation #(round-to-int (* % 60)))
+                  (update-if-present :cooling #(round-to-int (* % 60)))
+                  (update-if-present :active-cooling #(round-to-int (* % 60)))
+                  (update-if-present :cooling-energy #(round-to-int (* % 60))))))))
 
 (comment
   ;; outfit counts by category
