@@ -3,7 +3,7 @@ import R from 'ramda';
 
 const sortByColumn = (objects, { columnName, order }) => {
   if (columnName) {
-    const prop = R.propOr(0, columnName);
+    const prop = typeof(columnName) === 'function' ? columnName : R.propOr(0, columnName);
     const sortedProp = (order === 'asc') ? R.ascend(prop) : R.descend(prop);
     const comparator = R.sort(sortedProp);
 
@@ -41,4 +41,6 @@ const TableHeaders = ({ columns, ordering, toggleOrdering }) => {
   });
 };
 
-export { TableHeaders, sortByColumn };
+const totalCooling = cooler => R.propOr(0, 'cooling', cooler) + R.propOr(0, 'activeCooling', cooler);
+
+export { TableHeaders, sortByColumn, totalCooling };

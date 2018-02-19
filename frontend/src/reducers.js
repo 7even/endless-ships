@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import R from 'ramda';
+import { totalCooling } from './ordering';
 
 const toggleFilter  = (filter = {}, value) => ({ ...filter, [value]: !filter[value] });
 const initialFilter = (values) => R.uniq(R.flatten(values)).reduce(toggleFilter, {});
@@ -101,7 +102,7 @@ const batteriesOrdering = (state = { columnName: 'energyCapacity', order: 'desc'
   }
 };
 
-const coolersOrdering = (state = { columnName: 'cooling', order: 'desc' }, action) => {
+const coolersOrdering = (state = { columnName: totalCooling, order: 'desc' }, action) => {
   if (action.type === 'toggle-coolers-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {

@@ -4,15 +4,14 @@ import R from 'ramda';
 
 import Table, { TextCell, NumberCell } from '../Table';
 import { renderLicenses } from '../../common';
-import { sortByColumn } from '../../ordering';
+import { sortByColumn, totalCooling } from '../../ordering';
 
 const Row = ({ cooler }) => (
   <tr>
     <TextCell>{cooler.name}</TextCell>
     <NumberCell number={cooler.cost} />
     <NumberCell number={cooler.outfitSpace} />
-    <NumberCell number={cooler.cooling} />
-    <NumberCell number={cooler.activeCooling} />
+    <NumberCell number={totalCooling(cooler)} />
     <NumberCell number={cooler.coolingEnergy} />
     <TextCell>{renderLicenses(cooler.licenses)}</TextCell>
   </tr>
@@ -22,8 +21,7 @@ const headerColumns = [
   ['Name', 'name'],
   ['Cost', 'cost'],
   ['Outfit sp.', 'outfitSpace'],
-  ['Cooling', 'cooling'],
-  ['Active cooling', 'activeCooling'],
+  ['Cooling', totalCooling],
   ['Cooling energy', 'coolingEnergy'],
   ['Licenses']
 ];
