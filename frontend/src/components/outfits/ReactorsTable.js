@@ -17,17 +17,17 @@ const Row = ({ reactor }) => (
   </tr>
 );
 
-const headerColumns = [
-  ['Name', 'name'],
-  ['Cost', 'cost'],
-  ['Outfit sp.', 'outfitSpace'],
-  ['Energy generation', 'energyGeneration'],
-  ['Heat generation', 'heatGeneration'],
-  ['Licenses']
-];
+const columns = new Map([
+  ['Name',              R.prop('name')],
+  ['Cost',              R.prop('cost')],
+  ['Outfit sp.',        R.prop('outfitSpace')],
+  ['Energy generation', R.prop('energyGeneration')],
+  ['Heat generation',   R.prop('heatGeneration')],
+  ['Licenses',          null]
+]);
 
 const ReactorsTable = ({ reactors, ordering, toggleOrdering }) => (
-  <Table headerColumns={headerColumns}
+  <Table headerColumns={columns}
          ordering={ordering}
          toggleOrdering={toggleOrdering}>
     {reactors.map(reactor => <Row reactor={reactor} key={reactor.name} />)}
@@ -38,8 +38,10 @@ const mapStateToProps = (state) => {
   return {
     reactors: sortByColumn(
       R.filter(R.has('energyGeneration'), state.outfits),
+      columns,
       state.outfitSettings.reactorsOrdering
     ),
+    headers: columns,
     ordering: state.outfitSettings.reactorsOrdering
   };
 };

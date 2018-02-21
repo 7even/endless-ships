@@ -16,16 +16,16 @@ const Row = ({ battery }) => (
   </tr>
 );
 
-const headerColumns = [
-  ['Name', 'name'],
-  ['Cost', 'cost'],
-  ['Outfit sp.', 'outfitSpace'],
-  ['Energy capacity', 'energyCapacity'],
-  ['Licenses']
-];
+const columns = new Map([
+  ['Name',            R.prop('name')],
+  ['Cost',            R.prop('cost')],
+  ['Outfit sp.',      R.prop('outfitSpace')],
+  ['Energy capacity', R.prop('energyCapacity')],
+  ['Licenses',        null]
+]);
 
 const BatteriesTable = ({ batteries, ordering, toggleOrdering }) => (
-  <Table headerColumns={headerColumns}
+  <Table headerColumns={columns}
          ordering={ordering}
          toggleOrdering={toggleOrdering}>
     {batteries.map(battery => <Row battery={battery} key={battery.name} />)}
@@ -45,8 +45,10 @@ const mapStateToProps = (state) => {
         ),
         state.outfits
       ),
+      columns,
       state.outfitSettings.batteriesOrdering
     ),
+    headers: columns,
     ordering: state.outfitSettings.batteriesOrdering
   };
 };

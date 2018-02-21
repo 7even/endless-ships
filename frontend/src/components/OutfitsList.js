@@ -14,7 +14,6 @@ const OutfitsList = () => (
     <h2>Steerings</h2>
     <SteeringsTable />
 
-
     <h2>Reactors</h2>
     <ReactorsTable />
 

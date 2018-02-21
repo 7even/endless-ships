@@ -18,18 +18,18 @@ const Row = ({ thruster }) => (
   </tr>
 );
 
-const headerColumns = [
-  ['Name', 'name'],
-  ['Cost', 'cost'],
-  ['Outfit sp.', 'outfitSpace'],
-  ['Thrust', 'thrust'],
-  ['Thr. energy', 'thrustingEnergy'],
-  ['Thr. heat', 'thrustingHeat'],
-  ['Licenses']
-];
+const columns = new Map([
+  ['Name',        R.prop('name')],
+  ['Cost',        R.prop('cost')],
+  ['Outfit sp.',  R.prop('outfitSpace')],
+  ['Thrust',      R.prop('thrust')],
+  ['Thr. energy', R.prop('thrustingEnergy')],
+  ['Thr. heat',   R.prop('thrustingHeat')],
+  ['Licenses',    null]
+]);
 
 const ThrustersTable = ({ thrusters, ordering, toggleOrdering }) => (
-  <Table headerColumns={headerColumns}
+  <Table headerColumns={columns}
          ordering={ordering}
          toggleOrdering={toggleOrdering}>
     {thrusters.map(thruster => <Row thruster={thruster} key={thruster.name} />)}
@@ -40,8 +40,10 @@ const mapStateToProps = (state) => {
   return {
     thrusters: sortByColumn(
       R.filter(R.has('thrust'), state.outfits),
+      columns,
       state.outfitSettings.thrustersOrdering
     ),
+    headers: columns,
     ordering: state.outfitSettings.thrustersOrdering
   };
 };

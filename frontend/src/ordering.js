@@ -1,9 +1,9 @@
 import React from 'react';
 import R from 'ramda';
 
-const sortByColumn = (objects, { columnName, order }) => {
+const sortByColumn = (objects, columnProps, { columnName, order }) => {
   if (columnName) {
-    const prop = typeof(columnName) === 'function' ? columnName : R.propOr(0, columnName);
+    const prop       = columnProps.get(columnName);
     const sortedProp = (order === 'asc') ? R.ascend(prop) : R.descend(prop);
     const comparator = R.sort(sortedProp);
 
@@ -14,13 +14,13 @@ const sortByColumn = (objects, { columnName, order }) => {
 };
 
 const TableHeaders = ({ columns, ordering, toggleOrdering }) => {
-  return columns.map(([text, sortBy]) => {
+  return Array.from(columns).map(([text, prop]) => {
     let title, icon;
 
-    if (sortBy) {
-      title = <a className="table-header" onClick={() => toggleOrdering(sortBy)}>{text}</a>;
+    if (prop) {
+      title = <a className="table-header" onClick={() => toggleOrdering(text)}>{text}</a>;
 
-      if (ordering.columnName === sortBy) {
+      if (ordering.columnName === text) {
         if (ordering.order === 'asc') {
           icon = <span className="glyphicon glyphicon-sort-by-attributes"></span>;
         } else {
@@ -41,6 +41,4 @@ const TableHeaders = ({ columns, ordering, toggleOrdering }) => {
   });
 };
 
-const totalCooling = cooler => R.propOr(0, 'cooling', cooler) + R.propOr(0, 'activeCooling', cooler);
-
-export { TableHeaders, sortByColumn, totalCooling };
+export { TableHeaders, sortByColumn };

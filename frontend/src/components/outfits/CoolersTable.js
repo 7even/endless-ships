@@ -4,7 +4,9 @@ import R from 'ramda';
 
 import Table, { TextCell, NumberCell } from '../Table';
 import { renderLicenses } from '../../common';
-import { sortByColumn, totalCooling } from '../../ordering';
+import { sortByColumn } from '../../ordering';
+
+const totalCooling = cooler => R.propOr(0, 'cooling', cooler) + R.propOr(0, 'activeCooling', cooler);
 
 const Row = ({ cooler }) => (
   <tr>
@@ -17,17 +19,17 @@ const Row = ({ cooler }) => (
   </tr>
 );
 
-const headerColumns = [
-  ['Name', 'name'],
-  ['Cost', 'cost'],
-  ['Outfit sp.', 'outfitSpace'],
-  ['Cooling', totalCooling],
-  ['Cooling energy', 'coolingEnergy'],
-  ['Licenses']
-];
+const columns = new Map([
+  ['Name',           R.prop('name')],
+  ['Cost',           R.prop('cost')],
+  ['Outfit sp.',     R.prop('outfitSpace')],
+  ['Cooling',        totalCooling],
+  ['Cooling energy', R.propOr(0, 'coolingEnergy')],
+  ['Licenses',       null]
+]);
 
 const CoolersTable = ({ coolers, ordering, toggleOrdering }) => (
-  <Table headerColumns={headerColumns}
+  <Table headerColumns={columns}
          ordering={ordering}
          toggleOrdering={toggleOrdering}>
     {coolers.map(cooler => <Row cooler={cooler} key={cooler.name} />)}
@@ -47,8 +49,10 @@ const mapStateToProps = (state) => {
         ),
         state.outfits
       ),
+      columns,
       state.outfitSettings.coolersOrdering
     ),
+    headers: columns,
     ordering: state.outfitSettings.coolersOrdering
   };
 };

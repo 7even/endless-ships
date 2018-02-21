@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import R from 'ramda';
-import { totalCooling } from './ordering';
 
 const toggleFilter  = (filter = {}, value) => ({ ...filter, [value]: !filter[value] });
 const initialFilter = (values) => R.uniq(R.flatten(values)).reduce(toggleFilter, {});
@@ -70,7 +69,7 @@ const licenseFilter = (state = {}, action) => {
   }
 };
 
-const thrustersOrdering = (state = { columnName: 'thrust', order: 'desc' }, action) => {
+const thrustersOrdering = (state = { columnName: 'Thrust', order: 'desc' }, action) => {
   if (action.type === 'toggle-thrusters-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -78,7 +77,7 @@ const thrustersOrdering = (state = { columnName: 'thrust', order: 'desc' }, acti
   }
 };
 
-const steeringsOrdering = (state = { columnName: 'turn', order: 'desc' }, action) => {
+const steeringsOrdering = (state = { columnName: 'Turn', order: 'desc' }, action) => {
   if (action.type === 'toggle-steerings-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -86,7 +85,7 @@ const steeringsOrdering = (state = { columnName: 'turn', order: 'desc' }, action
   }
 };
 
-const reactorsOrdering = (state = { columnName: 'energyGeneration', order: 'desc' }, action) => {
+const reactorsOrdering = (state = { columnName: 'Energy generation', order: 'desc' }, action) => {
   if (action.type === 'toggle-reactors-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -94,7 +93,7 @@ const reactorsOrdering = (state = { columnName: 'energyGeneration', order: 'desc
   }
 };
 
-const batteriesOrdering = (state = { columnName: 'energyCapacity', order: 'desc' }, action) => {
+const batteriesOrdering = (state = { columnName: 'Energy capacity', order: 'desc' }, action) => {
   if (action.type === 'toggle-batteries-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -102,7 +101,7 @@ const batteriesOrdering = (state = { columnName: 'energyCapacity', order: 'desc'
   }
 };
 
-const coolersOrdering = (state = { columnName: totalCooling, order: 'desc' }, action) => {
+const coolersOrdering = (state = { columnName: 'Cooling', order: 'desc' }, action) => {
   if (action.type === 'toggle-coolers-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {

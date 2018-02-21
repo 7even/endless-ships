@@ -18,18 +18,18 @@ const Row = ({ steering }) => (
   </tr>
 );
 
-const headerColumns = [
-  ['Name', 'name'],
-  ['Cost', 'cost'],
-  ['Outfit sp.', 'outfitSpace'],
-  ['Turn', 'turn'],
-  ['Turn. energy', 'turningEnergy'],
-  ['Turn. heat', 'turningHeat'],
-  ['Licenses']
-];
+const columns = new Map([
+  ['Name',         R.prop('name')],
+  ['Cost',         R.prop('cost')],
+  ['Outfit sp.',   R.prop('outfitSpace')],
+  ['Turn',         R.prop('turn')],
+  ['Turn. energy', R.prop('turningEnergy')],
+  ['Turn. heat',   R.prop('turningHeat')],
+  ['Licenses',     null]
+]);
 
 const SteeringsTable = ({ steerings, ordering, toggleOrdering }) => (
-  <Table headerColumns={headerColumns}
+  <Table headerColumns={columns}
          ordering={ordering}
          toggleOrdering={toggleOrdering}>
     {steerings.map(steering => <Row steering={steering} key={steering.name} />)}
@@ -40,8 +40,10 @@ const mapStateToProps = (state) => {
   return {
     steerings: sortByColumn(
       R.filter(R.has('turn'), state.outfits),
+      columns,
       state.outfitSettings.steeringsOrdering
     ),
+    headers: columns,
     ordering: state.outfitSettings.steeringsOrdering
   };
 };
