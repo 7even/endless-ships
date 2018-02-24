@@ -77,11 +77,15 @@
   ;; some computed attributes of guns
   (->> outfits
        (filter #(= (:category %) "Guns"))
-       (map #(let [weapon (:weapon %)]
-               {:name (:name %)
-                :shots-per-second (if (= (:reload weapon) 1)
-                                    "continuous"
-                                    (float (/ 60 (:reload weapon))))
-                :range (* (:velocity weapon)
-                          (:lifetime weapon))}))
+       (map (fn [{name :name
+                  {:keys [reload submunition velocity lifetime]} :weapon}]
+              {:name name
+               :shots-per-second (if (= reload 1)
+                                   "continuous"
+                                   (float (/ 60 reload)))
+               :range (if (some? submunition)
+                        (let [submunition-outfit (first (filter #(= (:name %) submunition) outfits))
+                              total-lifetime (+ lifetime (get-in submunition-outfit [:weapon :lifetime]))]
+                          (* velocity total-lifetime))
+                        (* velocity lifetime))}))
        (sort-by :name)))
