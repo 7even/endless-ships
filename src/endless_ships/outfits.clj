@@ -73,4 +73,15 @@
                                      {}
                                      outfit-attributes)))
                {})
-       (sort-by last >)))
+       (sort-by last >))
+  ;; some computed attributes of guns
+  (->> outfits
+       (filter #(= (:category %) "Guns"))
+       (map #(let [weapon (:weapon %)]
+               {:name (:name %)
+                :shots-per-second (if (= (:reload weapon) 1)
+                                    "continuous"
+                                    (float (/ 60 (:reload weapon))))
+                :range (* (:velocity weapon)
+                          (:lifetime weapon))}))
+       (sort-by :name)))

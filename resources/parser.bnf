@@ -1,8 +1,8 @@
 data = (0-indented-block | <newline> | <comment>)+
 
 0-indented-block = line (1-indented-block | <newline> | <comment>)*
-1-indented-block = <tab> line (2-indented-block | <newline> | <comment>)*
-2-indented-block = <tab> <tab> line (3-indented-block | <newline> | <comment>)*
+1-indented-block = <tab> line (2-indented-block | 3-indented-block | <newline> | <comment>)*
+2-indented-block = <tab> <tab> line (3-indented-block | 4-indented-block | <newline> | <comment>)*
 3-indented-block = <tab> <tab> <tab> line (4-indented-block | 5-indented-block | <newline> | <comment>)*
 4-indented-block = <tab> <tab> <tab> <tab> line (5-indented-block | 6-indented-block | <newline> | <comment>)*
 5-indented-block = <tab> <tab> <tab> <tab> <tab> line
