@@ -6,12 +6,16 @@ import Table, { TextCell, NumberCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
 
+const totalEnergyGeneration = (reactor) => {
+  return R.propOr(0, 'energyGeneration', reactor) + R.propOr(0, 'solarCollection', reactor);
+};
+
 const Row = ({ reactor }) => (
   <tr>
     <TextCell>{reactor.name}</TextCell>
     <NumberCell number={reactor.cost} />
     <NumberCell number={reactor.outfitSpace} />
-    <NumberCell number={reactor.energyGeneration} />
+    <NumberCell number={totalEnergyGeneration(reactor)} />
     <NumberCell number={reactor.heatGeneration} />
     <TextCell>{renderLicenses(reactor.licenses)}</TextCell>
   </tr>
@@ -21,8 +25,8 @@ const columns = new Map([
   ['Name',              R.prop('name')],
   ['Cost',              R.prop('cost')],
   ['Outfit sp.',        R.prop('outfitSpace')],
-  ['Energy generation', R.prop('energyGeneration')],
-  ['Heat generation',   R.prop('heatGeneration')],
+  ['Energy generation', totalEnergyGeneration],
+  ['Heat generation',   R.propOr(0, 'heatGeneration')],
   ['Licenses',          null]
 ]);
 
@@ -37,7 +41,10 @@ const ReactorsTable = ({ reactors, ordering, toggleOrdering }) => (
 const mapStateToProps = (state) => {
   return {
     reactors: sortByColumn(
-      R.filter(R.has('energyGeneration'), state.outfits),
+      R.filter(
+        outfit => R.or(R.has('energyGeneration', outfit), R.has('solarCollection', outfit)),
+        state.outfits
+      ),
       columns,
       state.outfitSettings.reactorsOrdering
     ),
