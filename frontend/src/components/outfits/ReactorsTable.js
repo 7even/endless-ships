@@ -48,7 +48,6 @@ const mapStateToProps = (state) => {
       columns,
       state.outfitSettings.reactorsOrdering
     ),
-    headers: columns,
     ordering: state.outfitSettings.reactorsOrdering
   };
 };

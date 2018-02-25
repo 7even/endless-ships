@@ -48,7 +48,6 @@ const mapStateToProps = (state) => {
       columns,
       state.outfitSettings.batteriesOrdering
     ),
-    headers: columns,
     ordering: state.outfitSettings.batteriesOrdering
   };
 };

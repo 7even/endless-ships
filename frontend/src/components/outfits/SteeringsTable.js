@@ -43,7 +43,6 @@ const mapStateToProps = (state) => {
       columns,
       state.outfitSettings.steeringsOrdering
     ),
-    headers: columns,
     ordering: state.outfitSettings.steeringsOrdering
   };
 };

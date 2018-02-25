@@ -52,7 +52,6 @@ const mapStateToProps = (state) => {
       columns,
       state.outfitSettings.coolersOrdering
     ),
-    headers: columns,
     ordering: state.outfitSettings.coolersOrdering
   };
 };

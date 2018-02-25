@@ -119,7 +119,7 @@ const shieldGeneratorsOrdering = (state = initialOrdering('Shield generation'), 
   }
 };
 
-const hullRepairModulesOrdering = (state = initialOrdering('Hull energy'), action) => {
+const hullRepairModulesOrdering = (state = initialOrdering('Hull repair rate'), action) => {
   if (action.type === 'toggle-hull-repair-modules-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {

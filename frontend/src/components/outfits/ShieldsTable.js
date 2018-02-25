@@ -43,7 +43,6 @@ const mapStateToProps = (state) => {
       columns,
       state.outfitSettings.shieldGeneratorsOrdering
     ),
-    headers: columns,
     ordering: state.outfitSettings.shieldGeneratorsOrdering
   };
 };

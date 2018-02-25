@@ -43,7 +43,6 @@ const mapStateToProps = (state) => {
       columns,
       state.outfitSettings.hullRepairModulesOrdering
     ),
-    headers: columns,
     ordering: state.outfitSettings.hullRepairModulesOrdering
   };
 };
