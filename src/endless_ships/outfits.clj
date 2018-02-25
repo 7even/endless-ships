@@ -9,6 +9,31 @@
 (defn- round-to-int [num]
   (-> num double Math/round))
 
+(defn- normalize-weapon-attrs [outfits]
+  (map
+   (fn [{category :category
+         {:keys [reload submunition velocity lifetime] :as weapon-attrs} :weapon
+         :as outfit}]
+     (if (#{"Guns" "Secondary Weapons" "Turrets"} category)
+       (let [shots-per-second (if (= reload 1)
+                                "continuous"
+                                (->> reload
+                                     (/ 60M)
+                                     (with-precision 5)
+                                     float))
+             range (if (some? submunition)
+                     (let [submunition-outfit (first (filter #(= (:name %) submunition) outfits))
+                           total-lifetime (+ lifetime (get-in submunition-outfit [:weapon :lifetime]))]
+                       (* velocity total-lifetime))
+                     (* velocity lifetime))]
+         (assoc outfit
+                :weapon
+                (-> weapon-attrs
+                    (assoc :shots-per-second shots-per-second)
+                    (assoc :range range))))
+       (dissoc outfit :weapon)))
+   outfits))
+
 (def outfits
   (->> data
        (filter #(= (first %) "outfit"))
@@ -17,10 +42,12 @@
                   {description-attrs "description"
                    license-attrs "licenses"
                    weapon-attrs "weapon"
+                   [[[category]]] "category"
                    file "file"
                    :as attrs}]]
               (merge (->map attrs)
                      {:name name
+                      :category category
                       :licenses (->> license-attrs
                                      (map #(-> % (get 1) keys))
                                      (apply concat)
@@ -32,6 +59,7 @@
                                         (map #(get-in % [0 0]))
                                         vec)
                       :file file})))
+       normalize-weapon-attrs
        (map (fn [outfit]
               (-> outfit
                   (update-if-present :outfit-space -)
@@ -63,7 +91,8 @@
        (sort-by last >))
   ;; attribute counts among outfits having a given attribute
   (->> outfits
-       (filter #(some? (:energy-capacity %)))
+       (filter #(= (:category %) "Turrets"))
+       (map :weapon)
        (map keys)
        (reduce (fn [counts outfit-attributes]
                  (merge-with +
