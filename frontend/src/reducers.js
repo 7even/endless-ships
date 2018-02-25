@@ -127,6 +127,14 @@ const hullRepairModulesOrdering = (state = initialOrdering('Hull repair rate'), 
   }
 };
 
+const ramscoopsOrdering = (state = initialOrdering('Ramscoop'), action) => {
+  if (action.type === 'toggle-ramscoops-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -145,6 +153,7 @@ export default combineReducers({
     batteriesOrdering,
     coolersOrdering,
     shieldGeneratorsOrdering,
-    hullRepairModulesOrdering
+    hullRepairModulesOrdering,
+    ramscoopsOrdering
   })
 });
