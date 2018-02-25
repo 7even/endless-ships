@@ -80,7 +80,10 @@
                   (update-if-present :solar-collection #(round-to-int (* % 60)))
                   (update-if-present :cooling #(round-to-int (* % 60)))
                   (update-if-present :active-cooling #(round-to-int (* % 60)))
-                  (update-if-present :cooling-energy #(round-to-int (* % 60))))))))
+                  (update-if-present :cooling-energy #(round-to-int (* % 60)))
+                  (update-if-present :shield-generation #(round-to-int (* % 60)))
+                  (update-if-present :shield-energy #(round-to-int (* % 60)))
+                  (update-if-present :shield-heat #(round-to-int (* % 60))))))))
 
 (comment
   ;; outfit counts by category

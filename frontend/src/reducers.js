@@ -109,6 +109,14 @@ const coolersOrdering = (state = { columnName: 'Cooling', order: 'desc' }, actio
   }
 };
 
+const shieldGeneratorsOrdering = (state = { columnName: 'Shield generation', order: 'desc' }, action) => {
+  if (action.type === 'toggle-shield-generators-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -125,6 +133,7 @@ export default combineReducers({
     steeringsOrdering,
     reactorsOrdering,
     batteriesOrdering,
-    coolersOrdering
+    coolersOrdering,
+    shieldGeneratorsOrdering
   })
 });

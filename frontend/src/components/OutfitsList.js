@@ -5,6 +5,7 @@ import SteeringsTable from './outfits/SteeringsTable';
 import ReactorsTable from './outfits/ReactorsTable';
 import BatteriesTable from './outfits/BatteriesTable';
 import CoolersTable from './outfits/CoolersTable';
+import ShieldGeneratorsTable from './outfits/ShieldsTable';
 
 const OutfitsList = () => (
   <div className="app">
@@ -22,6 +23,9 @@ const OutfitsList = () => (
 
     <h2>Coolers</h2>
     <CoolersTable />
+
+    <h2>Shield generators</h2>
+    <ShieldGeneratorsTable />
   </div>
 );
 
