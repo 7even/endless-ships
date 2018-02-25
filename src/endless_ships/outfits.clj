@@ -7,7 +7,8 @@
     m))
 
 (defn- round-to-int [num]
-  (-> num double Math/round))
+  (when (some? num)
+    (-> num double Math/round)))
 
 (def attribute-convertors
   (let [times-3600 (comp round-to-int (partial * 3600))
@@ -49,7 +50,9 @@
 (defn- normalize-weapon-attrs [outfits]
   (map
    (fn [{category :category
-         {:keys [reload submunition velocity lifetime] :as weapon-attrs} :weapon
+         {:keys [reload velocity lifetime shield-damage hull-damage]
+          [submunition-name submunition-count] :submunition
+          :as weapon-attrs} :weapon
          :as outfit}]
      (if (#{"Guns" "Secondary Weapons" "Turrets"} category)
        (let [shots-per-second (if (= reload 1)
@@ -58,16 +61,28 @@
                                      (/ 60M)
                                      (with-precision 5)
                                      float))
+             submunition (when (some? submunition-name)
+                           (first (filter #(= (:name %) submunition-name) outfits)))
              range (if (some? submunition)
-                     (let [submunition-outfit (first (filter #(= (:name %) submunition) outfits))
-                           total-lifetime (+ lifetime (get-in submunition-outfit [:weapon :lifetime]))]
+                     (let [total-lifetime (+ lifetime (get-in submunition [:weapon :lifetime]))]
                        (* velocity total-lifetime))
-                     (* velocity lifetime))]
+                     (* velocity lifetime))
+             shield-damage-per-shot (if (some? submunition)
+                                      (+ (or shield-damage 0)
+                                         (* (get-in submunition [:weapon :shield-damage])
+                                            (or submunition-count 1)))
+                                      shield-damage)
+             shield-damage-per-second (when (some? shield-damage-per-shot)
+                                        (/ (* shield-damage-per-shot 60) reload))]
          (assoc outfit
                 :weapon
-                (-> weapon-attrs
-                    (assoc :shots-per-second shots-per-second)
-                    (assoc :range range))))
+                (merge weapon-attrs
+                       {:shots-per-second shots-per-second
+                        :range range
+                        :shield-damage-per-second (round-to-int shield-damage-per-second)}
+                       (if (> reload 1)
+                         {:shield-damage-per-shot (round-to-int shield-damage-per-shot)}
+                         {}))))
        (dissoc outfit :weapon)))
    outfits))
 
@@ -91,7 +106,8 @@
                                      vec)
                       :weapon (-> weapon-attrs
                                   (get-in [0 1])
-                                  ->map)
+                                  ->map
+                                  (assoc :submunition (get-in weapon-attrs [0 1 "submunition" 0 0])))
                       :description (->> description-attrs
                                         (map #(get-in % [0 0]))
                                         vec)
