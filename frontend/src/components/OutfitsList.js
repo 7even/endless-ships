@@ -6,6 +6,7 @@ import ReactorsTable from './outfits/ReactorsTable';
 import BatteriesTable from './outfits/BatteriesTable';
 import CoolersTable from './outfits/CoolersTable';
 import ShieldGeneratorsTable from './outfits/ShieldsTable';
+import HullRepairModulesTable from './outfits/HullRepairModules';
 
 const OutfitsList = () => (
   <div className="app">
@@ -26,6 +27,9 @@ const OutfitsList = () => (
 
     <h2>Shield generators</h2>
     <ShieldGeneratorsTable />
+
+    <h2>Hull repair modules</h2>
+    <HullRepairModulesTable />
   </div>
 );
 

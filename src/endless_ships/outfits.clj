@@ -83,7 +83,10 @@
                   (update-if-present :cooling-energy #(round-to-int (* % 60)))
                   (update-if-present :shield-generation #(round-to-int (* % 60)))
                   (update-if-present :shield-energy #(round-to-int (* % 60)))
-                  (update-if-present :shield-heat #(round-to-int (* % 60))))))))
+                  (update-if-present :shield-heat #(round-to-int (* % 60)))
+                  (update-if-present :hull-repair-rate #(round-to-int (* % 60)))
+                  (update-if-present :hull-energy #(round-to-int (* % 60)))
+                  (update-if-present :hull-heat #(round-to-int (* % 60))))))))
 
 (comment
   ;; outfit counts by category

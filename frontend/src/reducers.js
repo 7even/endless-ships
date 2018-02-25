@@ -117,6 +117,14 @@ const shieldGeneratorsOrdering = (state = { columnName: 'Shield generation', ord
   }
 };
 
+const hullRepairModulesOrdering = (state = { columnName: 'Hull repair rate', order: 'desc' }, action) => {
+  if (action.type === 'toggle-hull-repair-modules-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -134,6 +142,7 @@ export default combineReducers({
     reactorsOrdering,
     batteriesOrdering,
     coolersOrdering,
-    shieldGeneratorsOrdering
+    shieldGeneratorsOrdering,
+    hullRepairModulesOrdering
   })
 });
