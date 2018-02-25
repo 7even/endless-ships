@@ -9,6 +9,43 @@
 (defn- round-to-int [num]
   (-> num double Math/round))
 
+(def attribute-convertors
+  (let [times-3600 (comp round-to-int (partial * 3600))
+        times-60 (comp round-to-int (partial * 60))]
+    {:outfit-space -
+     ;; thrusters
+     :thrust times-3600
+     :thrusting-energy times-60
+     :thrusting-heat times-60
+     ;; steerings
+     :turn times-60
+     :turning-energy times-60
+     :turning-heat times-60
+     ;; reverse thrusters
+     :reverse-thrust times-3600
+     :reverse-thrusting-energy times-60
+     :reverse-thrusting-heat times-60
+     ;; afterburners
+     :afterburner-thrust times-3600
+     :afterburner-fuel times-60
+     :afterburner-heat times-60
+     ;; reactors & solar collectors
+     :energy-generation times-60
+     :heat-generation times-60
+     :solar-collection times-60
+     ;; coolers
+     :cooling times-60
+     :active-cooling times-60
+     :cooling-energy times-60
+     ;; shield generators
+     :shield-generation times-60
+     :shield-energy times-60
+     :shield-heat times-60
+     ;; hull repair modules
+     :hull-repair-rate times-60
+     :hull-energy times-60
+     :hull-heat times-60}))
+
 (defn- normalize-weapon-attrs [outfits]
   (map
    (fn [{category :category
@@ -61,32 +98,10 @@
                       :file file})))
        normalize-weapon-attrs
        (map (fn [outfit]
-              (-> outfit
-                  (update-if-present :outfit-space -)
-                  (update-if-present :thrust #(round-to-int (* % 3600)))
-                  (update-if-present :reverse-thrust #(round-to-int (* % 3600)))
-                  (update-if-present :afterburner-thrust #(round-to-int (* % 3600)))
-                  (update-if-present :turn #(round-to-int (* % 60)))
-                  (update-if-present :thrusting-energy #(round-to-int (* % 60)))
-                  (update-if-present :thrusting-heat #(round-to-int (* % 60)))
-                  (update-if-present :reverse-thrusting-energy #(round-to-int (* % 60)))
-                  (update-if-present :reverse-thrusting-heat #(round-to-int (* % 60)))
-                  (update-if-present :turning-energy #(round-to-int (* % 60)))
-                  (update-if-present :turning-heat #(round-to-int (* % 60)))
-                  (update-if-present :afterburner-fuel #(round-to-int (* % 60)))
-                  (update-if-present :afterburner-heat #(round-to-int (* % 60)))
-                  (update-if-present :energy-generation #(round-to-int (* % 60)))
-                  (update-if-present :heat-generation #(round-to-int (* % 60)))
-                  (update-if-present :solar-collection #(round-to-int (* % 60)))
-                  (update-if-present :cooling #(round-to-int (* % 60)))
-                  (update-if-present :active-cooling #(round-to-int (* % 60)))
-                  (update-if-present :cooling-energy #(round-to-int (* % 60)))
-                  (update-if-present :shield-generation #(round-to-int (* % 60)))
-                  (update-if-present :shield-energy #(round-to-int (* % 60)))
-                  (update-if-present :shield-heat #(round-to-int (* % 60)))
-                  (update-if-present :hull-repair-rate #(round-to-int (* % 60)))
-                  (update-if-present :hull-energy #(round-to-int (* % 60)))
-                  (update-if-present :hull-heat #(round-to-int (* % 60))))))))
+              (reduce (fn [attrs [attr-name convertor]]
+                        (update-if-present attrs attr-name convertor))
+                      outfit
+                      attribute-convertors)))))
 
 (comment
   ;; outfit counts by category
