@@ -71,7 +71,7 @@ const licenseFilter = (state = {}, action) => {
 
 const initialOrdering = columnName => ({ columnName, order: 'desc' });
 
-const thrustersOrdering = (state = initialOrdering('Thrust'), action) => {
+const thrustersOrdering = (state = initialOrdering('Thrust per space'), action) => {
   if (action.type === 'toggle-thrusters-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -79,7 +79,7 @@ const thrustersOrdering = (state = initialOrdering('Thrust'), action) => {
   }
 };
 
-const steeringsOrdering = (state = initialOrdering('Turn'), action) => {
+const steeringsOrdering = (state = initialOrdering('Turn per space'), action) => {
   if (action.type === 'toggle-steerings-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -87,7 +87,7 @@ const steeringsOrdering = (state = initialOrdering('Turn'), action) => {
   }
 };
 
-const reactorsOrdering = (state = initialOrdering('Energy generation'), action) => {
+const reactorsOrdering = (state = initialOrdering('Energy per space'), action) => {
   if (action.type === 'toggle-reactors-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -95,7 +95,7 @@ const reactorsOrdering = (state = initialOrdering('Energy generation'), action) 
   }
 };
 
-const batteriesOrdering = (state = initialOrdering('Energy capacity'), action) => {
+const batteriesOrdering = (state = initialOrdering('Energy per space'), action) => {
   if (action.type === 'toggle-batteries-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -103,7 +103,7 @@ const batteriesOrdering = (state = initialOrdering('Energy capacity'), action) =
   }
 };
 
-const coolersOrdering = (state = initialOrdering('Cooling'), action) => {
+const coolersOrdering = (state = initialOrdering('Cooling per space'), action) => {
   if (action.type === 'toggle-coolers-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -111,7 +111,7 @@ const coolersOrdering = (state = initialOrdering('Cooling'), action) => {
   }
 };
 
-const shieldGeneratorsOrdering = (state = initialOrdering('Shield generation'), action) => {
+const shieldGeneratorsOrdering = (state = initialOrdering('Shield per space'), action) => {
   if (action.type === 'toggle-shield-generators-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -119,7 +119,7 @@ const shieldGeneratorsOrdering = (state = initialOrdering('Shield generation'), 
   }
 };
 
-const hullRepairModulesOrdering = (state = initialOrdering('Hull repair rate'), action) => {
+const hullRepairModulesOrdering = (state = initialOrdering('Hull per space'), action) => {
   if (action.type === 'toggle-hull-repair-modules-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {
@@ -127,7 +127,7 @@ const hullRepairModulesOrdering = (state = initialOrdering('Hull repair rate'), 
   }
 };
 
-const ramscoopsOrdering = (state = initialOrdering('Ramscoop'), action) => {
+const ramscoopsOrdering = (state = initialOrdering('Ramscoop per space'), action) => {
   if (action.type === 'toggle-ramscoops-ordering') {
     return toggleOrdering(state, action.columnName);
   } else {

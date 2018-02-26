@@ -12,11 +12,13 @@ const nbsp = '\u00a0';
 
 const nbspize = string => string.replace(/ /g, nbsp);
 
-const FormattedNumber = ({ number }) => {
+const FormattedNumber = ({ number, isDecimal }) => {
   return (
     <NumberFormat value={number}
                   displayType={'text'}
-                  thousandSeparator={true} />
+                  thousandSeparator={true}
+                  decimalScale={2}
+                  fixedDecimalScale={isDecimal} />
   );
 };
 

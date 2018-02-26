@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table, { TextCell, NumberCell } from '../Table';
+import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
+
+const effectiveness = steering => steering.turn / steering.outfitSpace;
 
 const Row = ({ steering }) => (
   <tr>
@@ -12,6 +14,7 @@ const Row = ({ steering }) => (
     <NumberCell number={steering.cost} />
     <NumberCell number={steering.outfitSpace} />
     <NumberCell number={steering.turn} />
+    <DecimalCell decimal={effectiveness(steering)} />
     <NumberCell number={steering.turningEnergy} />
     <NumberCell number={steering.turningHeat} />
     <TextCell>{renderLicenses(steering.licenses)}</TextCell>
@@ -19,13 +22,14 @@ const Row = ({ steering }) => (
 );
 
 const columns = new Map([
-  ['Name',         R.prop('name')],
-  ['Cost',         R.prop('cost')],
-  ['Outfit sp.',   R.prop('outfitSpace')],
-  ['Turn',         R.prop('turn')],
-  ['Turn. energy', R.prop('turningEnergy')],
-  ['Turn. heat',   R.prop('turningHeat')],
-  ['Licenses',     null]
+  ['Name',           R.prop('name')],
+  ['Cost',           R.prop('cost')],
+  ['Outfit sp.',     R.prop('outfitSpace')],
+  ['Turn',           R.prop('turn')],
+  ['Turn per space', effectiveness],
+  ['Turn. energy',   R.prop('turningEnergy')],
+  ['Turn. heat',     R.prop('turningHeat')],
+  ['Licenses',       null]
 ]);
 
 const SteeringsTable = ({ steerings, ordering, toggleOrdering }) => (

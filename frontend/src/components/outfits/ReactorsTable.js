@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table, { TextCell, NumberCell } from '../Table';
+import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
 
@@ -10,12 +10,15 @@ const totalEnergyGeneration = (reactor) => {
   return R.propOr(0, 'energyGeneration', reactor) + R.propOr(0, 'solarCollection', reactor);
 };
 
+const effectiveness = reactor => totalEnergyGeneration(reactor) / reactor.outfitSpace;
+
 const Row = ({ reactor }) => (
   <tr>
     <TextCell>{reactor.name}</TextCell>
     <NumberCell number={reactor.cost} />
     <NumberCell number={reactor.outfitSpace} />
     <NumberCell number={totalEnergyGeneration(reactor)} />
+    <DecimalCell decimal={effectiveness(reactor)} />
     <NumberCell number={reactor.heatGeneration} />
     <TextCell>{renderLicenses(reactor.licenses)}</TextCell>
   </tr>
@@ -26,6 +29,7 @@ const columns = new Map([
   ['Cost',              R.prop('cost')],
   ['Outfit sp.',        R.prop('outfitSpace')],
   ['Energy generation', totalEnergyGeneration],
+  ['Energy per space',  effectiveness],
   ['Heat generation',   R.propOr(0, 'heatGeneration')],
   ['Licenses',          null]
 ]);

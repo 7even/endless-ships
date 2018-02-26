@@ -31,9 +31,15 @@ const RightCell = ({ children }) => (
 
 const NumberCell = ({ number }) => (
   <td className="text-right">
-    <FormattedNumber number={number} />
+    <FormattedNumber number={number} isDecimal={false} />
+  </td>
+);
+
+const DecimalCell = ({ decimal }) => (
+  <td className="text-right">
+    <FormattedNumber number={decimal} isDecimal={true} />
   </td>
 );
 
 export default Table;
-export { TextCell, RightCell, NumberCell };
+export { TextCell, RightCell, NumberCell, DecimalCell };

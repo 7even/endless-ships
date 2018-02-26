@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table, { TextCell, NumberCell } from '../Table';
+import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
+
+const effectiveness = generator => generator.shieldGeneration / generator.outfitSpace;
 
 const Row = ({ shieldGenerator }) => (
   <tr>
@@ -12,6 +14,7 @@ const Row = ({ shieldGenerator }) => (
     <NumberCell number={shieldGenerator.cost} />
     <NumberCell number={shieldGenerator.outfitSpace} />
     <NumberCell number={shieldGenerator.shieldGeneration} />
+    <DecimalCell decimal={effectiveness(shieldGenerator)} />
     <NumberCell number={shieldGenerator.shieldEnergy} />
     <NumberCell number={shieldGenerator.shieldHeat} />
     <TextCell>{renderLicenses(shieldGenerator.licenses)}</TextCell>
@@ -23,6 +26,7 @@ const columns = new Map([
   ['Cost',              R.prop('cost')],
   ['Outfit sp.',        R.prop('outfitSpace')],
   ['Shield generation', R.prop('shieldGeneration')],
+  ['Shield per space',  effectiveness],
   ['Shield energy',     R.prop('shieldEnergy')],
   ['Shield heat',       R.propOr(0, 'shieldHeat')],
   ['Licenses',          null]

@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table, { TextCell, NumberCell } from '../Table';
+import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
+
+const effectiveness = ramscoop => ramscoop.ramscoop / ramscoop.outfitSpace;
 
 const Row = ({ ramscoop }) => (
   <tr>
@@ -12,16 +14,18 @@ const Row = ({ ramscoop }) => (
     <NumberCell number={ramscoop.cost} />
     <NumberCell number={ramscoop.outfitSpace} />
     <NumberCell number={ramscoop.ramscoop} />
+    <DecimalCell decimal={effectiveness(ramscoop)} />
     <TextCell>{renderLicenses(ramscoop.licenses)}</TextCell>
   </tr>
 );
 
 const columns = new Map([
-  ['Name',       R.prop('name')],
-  ['Cost',       R.prop('cost')],
-  ['Outfit sp.', R.prop('outfitSpace')],
-  ['Ramscoop',   R.prop('ramscoop')],
-  ['Licenses',   null]
+  ['Name',               R.prop('name')],
+  ['Cost',               R.prop('cost')],
+  ['Outfit sp.',         R.prop('outfitSpace')],
+  ['Ramscoop',           R.prop('ramscoop')],
+  ['Ramscoop per space', effectiveness],
+  ['Licenses',           null]
 ]);
 
 const RamscoopsTable = ({ ramscoops, ordering, toggleOrdering }) => (

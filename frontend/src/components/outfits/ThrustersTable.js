@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table, { TextCell, NumberCell } from '../Table';
+import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
+
+const effectiveness = thruster => thruster.thrust / thruster.outfitSpace;
 
 const Row = ({ thruster }) => (
   <tr>
@@ -12,6 +14,7 @@ const Row = ({ thruster }) => (
     <NumberCell number={thruster.cost} />
     <NumberCell number={thruster.outfitSpace} />
     <NumberCell number={thruster.thrust} />
+    <DecimalCell decimal={effectiveness(thruster)} />
     <NumberCell number={thruster.thrustingEnergy} />
     <NumberCell number={thruster.thrustingHeat} />
     <TextCell>{renderLicenses(thruster.licenses)}</TextCell>
@@ -19,13 +22,14 @@ const Row = ({ thruster }) => (
 );
 
 const columns = new Map([
-  ['Name',        R.prop('name')],
-  ['Cost',        R.prop('cost')],
-  ['Outfit sp.',  R.prop('outfitSpace')],
-  ['Thrust',      R.prop('thrust')],
-  ['Thr. energy', R.prop('thrustingEnergy')],
-  ['Thr. heat',   R.prop('thrustingHeat')],
-  ['Licenses',    null]
+  ['Name',             R.prop('name')],
+  ['Cost',             R.prop('cost')],
+  ['Outfit sp.',       R.prop('outfitSpace')],
+  ['Thrust',           R.prop('thrust')],
+  ['Thrust per space', effectiveness],
+  ['Thr. energy',      R.prop('thrustingEnergy')],
+  ['Thr. heat',        R.prop('thrustingHeat')],
+  ['Licenses',         null]
 ]);
 
 const ThrustersTable = ({ thrusters, ordering, toggleOrdering }) => (

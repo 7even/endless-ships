@@ -2,11 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table, { TextCell, NumberCell } from '../Table';
+import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const totalCooling = cooler => R.propOr(0, 'cooling', cooler) + R.propOr(0, 'activeCooling', cooler);
+const effectiveness = cooler => totalCooling(cooler) / cooler.outfitSpace;
 
 const Row = ({ cooler }) => (
   <tr>
@@ -14,18 +15,20 @@ const Row = ({ cooler }) => (
     <NumberCell number={cooler.cost} />
     <NumberCell number={cooler.outfitSpace} />
     <NumberCell number={totalCooling(cooler)} />
+    <DecimalCell decimal={effectiveness(cooler)} />
     <NumberCell number={cooler.coolingEnergy} />
     <TextCell>{renderLicenses(cooler.licenses)}</TextCell>
   </tr>
 );
 
 const columns = new Map([
-  ['Name',           R.prop('name')],
-  ['Cost',           R.prop('cost')],
-  ['Outfit sp.',     R.prop('outfitSpace')],
-  ['Cooling',        totalCooling],
-  ['Cooling energy', R.propOr(0, 'coolingEnergy')],
-  ['Licenses',       null]
+  ['Name',              R.prop('name')],
+  ['Cost',              R.prop('cost')],
+  ['Outfit sp.',        R.prop('outfitSpace')],
+  ['Cooling',           totalCooling],
+  ['Cooling per space', effectiveness],
+  ['Cooling energy',    R.propOr(0, 'coolingEnergy')],
+  ['Licenses',          null]
 ]);
 
 const CoolersTable = ({ coolers, ordering, toggleOrdering }) => (

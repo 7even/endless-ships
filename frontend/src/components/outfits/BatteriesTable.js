@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table, { TextCell, NumberCell } from '../Table';
+import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
+
+const effectiveness = battery => battery.energyCapacity / battery.outfitSpace;
 
 const Row = ({ battery }) => (
   <tr>
@@ -12,16 +14,18 @@ const Row = ({ battery }) => (
     <NumberCell number={battery.cost} />
     <NumberCell number={battery.outfitSpace} />
     <NumberCell number={battery.energyCapacity} />
+    <DecimalCell decimal={effectiveness(battery)} />
     <TextCell>{renderLicenses(battery.licenses)}</TextCell>
   </tr>
 );
 
 const columns = new Map([
-  ['Name',            R.prop('name')],
-  ['Cost',            R.prop('cost')],
-  ['Outfit sp.',      R.prop('outfitSpace')],
-  ['Energy capacity', R.prop('energyCapacity')],
-  ['Licenses',        null]
+  ['Name',             R.prop('name')],
+  ['Cost',             R.prop('cost')],
+  ['Outfit sp.',       R.prop('outfitSpace')],
+  ['Energy capacity',  R.prop('energyCapacity')],
+  ['Energy per space', effectiveness],
+  ['Licenses',         null]
 ]);
 
 const BatteriesTable = ({ batteries, ordering, toggleOrdering }) => (

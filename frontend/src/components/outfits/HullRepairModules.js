@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import R from 'ramda';
 
-import Table, { TextCell, NumberCell } from '../Table';
+import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
 import { renderLicenses } from '../../common';
 import { sortByColumn } from '../../ordering';
+
+const effectiveness = module => module.hullRepairRate / module.outfitSpace;
 
 const Row = ({ hullRepairModule }) => (
   <tr>
@@ -12,6 +14,7 @@ const Row = ({ hullRepairModule }) => (
     <NumberCell number={hullRepairModule.cost} />
     <NumberCell number={hullRepairModule.outfitSpace} />
     <NumberCell number={hullRepairModule.hullRepairRate} />
+    <DecimalCell decimal={effectiveness(hullRepairModule)} />
     <NumberCell number={hullRepairModule.hullEnergy} />
     <NumberCell number={hullRepairModule.hullHeat} />
     <TextCell>{renderLicenses(hullRepairModule.licenses)}</TextCell>
@@ -23,6 +26,7 @@ const columns = new Map([
   ['Cost',             R.prop('cost')],
   ['Outfit sp.',       R.prop('outfitSpace')],
   ['Hull repair rate', R.prop('hullRepairRate')],
+  ['Hull per space',   effectiveness],
   ['Hull energy',      R.prop('hullEnergy')],
   ['Hull heat',        R.propOr(0, 'hullHeat')],
   ['Licenses',         null]
