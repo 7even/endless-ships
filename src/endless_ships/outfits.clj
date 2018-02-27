@@ -47,6 +47,19 @@
      :hull-energy times-60
      :hull-heat times-60}))
 
+(defn- calculate-damage [weapon-attrs submunition submunition-count damage-type]
+  (let [per-shot (if (some? submunition)
+                   (+ (or (get weapon-attrs damage-type) 0)
+                      (* (get-in submunition [:weapon damage-type])
+                         (or submunition-count 1)))
+                   (get weapon-attrs damage-type))
+        per-second (when (some? per-shot)
+                     (/ (* per-shot 60) (:reload weapon-attrs)))]
+    (merge {:per-second (round-to-int per-second)}
+           (if (> (:reload weapon-attrs) 1)
+             {:per-shot (round-to-int per-shot)}
+             {}))))
+
 (defn- normalize-weapon-attrs [outfits]
   (map
    (fn [{category :category
@@ -66,23 +79,21 @@
              range (if (some? submunition)
                      (let [total-lifetime (+ lifetime (get-in submunition [:weapon :lifetime]))]
                        (* velocity total-lifetime))
-                     (* velocity lifetime))
-             shield-damage-per-shot (if (some? submunition)
-                                      (+ (or shield-damage 0)
-                                         (* (get-in submunition [:weapon :shield-damage])
-                                            (or submunition-count 1)))
-                                      shield-damage)
-             shield-damage-per-second (when (some? shield-damage-per-shot)
-                                        (/ (* shield-damage-per-shot 60) reload))]
+                     (* velocity lifetime))]
          (assoc outfit
                 :weapon
                 (merge weapon-attrs
                        {:shots-per-second shots-per-second
-                        :range range
-                        :shield-damage-per-second (round-to-int shield-damage-per-second)}
-                       (if (> reload 1)
-                         {:shield-damage-per-shot (round-to-int shield-damage-per-shot)}
-                         {}))))
+                        :range range}
+                       (reduce (fn [damage-attrs damage-type]
+                                 (assoc damage-attrs
+                                        damage-type
+                                        (calculate-damage weapon-attrs
+                                                          submunition
+                                                          submunition-count
+                                                          damage-type)))
+                               {}
+                               [:shield-damage :hull-damage]))))
        (dissoc outfit :weapon)))
    outfits))
 
