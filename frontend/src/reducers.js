@@ -151,6 +151,14 @@ const secondaryWeaponsOrdering = (state = initialOrdering('Shield damage / space
   }
 };
 
+const turretsOrdering = (state = initialOrdering('Shield damage / space'), action) => {
+  if (action.type === 'toggle-turrets-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -172,6 +180,7 @@ export default combineReducers({
     hullRepairModulesOrdering,
     ramscoopsOrdering,
     gunsOrdering,
-    secondaryWeaponsOrdering
+    secondaryWeaponsOrdering,
+    turretsOrdering
   })
 });
