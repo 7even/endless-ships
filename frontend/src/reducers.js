@@ -159,6 +159,14 @@ const turretsOrdering = (state = initialOrdering('Shield damage / space'), actio
   }
 };
 
+const antiMissileTurretsOrdering = (state = initialOrdering('Anti-missile'), action) => {
+  if (action.type === 'toggle-anti-missile-turrets-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -181,6 +189,7 @@ export default combineReducers({
     ramscoopsOrdering,
     gunsOrdering,
     secondaryWeaponsOrdering,
-    turretsOrdering
+    turretsOrdering,
+    antiMissileTurretsOrdering
   })
 });

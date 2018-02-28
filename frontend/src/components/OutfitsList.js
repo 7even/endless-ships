@@ -11,6 +11,7 @@ import RamscoopsTable from './outfits/RamscoopsTable';
 import GunsTable from './outfits/GunsTable';
 import SecondaryWeaponsTable from './outfits/SecondaryWeaponsTable';
 import TurretsTable from './outfits/TurretsTable';
+import AntiMissileTurretsTable from './outfits/AntiMissileTurretsTable';
 
 const OutfitsList = () => (
   <div className="app">
@@ -46,6 +47,9 @@ const OutfitsList = () => (
 
     <h2>Turrets</h2>
     <TurretsTable />
+
+    <h2>Anti-missile turrets</h2>
+    <AntiMissileTurretsTable />
   </div>
 );
 
