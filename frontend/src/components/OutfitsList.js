@@ -9,6 +9,7 @@ import ShieldGeneratorsTable from './outfits/ShieldsTable';
 import HullRepairModulesTable from './outfits/HullRepairModules';
 import RamscoopsTable from './outfits/RamscoopsTable';
 import GunsTable from './outfits/GunsTable';
+import SecondaryWeaponsTable from './outfits/SecondaryWeaponsTable';
 
 const OutfitsList = () => (
   <div className="app">
@@ -38,6 +39,9 @@ const OutfitsList = () => (
 
     <h2>Guns</h2>
     <GunsTable />
+
+    <h2>Secondary weapons</h2>
+    <SecondaryWeaponsTable />
   </div>
 );
 
