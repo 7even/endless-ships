@@ -135,6 +135,14 @@ const ramscoopsOrdering = (state = initialOrdering('Ramscoop per space'), action
   }
 };
 
+const gunsOrdering = (state = initialOrdering('Shield damage / space'), action) => {
+  if (action.type === 'toggle-guns-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -154,6 +162,7 @@ export default combineReducers({
     coolersOrdering,
     shieldGeneratorsOrdering,
     hullRepairModulesOrdering,
-    ramscoopsOrdering
+    ramscoopsOrdering,
+    gunsOrdering
   })
 });

@@ -42,7 +42,10 @@
 
 (def outfits-data
   (->> outfits
-       (remove #(= (:file %) "deprecated outfits.txt"))
+       (remove #(#{"deprecated outfits.txt"
+                   "indigenous.txt"
+                   "nanobots.txt"
+                   "transport missions.txt"} (:file %)))
        (map #(dissoc % :file))
        (map #(transform-keys ->camelCaseKeyword %))))
 

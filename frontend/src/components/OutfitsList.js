@@ -8,6 +8,7 @@ import CoolersTable from './outfits/CoolersTable';
 import ShieldGeneratorsTable from './outfits/ShieldsTable';
 import HullRepairModulesTable from './outfits/HullRepairModules';
 import RamscoopsTable from './outfits/RamscoopsTable';
+import GunsTable from './outfits/GunsTable';
 
 const OutfitsList = () => (
   <div className="app">
@@ -34,6 +35,9 @@ const OutfitsList = () => (
 
     <h2>Ramscoops</h2>
     <RamscoopsTable />
+
+    <h2>Guns</h2>
+    <GunsTable />
   </div>
 );
 
