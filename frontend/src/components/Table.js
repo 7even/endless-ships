@@ -31,13 +31,13 @@ const RightCell = ({ children }) => (
 
 const NumberCell = ({ number }) => (
   <td className="text-right">
-    <FormattedNumber number={number} isDecimal={false} />
+    {number && <FormattedNumber number={number} isDecimal={false} />}
   </td>
 );
 
 const DecimalCell = ({ decimal }) => (
   <td className="text-right">
-    <FormattedNumber number={decimal} isDecimal={true} />
+    {decimal && <FormattedNumber number={decimal} isDecimal={true} />}
   </td>
 );
 
