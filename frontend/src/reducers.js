@@ -167,6 +167,14 @@ const antiMissileTurretsOrdering = (state = initialOrdering('Anti-missile'), act
   }
 };
 
+const handToHandWeaponsOrdering = (state = initialOrdering('Capture attack'), action) => {
+  if (action.type === 'toggle-hand-to-hand-weapons-ordering') {
+    return toggleOrdering(state, action.columnName);
+  } else {
+    return state;
+  }
+};
+
 export default combineReducers({
   isLoading,
   ships,
@@ -190,6 +198,7 @@ export default combineReducers({
     gunsOrdering,
     secondaryWeaponsOrdering,
     turretsOrdering,
-    antiMissileTurretsOrdering
+    antiMissileTurretsOrdering,
+    handToHandWeaponsOrdering
   })
 });
