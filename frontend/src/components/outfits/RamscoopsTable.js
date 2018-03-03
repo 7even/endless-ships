@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const effectiveness = ramscoop => ramscoop.ramscoop / ramscoop.outfitSpace;
 
 const Row = ({ ramscoop }) => (
   <tr>
-    <TextCell>{ramscoop.name}</TextCell>
+    <TextCell><OutfitLink outfit={ramscoop} /></TextCell>
     <NumberCell number={ramscoop.cost} />
     <NumberCell number={ramscoop.outfitSpace} />
     <NumberCell number={ramscoop.ramscoop} />

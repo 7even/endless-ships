@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const effectiveness = steering => steering.turn / steering.outfitSpace;
 
 const Row = ({ steering }) => (
   <tr>
-    <TextCell>{steering.name}</TextCell>
+    <TextCell><OutfitLink outfit={steering} /></TextCell>
     <NumberCell number={steering.cost} />
     <NumberCell number={steering.outfitSpace} />
     <NumberCell number={steering.turn} />

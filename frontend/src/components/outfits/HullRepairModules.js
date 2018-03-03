@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const effectiveness = module => module.hullRepairRate / module.outfitSpace;
 
 const Row = ({ hullRepairModule }) => (
   <tr>
-    <TextCell>{hullRepairModule.name}</TextCell>
+    <TextCell><OutfitLink outfit={hullRepairModule} /></TextCell>
     <NumberCell number={hullRepairModule.cost} />
     <NumberCell number={hullRepairModule.outfitSpace} />
     <NumberCell number={hullRepairModule.hullRepairRate} />

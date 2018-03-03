@@ -10,6 +10,7 @@ import Navigation from './Navigation';
 import ShipsList from './ShipsList';
 import ShipPage from './ShipPage';
 import OutfitsList from './OutfitsList';
+import OutfitPage from './OutfitPage';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
@@ -26,6 +27,7 @@ const App = () => (
                 <Route exact={true} path="/" component={ShipsList} />
                 <Route path="/Ships/:shipName" component={ShipPage} />
                 <Route exact={true} path="/outfits" component={OutfitsList} />
+                <Route path="/outfits/:outfitName" component={OutfitPage} />
               </div>
             </Router>
           </Reference>

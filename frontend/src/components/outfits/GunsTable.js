@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const shieldDamagePerOutfitSpace = gun => gun.weapon.shieldDamage.perSecond / gun.outfitSpace;
@@ -12,7 +12,7 @@ const hullDamagePerOutfitSpace   = gun => gun.weapon.hullDamage.perSecond / gun.
 const Row = ({ gun }) => {
   return (
     <tr>
-      <TextCell>{gun.name}</TextCell>
+      <TextCell><OutfitLink outfit={gun} /></TextCell>
       <NumberCell number={gun.cost} />
       <NumberCell number={gun.outfitSpace} />
       <NumberCell number={gun.weapon.shieldDamage.perSecond} />

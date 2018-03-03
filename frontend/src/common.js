@@ -1,5 +1,6 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
+import { Link } from 'react-router-dom';
 import R from 'ramda';
 
 import LicenseLabel from './components/LicenseLabel';
@@ -28,4 +29,12 @@ const renderLicenses = (licenses) => {
   return R.intersperse(' ', labels);
 };
 
-export { FormattedNumber, kebabCase, capitalize, nbsp, nbspize, renderLicenses };
+const ShipLink = ({ ship }) => (
+  <Link to={`/ships/${kebabCase(ship.name)}`}>{nbspize(ship.name)}</Link>
+);
+
+const OutfitLink = ({ outfit }) => (
+  <Link to={`/outfits/${kebabCase(outfit.name)}`}>{nbspize(outfit.name)}</Link>
+);
+
+export { FormattedNumber, kebabCase, capitalize, nbsp, nbspize, renderLicenses, ShipLink, OutfitLink };
