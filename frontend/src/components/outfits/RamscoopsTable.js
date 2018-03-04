@@ -10,7 +10,7 @@ const effectiveness = ramscoop => ramscoop.ramscoop / ramscoop.outfitSpace;
 
 const Row = ({ ramscoop }) => (
   <tr>
-    <TextCell><OutfitLink outfit={ramscoop} /></TextCell>
+    <TextCell><OutfitLink outfitName={ramscoop.name} /></TextCell>
     <NumberCell number={ramscoop.cost} />
     <NumberCell number={ramscoop.outfitSpace} />
     <NumberCell number={ramscoop.ramscoop} />

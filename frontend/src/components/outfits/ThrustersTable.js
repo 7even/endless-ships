@@ -10,7 +10,7 @@ const effectiveness = thruster => thruster.thrust / thruster.outfitSpace;
 
 const Row = ({ thruster }) => (
   <tr>
-    <TextCell><OutfitLink outfit={thruster} /></TextCell>
+    <TextCell><OutfitLink outfitName={thruster.name} /></TextCell>
     <NumberCell number={thruster.cost} />
     <NumberCell number={thruster.outfitSpace} />
     <NumberCell number={thruster.thrust} />

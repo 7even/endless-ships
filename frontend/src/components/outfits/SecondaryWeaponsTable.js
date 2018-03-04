@@ -12,7 +12,7 @@ const hullDamagePerOutfitSpace   = secondaryWeapon => secondaryWeapon.weapon.hul
 const Row = ({ secondaryWeapon }) => {
   return (
     <tr>
-      <TextCell><OutfitLink outfit={secondaryWeapon} /></TextCell>
+      <TextCell><OutfitLink outfitName={secondaryWeapon.name} /></TextCell>
       <NumberCell number={secondaryWeapon.cost} />
       <NumberCell number={secondaryWeapon.outfitSpace} />
       <NumberCell number={secondaryWeapon.weapon.shieldDamage.perSecond} />

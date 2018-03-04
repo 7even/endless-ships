@@ -29,12 +29,12 @@ const renderLicenses = (licenses) => {
   return R.intersperse(' ', labels);
 };
 
-const ShipLink = ({ ship }) => (
-  <Link to={`/ships/${kebabCase(ship.name)}`}>{nbspize(ship.name)}</Link>
+const ShipLink = ({ shipName }) => (
+  <Link to={`/ships/${kebabCase(shipName)}`}>{nbspize(shipName)}</Link>
 );
 
-const OutfitLink = ({ outfit }) => (
-  <Link to={`/outfits/${kebabCase(outfit.name)}`}>{nbspize(outfit.name)}</Link>
+const OutfitLink = ({ outfitName }) => (
+  <Link to={`/outfits/${kebabCase(outfitName)}`}>{nbspize(outfitName)}</Link>
 );
 
 export { FormattedNumber, kebabCase, capitalize, nbsp, nbspize, renderLicenses, ShipLink, OutfitLink };

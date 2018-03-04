@@ -23,7 +23,7 @@ const renderLabel = (text, style = text) => (
 
 const ShipRow = ({ ship }) => (
   <tr>
-    <TextCell><ShipLink ship={ship} /></TextCell>
+    <TextCell><ShipLink shipName={ship.name} /></TextCell>
     <TextCell>{renderLabel(ship.race)}</TextCell>
     <NumberCell number={ship.cost} />
     <TextCell>{nbspize(ship.category)}</TextCell>

@@ -10,7 +10,7 @@ const effectiveness = generator => generator.shieldGeneration / generator.outfit
 
 const Row = ({ shieldGenerator }) => (
   <tr>
-    <TextCell><OutfitLink outfit={shieldGenerator} /></TextCell>
+    <TextCell><OutfitLink outfitName={shieldGenerator.name} /></TextCell>
     <NumberCell number={shieldGenerator.cost} />
     <NumberCell number={shieldGenerator.outfitSpace} />
     <NumberCell number={shieldGenerator.shieldGeneration} />

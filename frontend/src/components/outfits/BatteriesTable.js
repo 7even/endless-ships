@@ -10,7 +10,7 @@ const effectiveness = battery => battery.energyCapacity / battery.outfitSpace;
 
 const Row = ({ battery }) => (
   <tr>
-    <TextCell><OutfitLink outfit={battery} /></TextCell>
+    <TextCell><OutfitLink outfitName={battery.name} /></TextCell>
     <NumberCell number={battery.cost} />
     <NumberCell number={battery.outfitSpace} />
     <NumberCell number={battery.energyCapacity} />

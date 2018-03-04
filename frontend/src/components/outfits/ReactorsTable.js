@@ -14,7 +14,7 @@ const effectiveness = reactor => totalEnergyGeneration(reactor) / reactor.outfit
 
 const Row = ({ reactor }) => (
   <tr>
-    <TextCell><OutfitLink outfit={reactor} /></TextCell>
+    <TextCell><OutfitLink outfitName={reactor.name} /></TextCell>
     <NumberCell number={reactor.cost} />
     <NumberCell number={reactor.outfitSpace} />
     <NumberCell number={totalEnergyGeneration(reactor)} />

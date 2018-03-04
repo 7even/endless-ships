@@ -11,7 +11,7 @@ const effectiveness = cooler => totalCooling(cooler) / cooler.outfitSpace;
 
 const Row = ({ cooler }) => (
   <tr>
-    <TextCell><OutfitLink outfit={cooler} /></TextCell>
+    <TextCell><OutfitLink outfitName={cooler.name} /></TextCell>
     <NumberCell number={cooler.cost} />
     <NumberCell number={cooler.outfitSpace} />
     <NumberCell number={totalCooling(cooler)} />

@@ -10,7 +10,7 @@ const effectiveness = module => module.hullRepairRate / module.outfitSpace;
 
 const Row = ({ hullRepairModule }) => (
   <tr>
-    <TextCell><OutfitLink outfit={hullRepairModule} /></TextCell>
+    <TextCell><OutfitLink outfitName={hullRepairModule.name} /></TextCell>
     <NumberCell number={hullRepairModule.cost} />
     <NumberCell number={hullRepairModule.outfitSpace} />
     <NumberCell number={hullRepairModule.hullRepairRate} />

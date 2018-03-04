@@ -10,7 +10,7 @@ const effectiveness = steering => steering.turn / steering.outfitSpace;
 
 const Row = ({ steering }) => (
   <tr>
-    <TextCell><OutfitLink outfit={steering} /></TextCell>
+    <TextCell><OutfitLink outfitName={steering.name} /></TextCell>
     <NumberCell number={steering.cost} />
     <NumberCell number={steering.outfitSpace} />
     <NumberCell number={steering.turn} />
