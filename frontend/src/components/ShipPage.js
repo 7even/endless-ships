@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Panel, Image } from 'react-bootstrap';
+import R from 'ramda';
 import { FormattedNumber, kebabCase, OutfitLink } from '../common';
 import './ShipPage.css';
 
@@ -35,6 +36,10 @@ const imageURL = (ship) => {
   // probably not a good idea to hotlink to github to the master branch
   return "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" + filename;
 };
+
+const FormattedPercentage = ({ coefficient }) => (
+  <span><FormattedNumber number={coefficient * 100}/>%</span>
+);
 
 const OutfitItem = ({ name, quantity }) => {
   if (quantity === 1) {
@@ -85,6 +90,7 @@ const ShipPage = ({ ship }) => (
                   <li>turrets: <FormattedNumber number={ship.turrets} /></li>
                   {ship.drones > 0 && <li>drones: <FormattedNumber number={ship.drones} /></li>}
                   {ship.fighters > 0 && <li>fighters: <FormattedNumber number={ship.fighters} /></li>}
+                  {R.has('selfDestruct', ship) && <li>self-destruct: <FormattedPercentage coefficient={ship.selfDestruct}/></li>}
                 </ul>
 
                 {ship.licenses.length > 0 && <ShipLicenses licenses={ship.licenses} />}

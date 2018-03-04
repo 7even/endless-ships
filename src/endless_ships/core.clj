@@ -30,7 +30,7 @@
                                :engine-capacity :weapon-capacity :fuel-capacity
                                :outfit-space :cargo-space
                                :required-crew :bunks :description
-                               :guns :turrets :drones :fighters])
+                               :guns :turrets :drones :fighters :self-destruct])
                  (assoc :outfits (->> (:outfits %)
                                       (map (fn [[name quantity]]
                                              {:name name
