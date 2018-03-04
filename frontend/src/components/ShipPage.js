@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Panel, Image } from 'react-bootstrap';
-import { FormattedNumber, kebabCase } from '../common';
+import { FormattedNumber, kebabCase, OutfitLink } from '../common';
 import './ShipPage.css';
 
 const intersperse = (arr, sep) => {
@@ -38,12 +38,12 @@ const imageURL = (ship) => {
 
 const OutfitItem = ({ name, quantity }) => {
   if (quantity === 1) {
-    return <li className="list-group-item">{name}</li>;
+    return <li className="list-group-item"><OutfitLink outfitName={name} /></li>;
   } else {
     return (
       <li className="list-group-item">
         <span className="badge">{quantity}</span>
-        {name}
+        <OutfitLink outfitName={name} />
       </li>
     );
   }
