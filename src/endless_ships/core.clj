@@ -6,7 +6,7 @@
             [endless-ships
              [outfits :refer [outfits]]
              [parser :refer [data]]
-             [ships :refer [ships]]]))
+             [ships :refer [modifications ships]]]))
 
 (def file->race
   {"kestrel.txt" :human
@@ -40,6 +40,17 @@
                  (dissoc :file)))
        (map #(transform-keys ->camelCaseKeyword %))))
 
+(def modifications-data
+  (->> modifications
+       (map #(-> %
+                 (assoc :outfits (->> (:outfits %)
+                                      (map (fn [[name quantity]]
+                                             {:name name
+                                              :quantity quantity}))
+                                      vec))
+                 (dissoc :file)))
+       (map #(transform-keys ->camelCaseKeyword %))))
+
 (def outfits-data
   (->> outfits
        (remove #(#{"deprecated outfits.txt"
@@ -54,6 +65,7 @@
    (generate-json "build/data.json"))
   ([path]
    (let [data {:ships ships-data
+               :shipModifications modifications-data
                :outfits outfits-data}
          json (generate-string data {:pretty true})]
      (spit path (str json "\n")))))
