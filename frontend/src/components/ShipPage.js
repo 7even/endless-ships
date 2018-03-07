@@ -64,7 +64,7 @@ const ShipDescription = ({ description }) => (
   </Row>
 );
 
-const ShipPage = ({ ship }) => (
+const ShipPage = ({ ship, modifications }) => (
   <div className="app">
     <Row>
       <Col md={6}>
@@ -122,9 +122,10 @@ const ShipPage = ({ ship }) => (
 );
 
 const mapStateToProps = (state, { match: { params: { shipName } } }) => {
-  return {
-    ship: state.ships.find(ship => kebabCase(ship.name) === shipName)
-  };
+  const ship = state.ships.find(ship => kebabCase(ship.name) === shipName);
+  const modifications = state.shipModifications.filter(modification => modification.original === ship.name);
+
+  return { ship, modifications };
 };
 
 export default connect(mapStateToProps)(ShipPage);
