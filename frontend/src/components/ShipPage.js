@@ -97,6 +97,30 @@ const ShipModifications = ({ ship, selectedModification }) => {
   );
 };
 
+const ShipOutfits = ({ ship, selectedModification }) => {
+  let outfits;
+
+  if (selectedModification) {
+    outfits = ship.modifications.find(
+      modification => kebabCase(modification.name) === selectedModification
+    ).outfits;
+  } else {
+    outfits = ship.outfits;
+  }
+
+  return (
+    <Panel>
+      <Panel.Heading>Default outfits</Panel.Heading>
+
+      <Panel.Body>
+        <ul className="list-group">
+          {outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
+        </ul>
+      </Panel.Body>
+    </Panel>
+  );
+};
+
 const ShipPage = ({ ship, selectedModification }) => (
   <div className="app">
     <Row>
@@ -140,15 +164,7 @@ const ShipPage = ({ ship, selectedModification }) => (
       </Col>
 
       <Col md={6}>
-        <Panel>
-          <Panel.Heading>Default outfits</Panel.Heading>
-
-          <Panel.Body>
-            <ul className="list-group">
-              {ship.outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
-            </ul>
-          </Panel.Body>
-        </Panel>
+        <ShipOutfits ship={ship} selectedModification={selectedModification}/>
       </Col>
     </Row>
 
