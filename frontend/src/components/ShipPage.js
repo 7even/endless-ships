@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Panel, Image } from 'react-bootstrap';
+import { Row, Col, Panel, Image, Nav, NavItem } from 'react-bootstrap';
 import R from 'ramda';
 import { FormattedNumber, kebabCase, OutfitLink } from '../common';
 import './ShipPage.css';
@@ -64,7 +64,30 @@ const ShipDescription = ({ description }) => (
   </Row>
 );
 
-const ShipPage = ({ ship, modifications }) => (
+const ShipModifications = ({ ship }) => {
+  const items = ship.modifications.map(modification => (
+    <NavItem key={modification.name}
+             eventKey={modification.name}
+             href="/">
+      {modification.name}
+    </NavItem>
+  ));
+
+  return (
+    <Panel>
+      <Panel.Heading>Modifications</Panel.Heading>
+
+      <Panel.Body>
+        <Nav bsStyle="pills" stacked={true} activeKey={'default'}>
+          <NavItem eventKey={'default'} href="/" key={null}>{ship.name}</NavItem>
+          {items}
+        </Nav>
+      </Panel.Body>
+    </Panel>
+  );
+};
+
+const ShipPage = ({ ship }) => (
   <div className="app">
     <Row>
       <Col md={6}>
@@ -102,6 +125,8 @@ const ShipPage = ({ ship, modifications }) => (
             </div>
           </Panel.Body>
         </Panel>
+
+        {ship.modifications.length > 0 && <ShipModifications ship={ship} />}
       </Col>
 
       <Col md={6}>
@@ -125,7 +150,7 @@ const mapStateToProps = (state, { match: { params: { shipName } } }) => {
   const ship = state.ships.find(ship => kebabCase(ship.name) === shipName);
   const modifications = state.shipModifications.filter(modification => modification.original === ship.name);
 
-  return { ship, modifications };
+  return { ship: { modifications, ...ship } };
 };
 
 export default connect(mapStateToProps)(ShipPage);
