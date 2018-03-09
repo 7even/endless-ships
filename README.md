@@ -1,6 +1,6 @@
 # Endless Sky reference site generator
 
-This is a tool for generating a website with reference information about the [Endless Sky](https://endless-sky.github.io/) game. Currently the generated site only includes the ships data.
+This is a tool for generating a website with reference information about the [Endless Sky](https://endless-sky.github.io/) game.
 
 The generator works by parsing the game's sources (specifically `data/*.txt` files) to get all game data so the information always stays up-to-date.
 
