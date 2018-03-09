@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Row, Col, Panel, Image, Nav, NavItem } from 'react-bootstrap';
 import R from 'ramda';
 import { FormattedNumber, kebabCase, OutfitLink } from '../common';
@@ -64,22 +65,31 @@ const ShipDescription = ({ description }) => (
   </Row>
 );
 
-const ShipModifications = ({ ship }) => {
-  const items = ship.modifications.map(modification => (
-    <NavItem key={modification.name}
-             eventKey={modification.name}
-             href="/">
-      {modification.name}
-    </NavItem>
-  ));
+const modificationLink = (name, path) => (
+  <NavItem componentClass={Link}
+           key={name}
+           eventKey={kebabCase(name)}
+           href={path}
+           to={path}>
+    {name}
+  </NavItem>
+);
+
+const ShipModifications = ({ ship, selectedModification }) => {
+  const items = ship.modifications.map(modification => {
+    return modificationLink(
+      modification.name,
+      `/ships/${kebabCase(ship.name)}/${kebabCase(modification.name)}`
+    );
+  });
 
   return (
     <Panel>
       <Panel.Heading>Modifications</Panel.Heading>
 
       <Panel.Body>
-        <Nav bsStyle="pills" stacked={true} activeKey={'default'}>
-          <NavItem eventKey={'default'} href="/" key={null}>{ship.name}</NavItem>
+        <Nav bsStyle="pills" stacked={true} activeKey={selectedModification || kebabCase(ship.name)}>
+          {modificationLink(ship.name, `/ships/${kebabCase(ship.name)}`)}
           {items}
         </Nav>
       </Panel.Body>
@@ -87,7 +97,7 @@ const ShipModifications = ({ ship }) => {
   );
 };
 
-const ShipPage = ({ ship }) => (
+const ShipPage = ({ ship, selectedModification }) => (
   <div className="app">
     <Row>
       <Col md={6}>
@@ -126,7 +136,7 @@ const ShipPage = ({ ship }) => (
           </Panel.Body>
         </Panel>
 
-        {ship.modifications.length > 0 && <ShipModifications ship={ship} />}
+        {ship.modifications.length > 0 && <ShipModifications ship={ship} selectedModification={selectedModification} />}
       </Col>
 
       <Col md={6}>
@@ -146,11 +156,11 @@ const ShipPage = ({ ship }) => (
   </div>
 );
 
-const mapStateToProps = (state, { match: { params: { shipName } } }) => {
+const mapStateToProps = (state, { match: { params: { shipName, modification } } }) => {
   const ship = state.ships.find(ship => kebabCase(ship.name) === shipName);
   const modifications = state.shipModifications.filter(modification => modification.original === ship.name);
 
-  return { ship: { modifications, ...ship } };
+  return { ship: { modifications, ...ship }, selectedModification: modification };
 };
 
 export default connect(mapStateToProps)(ShipPage);
