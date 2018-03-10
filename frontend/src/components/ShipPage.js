@@ -109,15 +109,15 @@ const ShipPage = ({ ship, modificationNames }) => (
               <div className="media-body">
                 <ul>
                   <li>cost: <FormattedNumber number={ship.cost} /></li>
-                  <li>shields: <FormattedNumber number={ship.shields} /></li>
+                  {ship.shields && <li>shields: <FormattedNumber number={ship.shields} /></li>}
                   <li>hull: <FormattedNumber number={ship.hull} /></li>
                   <li>mass: <FormattedNumber number={ship.mass} /></li>
-                  <li>cargo space: <FormattedNumber number={ship.cargoSpace} /></li>
-                  <li>required crew: <FormattedNumber number={ship.requiredCrew} /></li>
-                  <li>bunks: <FormattedNumber number={ship.bunks} /></li>
-                  <li>fuel capacity: <FormattedNumber number={ship.fuelCapacity} /></li>
+                  {ship.cargoSpace && <li>cargo space: <FormattedNumber number={ship.cargoSpace} /></li>}
+                  {ship.requiredCrew && <li>required crew: <FormattedNumber number={ship.requiredCrew} /></li>}
+                  {ship.bunks && <li>bunks: <FormattedNumber number={ship.bunks} /></li>}
+                  {ship.fuelCapacity && <li>fuel capacity: <FormattedNumber number={ship.fuelCapacity} /></li>}
                   <li>outfit space: <FormattedNumber number={ship.outfitSpace} /></li>
-                  <li>weapon capacity: <FormattedNumber number={ship.weaponCapacity} /></li>
+                  {ship.weaponCapacity && <li>weapon capacity: <FormattedNumber number={ship.weaponCapacity} /></li>}
                   <li>engine capacity: <FormattedNumber number={ship.engineCapacity} /></li>
                   <li>guns: <FormattedNumber number={ship.guns || 0} /></li>
                   <li>turrets: <FormattedNumber number={ship.turrets || 0} /></li>
