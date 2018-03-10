@@ -97,20 +97,6 @@ const ShipModifications = ({ ship, modificationNames }) => {
   );
 };
 
-const ShipOutfits = ({ ship }) => {
-  return (
-    <Panel>
-      <Panel.Heading>Default outfits</Panel.Heading>
-
-      <Panel.Body>
-        <ul className="list-group">
-          {ship.outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
-        </ul>
-      </Panel.Body>
-    </Panel>
-  );
-};
-
 const ShipPage = ({ ship, modificationNames }) => (
   <div className="app">
     <Row>
@@ -154,7 +140,15 @@ const ShipPage = ({ ship, modificationNames }) => (
       </Col>
 
       <Col md={6}>
-        <ShipOutfits ship={ship} />
+        <Panel>
+          <Panel.Heading>Default outfits</Panel.Heading>
+
+          <Panel.Body>
+            <ul className="list-group">
+              {ship.outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
+            </ul>
+          </Panel.Body>
+        </Panel>
       </Col>
     </Row>
 
