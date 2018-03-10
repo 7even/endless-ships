@@ -28,14 +28,9 @@
                  (select-keys [:name :sprite :licenses :file
                                :cost :category :hull :shields :mass
                                :engine-capacity :weapon-capacity :fuel-capacity
-                               :outfit-space :cargo-space
+                               :outfits :outfit-space :cargo-space
                                :required-crew :bunks :description
                                :guns :turrets :drones :fighters :self-destruct])
-                 (assoc :outfits (->> (:outfits %)
-                                      (map (fn [[name quantity]]
-                                             {:name name
-                                              :quantity quantity}))
-                                      vec))
                  (assoc :race (get file->race (:file %) :other))
                  (dissoc :file)))
        (map #(transform-keys ->camelCaseKeyword %))))
@@ -43,11 +38,6 @@
 (def modifications-data
   (->> modifications
        (map #(-> %
-                 (assoc :outfits (->> (:outfits %)
-                                      (map (fn [[name quantity]]
-                                             {:name name
-                                              :quantity quantity}))
-                                      vec))
                  (dissoc :file)))
        (map #(transform-keys ->camelCaseKeyword %))))
 

@@ -2,6 +2,11 @@
   (:require [clojure.set :refer [rename-keys]]
             [endless-ships.parser :refer [->map data]]))
 
+(defn- add-key-if [cond key value]
+  (if cond
+    {key value}
+    {}))
+
 (defn- process-ship [[_
                       [ship-name ship-modification]
                       {[[[sprite] animation]] "sprite"
@@ -14,27 +19,42 @@
                        drone-points "drone"
                        fighter-points "fighter"
                        description-attrs "description"
-                       file "file"}]]
+                       file "file"
+                       :as ship}]]
   (merge (->map attrs)
          {:name ship-name
           :modification ship-modification
-          :sprite [sprite (not (empty? animation))]
-          :licenses (-> license-attrs keys vec)
           :weapon (->map weapon-attrs)
-          :outfits (reduce (fn [outfit-quantities [outfit-name [[[quantity]]]]]
-                             (assoc outfit-quantities
-                                    outfit-name
-                                    (or quantity 1)))
-                           {}
-                           outfit-attrs)
-          :guns (count gun-points)
-          :turrets (count turret-points)
-          :drones (count drone-points)
-          :fighters (count fighter-points)
-          :description (->> description-attrs
-                            (map #(get-in % [0 0]))
-                            vec)
-          :file file}))
+          :file file}
+         (add-key-if (contains? ship "sprite")
+                     :sprite
+                     [sprite (not (empty? animation))])
+         (add-key-if (contains? attrs "licenses")
+                     :licenses
+                     (-> license-attrs keys vec))
+         (add-key-if (contains? ship "outfits")
+                     :outfits
+                     (map (fn [[outfit-name [[[quantity]]]]]
+                            {:name outfit-name
+                             :quantity (or quantity 1)})
+                          outfit-attrs))
+         (add-key-if (> (count gun-points) 0)
+                     :guns
+                     (count gun-points))
+         (add-key-if (> (count turret-points) 0)
+                     :turrets
+                     (count turret-points))
+         (add-key-if (> (count drone-points) 0)
+                     :drones
+                     (count drone-points))
+         (add-key-if (> (count fighter-points) 0)
+                     :fighters
+                     (count fighter-points))
+         (add-key-if (contains? ship "description")
+                     :description
+                     (->> description-attrs
+                          (map #(get-in % [0 0]))
+                          vec))))
 
 (def ships
   (->> data
@@ -49,7 +69,4 @@
   (->> data
        (filter #(and (= (first %) "ship")
                      (= (-> % second count) 2)))
-       (map #(-> %
-                 process-ship
-                 (rename-keys {:name :original
-                               :modification :name})))))
+       (map process-ship)))

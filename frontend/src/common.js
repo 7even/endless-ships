@@ -23,7 +23,7 @@ const FormattedNumber = ({ number, isDecimal }) => {
   );
 };
 
-const renderLicenses = (licenses) => {
+const renderLicenses = (licenses = []) => {
   const labels = licenses.map(license => <LicenseLabel license={license} key={license} />);
 
   return R.intersperse(' ', labels);

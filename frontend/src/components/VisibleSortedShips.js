@@ -25,7 +25,7 @@ const filterShips = (ships, raceFilter, categoryFilter, licenseFilter) => {
   const filters = [
     ship => raceFilter[ship.race],
     ship => categoryFilter[ship.category],
-    ship => R.none(license => !licenseFilter[license])(ship.licenses)
+    ship => R.none(license => !licenseFilter[license])(ship.licenses || [])
   ];
 
   return R.filter(R.allPass(filters), ships);
