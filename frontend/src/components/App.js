@@ -25,7 +25,7 @@ const App = () => (
               <div className="app">
                 <Navigation />
                 <Route exact={true} path="/" component={ShipsList} />
-                <Route path="/Ships/:shipName/:modification?" component={ShipPage} />
+                <Route path="/Ships/:shipName/:modificationName?" component={ShipPage} />
                 <Route exact={true} path="/outfits" component={OutfitsList} />
                 <Route path="/outfits/:outfitName" component={OutfitPage} />
               </div>

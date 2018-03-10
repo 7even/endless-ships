@@ -68,18 +68,18 @@ const ShipDescription = ({ description }) => (
 const modificationLink = (name, path) => (
   <NavItem componentClass={Link}
            key={name}
-           eventKey={kebabCase(name)}
+           eventKey={name}
            href={path}
            to={path}>
     {name}
   </NavItem>
 );
 
-const ShipModifications = ({ ship, selectedModification }) => {
-  const items = ship.modifications.map(modification => {
+const ShipModifications = ({ ship, modificationNames }) => {
+  const items = modificationNames.map(modificationName => {
     return modificationLink(
-      modification.name,
-      `/ships/${kebabCase(ship.name)}/${kebabCase(modification.name)}`
+      modificationName,
+      `/ships/${kebabCase(ship.name)}/${kebabCase(modificationName)}`
     );
   });
 
@@ -88,7 +88,7 @@ const ShipModifications = ({ ship, selectedModification }) => {
       <Panel.Heading>Modifications</Panel.Heading>
 
       <Panel.Body>
-        <Nav bsStyle="pills" stacked={true} activeKey={selectedModification || kebabCase(ship.name)}>
+        <Nav bsStyle="pills" stacked={true} activeKey={ship.modification || ship.name}>
           {modificationLink(ship.name, `/ships/${kebabCase(ship.name)}`)}
           {items}
         </Nav>
@@ -97,31 +97,21 @@ const ShipModifications = ({ ship, selectedModification }) => {
   );
 };
 
-const ShipOutfits = ({ ship, selectedModification }) => {
-  let outfits;
-
-  if (selectedModification) {
-    outfits = ship.modifications.find(
-      modification => kebabCase(modification.name) === selectedModification
-    ).outfits;
-  } else {
-    outfits = ship.outfits;
-  }
-
+const ShipOutfits = ({ ship }) => {
   return (
     <Panel>
       <Panel.Heading>Default outfits</Panel.Heading>
 
       <Panel.Body>
         <ul className="list-group">
-          {outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
+          {ship.outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
         </ul>
       </Panel.Body>
     </Panel>
   );
 };
 
-const ShipPage = ({ ship, selectedModification }) => (
+const ShipPage = ({ ship, modificationNames }) => (
   <div className="app">
     <Row>
       <Col md={6}>
@@ -143,14 +133,14 @@ const ShipPage = ({ ship, selectedModification }) => (
                   <li>outfit space: <FormattedNumber number={ship.outfitSpace} /></li>
                   <li>weapon capacity: <FormattedNumber number={ship.weaponCapacity} /></li>
                   <li>engine capacity: <FormattedNumber number={ship.engineCapacity} /></li>
-                  <li>guns: <FormattedNumber number={ship.guns} /></li>
-                  <li>turrets: <FormattedNumber number={ship.turrets} /></li>
+                  <li>guns: <FormattedNumber number={ship.guns || 0} /></li>
+                  <li>turrets: <FormattedNumber number={ship.turrets || 0} /></li>
                   {ship.drones > 0 && <li>drones: <FormattedNumber number={ship.drones} /></li>}
                   {ship.fighters > 0 && <li>fighters: <FormattedNumber number={ship.fighters} /></li>}
                   {R.has('selfDestruct', ship) && <li>self-destruct: <FormattedPercentage coefficient={ship.selfDestruct}/></li>}
                 </ul>
 
-                {ship.licenses.length > 0 && <ShipLicenses licenses={ship.licenses} />}
+                {ship.licenses && <ShipLicenses licenses={ship.licenses} />}
               </div>
 
               <div className="media-right">
@@ -160,11 +150,11 @@ const ShipPage = ({ ship, selectedModification }) => (
           </Panel.Body>
         </Panel>
 
-        {ship.modifications.length > 0 && <ShipModifications ship={ship} selectedModification={selectedModification} />}
+        {modificationNames.length > 0 && <ShipModifications ship={ship} modificationNames={modificationNames} />}
       </Col>
 
       <Col md={6}>
-        <ShipOutfits ship={ship} selectedModification={selectedModification}/>
+        <ShipOutfits ship={ship} />
       </Col>
     </Row>
 
@@ -172,11 +162,15 @@ const ShipPage = ({ ship, selectedModification }) => (
   </div>
 );
 
-const mapStateToProps = (state, { match: { params: { shipName, modification } } }) => {
+const mapStateToProps = (state, { match: { params: { shipName, modificationName } } }) => {
   const ship = state.ships.find(ship => kebabCase(ship.name) === shipName);
-  const modifications = state.shipModifications.filter(modification => modification.original === ship.name);
+  const modifications = state.shipModifications.filter(modification => modification.name === ship.name);
+  const selectedModification = modifications.find(modification => kebabCase(modification.modification) === modificationName);
 
-  return { ship: { modifications, ...ship }, selectedModification: modification };
+  return {
+    ship: { ...ship, ...selectedModification },
+    modificationNames: modifications.map(mod => mod.modification)
+  };
 };
 
 export default connect(mapStateToProps)(ShipPage);
