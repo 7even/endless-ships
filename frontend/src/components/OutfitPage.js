@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Panel, Image } from 'react-bootstrap';
-import { FormattedNumber, kebabCase, intersperse } from '../common';
+import { FormattedNumber, kebabCase, ShipLink, intersperse } from '../common';
 
 const OutfitDescription = ({ description }) => {
   return intersperse(description, index => <span key={index}><br/><br/></span>);
@@ -13,7 +13,28 @@ const imageURL = (outfit) => {
   return "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" + filename;
 };
 
-const OutfitPage = ({ outfit }) => (
+const ShipInstallation = ({ shipName, quantity }) => {
+  if (quantity === 1) {
+    return <li className="list-group-item"><ShipLink shipName={shipName} /></li>;
+  } else {
+    return (
+      <li className="list-group-item">
+        <span className="badge">{quantity}</span>
+        <ShipLink shipName={shipName} />
+      </li>
+    );
+  }
+};
+
+const InstallationsList = ({ installations }) => (
+  <Panel.Body>
+    <ul className="list-group">
+      {installations.map(installation => <ShipInstallation key={installation.shipName} {...installation} />)}
+    </ul>
+  </Panel.Body>
+);
+
+const OutfitPage = ({ outfit, shipInstallations }) => (
   <div className="app">
     <Row>
       <Col md={12}>
@@ -64,13 +85,34 @@ const OutfitPage = ({ outfit }) => (
         </Panel>
       </Col>
     </Row>
+
+    <Row>
+      <Col md={6}>
+        <Panel>
+          <Panel.Heading>Installed on {shipInstallations.length} ships</Panel.Heading>
+
+          {shipInstallations.length > 0 && <InstallationsList installations={shipInstallations} />}
+        </Panel>
+      </Col>
+    </Row>
   </div>
 );
 
 const mapStateToProps = (state, { match: { params: { outfitName } } }) => {
-  return {
-    outfit: state.outfits.find(outfit => kebabCase(outfit.name) === outfitName)
-  };
+  const outfit = state.outfits.find(outfit => kebabCase(outfit.name) === outfitName);
+
+  const shipInstallations = state.ships.map(ship => {
+    const shipOutfit = ship.outfits.find(
+      ({ name }) => name === outfit.name
+    );
+
+    return {
+      shipName: ship.name,
+      quantity: shipOutfit ? shipOutfit.quantity : 0
+    };
+  }).filter(({ quantity }) => quantity > 0);
+
+  return { outfit, shipInstallations };
 };
 
 export default connect(mapStateToProps)(OutfitPage);
