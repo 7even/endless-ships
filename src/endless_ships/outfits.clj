@@ -14,6 +14,8 @@
   (let [times-3600 (comp round-to-int (partial * 3600))
         times-60 (comp round-to-int (partial * 60))]
     {:outfit-space -
+     :weapon-capacity -
+     :engine-capacity -
      ;; thrusters
      :thrust times-3600
      :thrusting-energy times-60

@@ -37,4 +37,12 @@ const OutfitLink = ({ outfitName }) => (
   <Link to={`/outfits/${kebabCase(outfitName)}`}>{nbspize(outfitName)}</Link>
 );
 
-export { FormattedNumber, kebabCase, capitalize, nbsp, nbspize, renderLicenses, ShipLink, OutfitLink };
+const intersperse = (arr, sep) => {
+  if (arr.length === 0) {
+    return [];
+  } else {
+    return arr.slice(1).reduce((xs, x, idx) => xs.concat([sep(idx), x]), [arr[0]]);
+  }
+};
+
+export { FormattedNumber, kebabCase, capitalize, nbsp, nbspize, renderLicenses, ShipLink, OutfitLink, intersperse };

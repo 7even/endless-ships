@@ -3,16 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Panel, Image, Nav, NavItem } from 'react-bootstrap';
 import R from 'ramda';
-import { FormattedNumber, kebabCase, OutfitLink } from '../common';
+import { FormattedNumber, kebabCase, OutfitLink, intersperse } from '../common';
 import './ShipPage.css';
-
-const intersperse = (arr, sep) => {
-  if (arr.length === 0) {
-    return [];
-  } else {
-    return arr.slice(1).reduce((xs, x, idx) => xs.concat([sep(idx), x]), [arr[0]]);
-  }
-};
 
 const ShipLicenses = ({ licenses }) => {
   if (licenses.length === 2) {
