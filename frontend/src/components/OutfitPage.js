@@ -73,6 +73,11 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {outfit.reverseThrust && <li>reverse thrust: <FormattedNumber number={outfit.reverseThrust} /></li>}
                       {outfit.reverseThrustingEnergy && <li>reverse thrusting energy: <FormattedNumber number={outfit.reverseThrustingEnergy} /></li>}
                       {outfit.reverseThrustingHeat && <li>reverse thrusting heat: <FormattedNumber number={outfit.reverseThrustingHeat} /></li>}
+                      {outfit.energyGeneration && <li>energy generation: <FormattedNumber number={outfit.energyGeneration} /></li>}
+                      {outfit.solarCollection && <li>solar collection: <FormattedNumber number={outfit.solarCollection} /></li>}
+                      {outfit.energyCapacity && <li>energy capacity: <FormattedNumber number={outfit.energyCapacity} /></li>}
+                      {outfit.energyConsumption && <li>energy consumption: <FormattedNumber number={outfit.energyConsumption} /></li>}
+                      {outfit.heatGeneration && <li>heat generation: <FormattedNumber number={outfit.heatGeneration} /></li>}
                     </ul>
                   </Col>
                 </Row>

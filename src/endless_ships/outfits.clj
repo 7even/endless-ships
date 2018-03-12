@@ -36,6 +36,7 @@
      :energy-generation times-60
      :heat-generation times-60
      :solar-collection times-60
+     :energy-consumption times-60
      ;; coolers
      :cooling times-60
      :active-cooling times-60
