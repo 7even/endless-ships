@@ -51,6 +51,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
 
                   <Col md={4}>
                     <ul>
+                      <li>category: {outfit.category}</li>
                       <li>cost: <FormattedNumber number={outfit.cost} /></li>
                       <li>outfit space needed: <FormattedNumber number={outfit.outfitSpace} /></li>
                       {outfit.weaponCapacity && <li>weapon capacity needed: <FormattedNumber number={outfit.weaponCapacity} /></li>}
