@@ -115,6 +115,7 @@ const ShipPage = ({ ship, modificationNames }) => (
                   <li>turrets: <FormattedNumber number={ship.turrets || 0} /></li>
                   {ship.drones > 0 && <li>drones: <FormattedNumber number={ship.drones} /></li>}
                   {ship.fighters > 0 && <li>fighters: <FormattedNumber number={ship.fighters} /></li>}
+                  {ship.ramscoop && <li>ramscoop: <FormattedNumber number={ship.ramscoop} /></li>}
                   {R.has('selfDestruct', ship) && <li>self-destruct: <FormattedPercentage coefficient={ship.selfDestruct}/></li>}
                 </ul>
 

@@ -30,7 +30,8 @@
                                :engine-capacity :weapon-capacity :fuel-capacity
                                :outfits :outfit-space :cargo-space
                                :required-crew :bunks :description
-                               :guns :turrets :drones :fighters :self-destruct])
+                               :guns :turrets :drones :fighters
+                               :self-destruct :ramscoop])
                  (assoc :race (get file->race (:file %) :other))
                  (dissoc :file)))
        (map #(transform-keys ->camelCaseKeyword %))))
