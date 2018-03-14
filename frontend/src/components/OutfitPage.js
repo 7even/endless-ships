@@ -47,6 +47,8 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                 <Row>
                   <Col md={4}>
                     <OutfitDescription description={outfit.description} />
+
+                    {outfit.licenses.length > 0 && <span><br /><br /><p className="licenses">Requires a {outfit.licenses[0]} license.</p></span>}
                   </Col>
 
                   <Col md={4}>
