@@ -83,6 +83,12 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {outfit.cooling && <li>cooling: <FormattedNumber number={outfit.cooling} /></li>}
                       {outfit.activeCooling && <li>active cooling: <FormattedNumber number={outfit.activeCooling} /></li>}
                       {outfit.coolingEnergy && <li>cooling energy: <FormattedNumber number={outfit.coolingEnergy} /></li>}
+                      {outfit.hullRepairRate && <li>hull repair rate: <FormattedNumber number={outfit.hullRepairRate} /></li>}
+                      {outfit.hullEnergy && <li>hull energy: <FormattedNumber number={outfit.hullEnergy} /></li>}
+                      {outfit.hullHeat && <li>hull heat: <FormattedNumber number={outfit.hullHeat} /></li>}
+                      {outfit.shieldGeneration && <li>shield generation: <FormattedNumber number={outfit.shieldGeneration} /></li>}
+                      {outfit.shieldEnergy && <li>shield energy: <FormattedNumber number={outfit.shieldEnergy} /></li>}
+                      {outfit.shieldHeat && <li>shield heat: <FormattedNumber number={outfit.shieldHeat} /></li>}
                     </ul>
                   </Col>
                 </Row>
