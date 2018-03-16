@@ -89,6 +89,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {outfit.shieldGeneration && <li>shield generation: <FormattedNumber number={outfit.shieldGeneration} /></li>}
                       {outfit.shieldEnergy && <li>shield energy: <FormattedNumber number={outfit.shieldEnergy} /></li>}
                       {outfit.shieldHeat && <li>shield heat: <FormattedNumber number={outfit.shieldHeat} /></li>}
+                      {outfit.ramscoop && <li>ramscoop: <FormattedNumber number={outfit.ramscoop} /></li>}
                     </ul>
                   </Col>
                 </Row>
