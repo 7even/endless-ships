@@ -1,10 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Panel, Image } from 'react-bootstrap';
+import R from 'ramda';
 import { FormattedNumber, kebabCase, ShipLink, intersperse } from '../common';
 
 const OutfitDescription = ({ description }) => {
   return intersperse(description, index => <span key={index}><br/><br/></span>);
+};
+
+const WeaponAttributes = ({ weapon }) => {
+  return [
+    [R.prop('range'), 'range'],
+    [R.path(['shieldDamage', 'perSecond']), 'shield damage / second'],
+    [R.path(['hullDamage', 'perSecond']),   'hull damage / second'],
+    [R.prop('shotsPerSecond'), 'shots / second'],
+    [R.path(['shieldDamage', 'perShot']), 'shield damage / shot'],
+    [R.path(['hullDamage', 'perShot']), 'hull damage / shot'],
+    [R.prop('firingEnergy'), 'firing energy / shot'],
+    [R.prop('firingHeat'), 'firing heat / shot'],
+    [R.prop('inaccuracy'), 'inaccuracy']
+  ].map(([prop, label]) => {
+    return prop(weapon) !== null && <li key={label}>{label}: <FormattedNumber number={prop(weapon)} /></li>;
+  });
 };
 
 const imageURL = (outfit) => {
@@ -90,6 +107,8 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {outfit.shieldEnergy && <li>shield energy: <FormattedNumber number={outfit.shieldEnergy} /></li>}
                       {outfit.shieldHeat && <li>shield heat: <FormattedNumber number={outfit.shieldHeat} /></li>}
                       {outfit.ramscoop && <li>ramscoop: <FormattedNumber number={outfit.ramscoop} /></li>}
+
+                      {outfit.weapon && <WeaponAttributes weapon={outfit.weapon} />}
                     </ul>
                   </Col>
                 </Row>
