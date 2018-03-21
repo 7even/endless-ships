@@ -8,20 +8,35 @@ const OutfitDescription = ({ description }) => {
   return intersperse(description, index => <span key={index}><br/><br/></span>);
 };
 
+const renderAttribute = (object, prop, label) => {
+  const value = prop(object);
+
+  if (!R.isNil(value)) {
+    if (typeof value === 'number') {
+      return <li>{label}: <FormattedNumber number={value} /></li>;
+    } else {
+      return <li>{label}: {value}</li>;
+    }
+  } else {
+    return null;
+  }
+};
+
 const WeaponAttributes = ({ weapon }) => {
-  return [
-    [R.prop('range'), 'range'],
-    [R.path(['shieldDamage', 'perSecond']), 'shield damage / second'],
-    [R.path(['hullDamage', 'perSecond']),   'hull damage / second'],
-    [R.prop('shotsPerSecond'), 'shots / second'],
-    [R.path(['shieldDamage', 'perShot']), 'shield damage / shot'],
-    [R.path(['hullDamage', 'perShot']), 'hull damage / shot'],
-    [R.prop('firingEnergy'), 'firing energy / shot'],
-    [R.prop('firingHeat'), 'firing heat / shot'],
-    [R.prop('inaccuracy'), 'inaccuracy']
-  ].map(([prop, label]) => {
-    return prop(weapon) !== null && <li key={label}>{label}: <FormattedNumber number={prop(weapon)} /></li>;
-  });
+  return (
+    <div>
+      {renderAttribute(weapon, R.prop('range'), 'range')}
+      {renderAttribute(weapon, R.path(['shieldDamage', 'perSecond']), 'shield damage / second')}
+      {renderAttribute(weapon, R.path(['hullDamage', 'perSecond']), 'hull damage / second')}
+      {renderAttribute(weapon, R.prop('shotsPerSecond'), 'shots / second')}
+      {R.has('shotsPerSecond', weapon) && (typeof weapon.shotsPerSecond === 'number') && <br />}
+      {renderAttribute(weapon, R.path(['shieldDamage', 'perShot']), 'shield damage / shot')}
+      {renderAttribute(weapon, R.path(['hullDamage', 'perShot']), 'hull damage / shot')}
+      {renderAttribute(weapon, R.prop('firingEnergy'), 'firing energy / shot')}
+      {renderAttribute(weapon, R.prop('firingHeat'), 'firing heat / shot')}
+      {renderAttribute(weapon, R.prop('inaccuracy'), 'inaccuracy')}
+    </div>
+  );
 };
 
 const imageURL = (outfit) => {
