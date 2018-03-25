@@ -28,6 +28,10 @@ const WeaponAttributes = ({ weapon }) => {
       {renderAttribute(weapon, R.prop('range'), 'range')}
       {renderAttribute(weapon, R.path(['shieldDamage', 'perSecond']), 'shield damage / second')}
       {renderAttribute(weapon, R.path(['hullDamage', 'perSecond']), 'hull damage / second')}
+      {renderAttribute(weapon, R.path(['heatDamage', 'perSecond']), 'heat damage / second')}
+      {renderAttribute(weapon, R.path(['ionDamage', 'perSecond']), 'ion damage / second')}
+      {renderAttribute(weapon, R.path(['disruptionDamage', 'perSecond']), 'disruption damage / second')}
+      {renderAttribute(weapon, R.path(['slowingDamage', 'perSecond']), 'slowing damage / second')}
       {renderAttribute(weapon, R.path(['firingEnergy', 'perSecond']), 'firing energy / second')}
       {renderAttribute(weapon, R.path(['firingHeat', 'perSecond']), 'firing heat / second')}
       {renderAttribute(weapon, R.path(['firingFuel', 'perSecond']), 'firing fuel / second')}
@@ -35,6 +39,10 @@ const WeaponAttributes = ({ weapon }) => {
       {R.has('shotsPerSecond', weapon) && (typeof weapon.shotsPerSecond === 'number') && <br />}
       {renderAttribute(weapon, R.path(['shieldDamage', 'perShot']), 'shield damage / shot')}
       {renderAttribute(weapon, R.path(['hullDamage', 'perShot']), 'hull damage / shot')}
+      {renderAttribute(weapon, R.path(['heatDamage', 'perShot']), 'heat damage / shot')}
+      {renderAttribute(weapon, R.path(['ionDamage', 'perShot']), 'ion damage / shot')}
+      {renderAttribute(weapon, R.path(['disruptionDamage', 'perShot']), 'disruption damage / shot')}
+      {renderAttribute(weapon, R.path(['slowingDamage', 'perShot']), 'slowing damage / shot')}
       {renderAttribute(weapon, R.path(['firingEnergy', 'perShot']), 'firing energy / shot')}
       {renderAttribute(weapon, R.path(['firingHeat', 'perShot']), 'firing heat / shot')}
       {renderAttribute(weapon, R.prop('inaccuracy'), 'inaccuracy')}

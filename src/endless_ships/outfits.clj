@@ -56,7 +56,8 @@
                       (* (get-in submunition [:weapon damage-type] 0)
                          (or submunition-count 1)))
                    (get weapon-attrs damage-type))
-        per-second (when (some? per-shot)
+        per-second (when (and (some? per-shot)
+                              (not= per-shot 0))
                      (/ (* per-shot 60) (:reload weapon-attrs)))]
     (when (some? per-second)
       (merge {:per-second (round-to-int per-second)}
