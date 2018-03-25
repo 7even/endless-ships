@@ -58,10 +58,11 @@
                    (get weapon-attrs damage-type))
         per-second (when (some? per-shot)
                      (/ (* per-shot 60) (:reload weapon-attrs)))]
-    (merge {:per-second (round-to-int per-second)}
-           (if (> (:reload weapon-attrs) 1)
-             {:per-shot (round-to-int per-shot)}
-             {}))))
+    (when (some? per-second)
+      (merge {:per-second (round-to-int per-second)}
+             (if (> (:reload weapon-attrs) 1)
+               {:per-shot (round-to-int per-shot)}
+               {})))))
 
 (defn- normalize-weapon-attrs [outfits]
   (map
@@ -89,14 +90,15 @@
                        {:shots-per-second shots-per-second
                         :range range}
                        (reduce (fn [damage-attrs damage-type]
-                                 (assoc damage-attrs
-                                        damage-type
-                                        (calculate-damage weapon-attrs
-                                                          submunition
-                                                          submunition-count
-                                                          damage-type)))
+                                 (if-let [attr-value (calculate-damage weapon-attrs
+                                                                       submunition
+                                                                       submunition-count
+                                                                       damage-type)]
+                                   (assoc damage-attrs damage-type attr-value)
+                                   damage-attrs))
                                {}
-                               [:shield-damage :hull-damage
+                               [:shield-damage :hull-damage :heat-damage
+                                :ion-damage :disruption-damage :slowing-damage
                                 :firing-energy :firing-heat :firing-fuel]))))
        (dissoc outfit :weapon)))
    outfits))

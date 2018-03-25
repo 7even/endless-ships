@@ -3,11 +3,8 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses, OutfitLink } from '../../common';
+import { renderLicenses, OutfitLink, orZero, damage, damagePerOutfitSpace } from '../../common';
 import { sortByColumn } from '../../ordering';
-
-const shieldDamagePerOutfitSpace = secondaryWeapon => secondaryWeapon.weapon.shieldDamage.perSecond / secondaryWeapon.outfitSpace;
-const hullDamagePerOutfitSpace   = secondaryWeapon => secondaryWeapon.weapon.hullDamage.perSecond / secondaryWeapon.outfitSpace;
 
 const Row = ({ secondaryWeapon }) => {
   return (
@@ -15,10 +12,10 @@ const Row = ({ secondaryWeapon }) => {
       <TextCell><OutfitLink outfitName={secondaryWeapon.name} /></TextCell>
       <NumberCell number={secondaryWeapon.cost} />
       <NumberCell number={secondaryWeapon.outfitSpace} />
-      <NumberCell number={secondaryWeapon.weapon.shieldDamage.perSecond} />
-      <DecimalCell decimal={shieldDamagePerOutfitSpace(secondaryWeapon)} />
-      <NumberCell number={secondaryWeapon.weapon.hullDamage.perSecond} />
-      <DecimalCell decimal={hullDamagePerOutfitSpace(secondaryWeapon)} />
+      <NumberCell number={damage('shieldDamage', secondaryWeapon)} />
+      <DecimalCell decimal={damagePerOutfitSpace('shieldDamage', secondaryWeapon)} />
+      <NumberCell number={damage('hullDamage', secondaryWeapon)} />
+      <DecimalCell decimal={damagePerOutfitSpace('hullDamage', secondaryWeapon)} />
       <NumberCell number={secondaryWeapon.weapon.range}/>
       <TextCell>{secondaryWeapon.weapon.shotsPerSecond}</TextCell>
       <TextCell>{renderLicenses(secondaryWeapon.licenses)}</TextCell>
@@ -30,10 +27,10 @@ const columns = new Map([
   ['Name',                  R.prop('name')],
   ['Cost',                  R.prop('cost')],
   ['Outfit sp.',            R.prop('outfitSpace')],
-  ['Shield damage',         R.path(['weapon', 'shieldDamage', 'perSecond'])],
-  ['Shield damage / space', shieldDamagePerOutfitSpace],
-  ['Hull damage',           R.path(['weapon', 'hullDamage', 'perSecond'])],
-  ['Hull damage / space',   hullDamagePerOutfitSpace],
+  ['Shield damage',         orZero(damage('shieldDamage'))],
+  ['Shield damage / space', damagePerOutfitSpace('shieldDamage')],
+  ['Hull damage',           orZero(damage('hullDamage'))],
+  ['Hull damage / space',   damagePerOutfitSpace('hullDamage')],
   ['Range',                 R.path(['weapon', 'range'])],
   ['Fire rate',             null],
   ['Licenses',              null]

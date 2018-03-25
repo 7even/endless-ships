@@ -45,4 +45,38 @@ const intersperse = (arr, sep) => {
   }
 };
 
-export { FormattedNumber, kebabCase, capitalize, nbsp, nbspize, renderLicenses, ShipLink, OutfitLink, intersperse };
+const orZero = (fn) => {
+  return (...args) => {
+    const result = fn(...args);
+    return R.isNil(result) ? 0 : result;
+  };
+};
+
+const damage = R.curry((damageType, gun) => {
+  return R.path(['weapon', damageType, 'perSecond'], gun);
+});
+
+const damagePerOutfitSpace = R.curry((damageType, gun) => {
+  const gunDamage = damage(damageType, gun);
+
+  if (!R.isNil(gunDamage)) {
+    return gunDamage / gun.outfitSpace;
+  } else {
+    return null;
+  }
+});
+
+export {
+  FormattedNumber,
+  kebabCase,
+  capitalize,
+  nbsp,
+  nbspize,
+  renderLicenses,
+  ShipLink,
+  OutfitLink,
+  intersperse,
+  orZero,
+  damage,
+  damagePerOutfitSpace
+};
