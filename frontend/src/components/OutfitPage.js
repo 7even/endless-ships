@@ -36,6 +36,7 @@ const WeaponAttributes = ({ weapon }) => {
       {renderAttribute(weapon, R.path(['firingHeat', 'perSecond']), 'firing heat / second')}
       {renderAttribute(weapon, R.path(['firingFuel', 'perSecond']), 'firing fuel / second')}
       {renderAttribute(weapon, R.prop('shotsPerSecond'), 'shots / second')}
+      {renderAttribute(weapon, R.prop('turretTurn'), 'turret turn rate')}
       {R.has('shotsPerSecond', weapon) && (typeof weapon.shotsPerSecond === 'number') && <br />}
       {renderAttribute(weapon, R.path(['shieldDamage', 'perShot']), 'shield damage / shot')}
       {renderAttribute(weapon, R.path(['hullDamage', 'perShot']), 'hull damage / shot')}
