@@ -50,6 +50,14 @@
      :hull-energy times-60
      :hull-heat times-60}))
 
+(def weapon-attribute-convertors
+  (let [times-60 (comp round-to-int (partial * 60))
+        times-100 (comp round-to-int (partial * 100))]
+    {:ion-damage times-100
+     :slowing-damage times-100
+     :disruption-damage times-100
+     :turret-turn times-60}))
+
 (defn- calculate-damage [weapon-attrs submunition submunition-count damage-type]
   (let [per-shot (if (some? submunition)
                    (+ (get weapon-attrs damage-type 0)
@@ -84,14 +92,18 @@
              range (if (some? submunition)
                      (let [total-lifetime (+ lifetime (get-in submunition [:weapon :lifetime]))]
                        (* velocity total-lifetime))
-                     (* velocity lifetime))]
+                     (* velocity lifetime))
+             converted-weapon-attrs (reduce (fn [attrs [attr-name convertor]]
+                                              (update-if-present attrs attr-name convertor))
+                                            weapon-attrs
+                                            weapon-attribute-convertors)]
          (assoc outfit
                 :weapon
-                (merge weapon-attrs
+                (merge converted-weapon-attrs
                        {:shots-per-second shots-per-second
                         :range range}
                        (reduce (fn [damage-attrs damage-type]
-                                 (if-let [attr-value (calculate-damage weapon-attrs
+                                 (if-let [attr-value (calculate-damage converted-weapon-attrs
                                                                        submunition
                                                                        submunition-count
                                                                        damage-type)]
