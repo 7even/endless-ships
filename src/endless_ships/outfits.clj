@@ -52,8 +52,8 @@
 
 (defn- calculate-damage [weapon-attrs submunition submunition-count damage-type]
   (let [per-shot (if (some? submunition)
-                   (+ (or (get weapon-attrs damage-type) 0)
-                      (* (get-in submunition [:weapon damage-type])
+                   (+ (get weapon-attrs damage-type 0)
+                      (* (get-in submunition [:weapon damage-type] 0)
                          (or submunition-count 1)))
                    (get weapon-attrs damage-type))
         per-second (when (some? per-shot)
@@ -96,7 +96,8 @@
                                                           submunition-count
                                                           damage-type)))
                                {}
-                               [:shield-damage :hull-damage]))))
+                               [:shield-damage :hull-damage
+                                :firing-energy :firing-heat :firing-fuel]))))
        (dissoc outfit :weapon)))
    outfits))
 
