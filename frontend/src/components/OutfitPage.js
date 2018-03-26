@@ -6,7 +6,7 @@ import { FormattedNumber, kebabCase, ShipLink, intersperse } from '../common';
 
 const OutfitDescription = ({ description }) => {
   if (description.length === 0) {
-    return <p className="licenses">No description.</p>;
+    return <p className="italic">No description.</p>;
   } else {
     return intersperse(description, index => <span key={index}><br/><br/></span>);
   }
@@ -98,7 +98,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                   <Col md={4}>
                     <OutfitDescription description={outfit.description} />
 
-                    {outfit.licenses.length > 0 && <span><br /><br /><p className="licenses">Requires a {outfit.licenses[0]} license.</p></span>}
+                    {outfit.licenses.length > 0 && <span><br /><br /><p className="italic">Requires a {outfit.licenses[0]} license.</p></span>}
                   </Col>
 
                   <Col md={4}>
@@ -148,7 +148,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {outfit.weapon && <WeaponAttributes weapon={outfit.weapon} />}
                     </ul>
 
-                    {outfit.unplunderable && <p className="licenses">This outfit cannot be plundered.</p>}
+                    {outfit.unplunderable && <p className="italic">This outfit cannot be plundered.</p>}
                   </Col>
                 </Row>
               </div>

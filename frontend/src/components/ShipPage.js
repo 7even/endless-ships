@@ -8,9 +8,9 @@ import './ShipPage.css';
 
 const ShipLicenses = ({ licenses }) => {
   if (licenses.length === 2) {
-    return <p className="licenses">This ship requires {licenses[0]} and {licenses[1]} licenses.</p>;
+    return <p className="italic">This ship requires {licenses[0]} and {licenses[1]} licenses.</p>;
   } else {
-    return <p className="licenses">This ship requires a {licenses[0]} license.</p>;
+    return <p className="italic">This ship requires a {licenses[0]} license.</p>;
   }
 };
 
