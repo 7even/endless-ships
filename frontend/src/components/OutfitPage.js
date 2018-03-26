@@ -51,6 +51,7 @@ const WeaponAttributes = ({ weapon }) => {
       {renderAttribute(weapon, R.path(['firingEnergy', 'perShot']), 'firing energy / shot')}
       {renderAttribute(weapon, R.path(['firingHeat', 'perShot']), 'firing heat / shot')}
       {renderAttribute(weapon, R.prop('inaccuracy'), 'inaccuracy')}
+      {renderAttribute(weapon, R.prop('antiMissile'), 'anti-missile')}
     </div>
   );
 };
@@ -138,6 +139,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {renderAttribute(outfit, R.prop('shieldEnergy'),           'shield energy')}
                       {renderAttribute(outfit, R.prop('shieldHeat'),             'shield heat')}
                       {renderAttribute(outfit, R.prop('ramscoop'),               'ramscoop')}
+                      {renderAttribute(outfit, R.prop('requiredCrew'),           'required crew')}
 
                       {outfit.weapon && <WeaponAttributes weapon={outfit.weapon} />}
                     </ul>
