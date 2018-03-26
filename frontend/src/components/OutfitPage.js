@@ -5,7 +5,11 @@ import R from 'ramda';
 import { FormattedNumber, kebabCase, ShipLink, intersperse } from '../common';
 
 const OutfitDescription = ({ description }) => {
-  return intersperse(description, index => <span key={index}><br/><br/></span>);
+  if (description.length === 0) {
+    return <p className="licenses">No description.</p>;
+  } else {
+    return intersperse(description, index => <span key={index}><br/><br/></span>);
+  }
 };
 
 const renderAttribute = (object, prop, label) => {
