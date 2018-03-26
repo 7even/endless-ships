@@ -141,9 +141,14 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {renderAttribute(outfit, R.prop('shieldHeat'),             'shield heat')}
                       {renderAttribute(outfit, R.prop('ramscoop'),               'ramscoop')}
                       {renderAttribute(outfit, R.prop('requiredCrew'),           'required crew')}
+                      {renderAttribute(outfit, R.prop('captureAttack'),          'capture attack')}
+                      {renderAttribute(outfit, R.prop('captureDefense'),         'capture defense')}
+                      {renderAttribute(outfit, R.prop('illegal'),                'illegal')}
 
                       {outfit.weapon && <WeaponAttributes weapon={outfit.weapon} />}
                     </ul>
+
+                    {outfit.unplunderable && <p className="licenses">This outfit cannot be plundered.</p>}
                   </Col>
                 </Row>
               </div>
