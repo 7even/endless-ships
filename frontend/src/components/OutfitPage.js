@@ -119,6 +119,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {renderAttribute(outfit, R.prop('turn'),                   'turn')}
                       {renderAttribute(outfit, R.prop('turningEnergy'),          'turning energy')}
                       {renderAttribute(outfit, R.prop('turningHeat'),            'turning heat')}
+                      {renderAttribute(outfit, R.prop('afterburnerEnergy'),      'afterburner energy')}
                       {renderAttribute(outfit, R.prop('afterburnerFuel'),        'afterburner fuel')}
                       {renderAttribute(outfit, R.prop('afterburnerHeat'),        'afterburner heat')}
                       {renderAttribute(outfit, R.prop('afterburnerThrust'),      'afterburner thrust')}

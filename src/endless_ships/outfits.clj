@@ -30,6 +30,7 @@
      :reverse-thrusting-heat times-60
      ;; afterburners
      :afterburner-thrust times-3600
+     :afterburner-energy times-60
      :afterburner-fuel times-60
      :afterburner-heat times-60
      ;; reactors & solar collectors
