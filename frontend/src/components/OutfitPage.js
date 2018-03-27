@@ -177,6 +177,21 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {renderAttribute(outfit, R.prop('cloakingEnergy'),         'cloaking energy')}
                       {renderAttribute(outfit, R.prop('cloakingFuel'),           'cloaking fuel')}
 
+                      <AmmoItem object={outfit} />
+                      {renderAttribute(outfit, R.prop('gatlingRoundCapacity'), 'gatling round capacity')}
+                      {renderAttribute(outfit, R.prop('javelinCapacity'),      'javelin capacity')}
+                      {renderAttribute(outfit, R.prop('finisherCapacity'),     'finisher capacity')}
+                      {renderAttribute(outfit, R.prop('trackerCapacity'),      'tracker capacity')}
+                      {renderAttribute(outfit, R.prop('rocketCapacity'),       'rocket capacity')}
+                      {renderAttribute(outfit, R.prop('minelayerCapacity'),    'minelayer capacity')}
+                      {renderAttribute(outfit, R.prop('piercerCapacity'),      'piercer capacity')}
+                      {renderAttribute(outfit, R.prop('meteorCapacity'),       'meteor capacity')}
+                      {renderAttribute(outfit, R.prop('railgunSlugCapacity'),  'railgun slug capacity')}
+                      {renderAttribute(outfit, R.prop('sidewinderCapacity'),   'sidewinder capacity')}
+                      {renderAttribute(outfit, R.prop('thunderheadCapacity'),  'thunderhead capacity')}
+                      {renderAttribute(outfit, R.prop('torpedoCapacity'),      'torpedo capacityn')}
+                      {renderAttribute(outfit, R.prop('typhoonCapacity'),      'typhoon capacity')}
+
                       {outfit.weapon && <WeaponAttributes weapon={outfit.weapon} />}
                     </ul>
 
