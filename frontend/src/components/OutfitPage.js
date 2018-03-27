@@ -124,6 +124,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                   <Col md={4}>
                     {outfit.hyperdrive && <p className="italic">Allows you to make hyperjumps.</p>}
                     {outfit.jumpDrive && <p className="italic">Lets you jump to any nearby system.</p>}
+                    {(outfit.installable === -1) && <p className="italic">This is not an installable item.</p>}
 
                     <ul>
                       {renderAttribute(outfit, R.prop('mass'),                   'mass')}
@@ -176,6 +177,10 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {renderAttribute(outfit, R.prop('cloak'),                  'cloak')}
                       {renderAttribute(outfit, R.prop('cloakingEnergy'),         'cloaking energy')}
                       {renderAttribute(outfit, R.prop('cloakingFuel'),           'cloaking fuel')}
+                      {renderAttribute(outfit, R.prop('bunks'),                  'bunks')}
+                      {renderAttribute(outfit, R.prop('automaton'),              'automaton')}
+                      {renderAttribute(outfit, R.prop('quantumKeystone'),        'quantum keystone')}
+                      {renderAttribute(outfit, R.prop('map'),                    'map')}
 
                       <AmmoItem object={outfit} />
                       {renderAttribute(outfit, R.prop('gatlingRoundCapacity'), 'gatling round capacity')}
