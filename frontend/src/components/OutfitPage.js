@@ -112,6 +112,9 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                   </Col>
 
                   <Col md={4}>
+                    {outfit.hyperdrive && <p className="italic">Allows you to make hyperjumps.</p>}
+                    {outfit.jumpDrive && <p className="italic">Lets you jump to any nearby system.</p>}
+
                     <ul>
                       {renderAttribute(outfit, R.prop('thrust'),                 'thrust')}
                       {renderAttribute(outfit, R.prop('thrustingEnergy'),        'thrusting energy')}
@@ -145,6 +148,13 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {renderAttribute(outfit, R.prop('captureAttack'),          'capture attack')}
                       {renderAttribute(outfit, R.prop('captureDefense'),         'capture defense')}
                       {renderAttribute(outfit, R.prop('illegal'),                'illegal')}
+                      {renderAttribute(outfit, R.prop('cargoSpace'),             'cargo space')}
+                      {renderAttribute(outfit, R.prop('coolingInefficiency'),    'cooling inefficiency')}
+                      {renderAttribute(outfit, R.prop('heatDissipation'),        'heat dissipation')}
+                      {renderAttribute(outfit, R.prop('fuelCapacity'),           'fuel capacity')}
+                      {renderAttribute(outfit, R.prop('jumpFuel'),               'jump fuel')}
+                      {renderAttribute(outfit, R.prop('jumpSpeed'),              'jump speed')}
+                      {renderAttribute(outfit, R.prop('scramDrive'),             'scram drive')}
 
                       {outfit.weapon && <WeaponAttributes weapon={outfit.weapon} />}
                     </ul>
