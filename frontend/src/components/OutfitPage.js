@@ -155,6 +155,16 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                       {renderAttribute(outfit, R.prop('jumpFuel'),               'jump fuel')}
                       {renderAttribute(outfit, R.prop('jumpSpeed'),              'jump speed')}
                       {renderAttribute(outfit, R.prop('scramDrive'),             'scram drive')}
+                      {renderAttribute(outfit, R.prop('atmosphereScan'),         'atmosphere scan')}
+                      {renderAttribute(outfit, R.prop('cargoScanPower'),         'cargo scan power')}
+                      {renderAttribute(outfit, R.prop('cargoScanSpeed'),         'cargo scan speed')}
+                      {renderAttribute(outfit, R.prop('outfitScanPower'),        'outfit scan power')}
+                      {renderAttribute(outfit, R.prop('outfitScanSpeed'),        'outfit scan speed')}
+                      {renderAttribute(outfit, R.prop('scanInterference'),       'scan interference')}
+                      {renderAttribute(outfit, R.prop('radarJamming'),           'radar jamming')}
+                      {renderAttribute(outfit, R.prop('cloak'),                  'cloak')}
+                      {renderAttribute(outfit, R.prop('cloakingEnergy'),         'cloaking energy')}
+                      {renderAttribute(outfit, R.prop('cloakingFuel'),           'cloaking fuel')}
 
                       {outfit.weapon && <WeaponAttributes weapon={outfit.weapon} />}
                     </ul>
@@ -165,7 +175,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
               </div>
 
               <div className="media-right">
-                <Image src={imageURL(outfit)} />
+                {outfit.thumbnail && <Image src={imageURL(outfit)} />}
               </div>
             </div>
           </Panel.Body>

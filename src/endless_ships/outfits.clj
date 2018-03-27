@@ -49,7 +49,10 @@
      ;; hull repair modules
      :hull-repair-rate times-60
      :hull-energy times-60
-     :hull-heat times-60}))
+     :hull-heat times-60
+     ;; cloaking device
+     :cloaking-energy times-60
+     :cloaking-fuel times-60}))
 
 (def weapon-attribute-convertors
   (let [times-60 (comp round-to-int (partial * 60))
