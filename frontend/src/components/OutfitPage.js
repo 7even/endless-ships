@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Panel, Image } from 'react-bootstrap';
 import R from 'ramda';
-import { FormattedNumber, kebabCase, ShipLink, intersperse } from '../common';
+import { FormattedNumber, kebabCase, ShipLink, OutfitLink, intersperse } from '../common';
 
 const OutfitDescription = ({ description }) => {
   if (description.length === 0) {
@@ -26,9 +26,19 @@ const renderAttribute = (object, prop, label) => {
   }
 };
 
+const AmmoItem = ({ object }) => {
+  if (object.ammo) {
+    return <li>ammo: <OutfitLink outfitName={object.ammo} /></li>;
+  } else {
+    return null;
+  }
+};
+
 const WeaponAttributes = ({ weapon }) => {
   return (
     <div>
+      <br />
+      <AmmoItem object={weapon} />
       {renderAttribute(weapon, R.prop('range'),                           'range')}
       {renderAttribute(weapon, R.path(['shieldDamage', 'perSecond']),     'shield damage / second')}
       {renderAttribute(weapon, R.path(['hullDamage', 'perSecond']),       'hull damage / second')}
@@ -116,6 +126,7 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
                     {outfit.jumpDrive && <p className="italic">Lets you jump to any nearby system.</p>}
 
                     <ul>
+                      {renderAttribute(outfit, R.prop('mass'),                   'mass')}
                       {renderAttribute(outfit, R.prop('thrust'),                 'thrust')}
                       {renderAttribute(outfit, R.prop('thrustingEnergy'),        'thrusting energy')}
                       {renderAttribute(outfit, R.prop('thrustingHeat'),          'thrusting heat')}
