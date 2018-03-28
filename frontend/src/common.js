@@ -33,6 +33,10 @@ const ShipLink = ({ shipName }) => (
   <Link to={`/ships/${kebabCase(shipName)}`}>{nbspize(shipName)}</Link>
 );
 
+const ShipModificationLink = ({ shipName, shipModification }) => (
+  <Link to={`/ships/${kebabCase(shipName)}/${kebabCase(shipModification)}`}>{nbspize(shipModification)}</Link>
+);
+
 const OutfitLink = ({ outfitName }) => (
   <Link to={`/outfits/${kebabCase(outfitName)}`}>{nbspize(outfitName)}</Link>
 );
@@ -74,6 +78,7 @@ export {
   nbspize,
   renderLicenses,
   ShipLink,
+  ShipModificationLink,
   OutfitLink,
   intersperse,
   orZero,

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Panel, Image } from 'react-bootstrap';
 import R from 'ramda';
-import { FormattedNumber, kebabCase, ShipLink, OutfitLink, intersperse } from '../common';
+import { FormattedNumber, kebabCase, ShipLink, ShipModificationLink, OutfitLink, intersperse } from '../common';
 
 const OutfitDescription = ({ description }) => {
   if (description.length === 0) {
@@ -73,23 +73,26 @@ const imageURL = (outfit) => {
   return "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" + filename;
 };
 
-const ShipInstallation = ({ shipName, quantity }) => {
-  if (quantity === 1) {
-    return <li className="list-group-item"><ShipLink shipName={shipName} /></li>;
+const ShipInstallation = ({ shipName, shipModification, quantity }) => {
+  let link;
+
+  if (R.isNil(shipModification)) {
+    link = <ShipLink shipName={shipName} />;
   } else {
-    return (
-      <li className="list-group-item">
-        <span className="badge">{quantity}</span>
-        <ShipLink shipName={shipName} />
-      </li>
-    );
+    link = <ShipModificationLink shipName={shipName} shipModification={shipModification} />;
+  }
+
+  if (quantity === 1) {
+    return <li className="list-group-item">{link}</li>;
+  } else {
+    return <li className="list-group-item"><span className="badge">{quantity}</span>{link}</li>;
   }
 };
 
 const InstallationsList = ({ installations }) => (
   <Panel.Body>
     <ul className="list-group">
-      {installations.map(installation => <ShipInstallation key={installation.shipName} {...installation} />)}
+      {installations.map(installation => <ShipInstallation key={R.values(installation)} {...installation} />)}
     </ul>
   </Panel.Body>
 );
@@ -226,19 +229,23 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
   </div>
 );
 
-const mapStateToProps = (state, { match: { params: { outfitName } } }) => {
-  const outfit = state.outfits.find(outfit => kebabCase(outfit.name) === outfitName);
-
-  const shipInstallations = state.ships.map(ship => {
-    const shipOutfit = ship.outfits.find(
+const findShipsWithOutfit = (ships, outfit) => {
+  return ships.map(ship => {
+    const shipOutfit = R.or(ship.outfits, []).find(
       ({ name }) => name === outfit.name
     );
 
     return {
       shipName: ship.name,
+      shipModification: ship.modification,
       quantity: shipOutfit ? shipOutfit.quantity : 0
     };
   }).filter(({ quantity }) => quantity > 0);
+};
+
+const mapStateToProps = (state, { match: { params: { outfitName } } }) => {
+  const outfit = state.outfits.find(outfit => kebabCase(outfit.name) === outfitName);
+  const shipInstallations = findShipsWithOutfit(R.concat(state.ships, state.shipModifications), outfit);
 
   return { outfit, shipInstallations };
 };
