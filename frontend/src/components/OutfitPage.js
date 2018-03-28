@@ -2,27 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Panel, Image } from 'react-bootstrap';
 import R from 'ramda';
-import { FormattedNumber, kebabCase, ShipLink, ShipModificationLink, OutfitLink, intersperse } from '../common';
+import { kebabCase, ShipLink, ShipModificationLink, OutfitLink, renderAttribute, intersperse } from '../common';
 
 const OutfitDescription = ({ description }) => {
   if (description.length === 0) {
     return <p className="italic">No description.</p>;
   } else {
     return intersperse(description, index => <span key={index}><br/><br/></span>);
-  }
-};
-
-const renderAttribute = (object, prop, label) => {
-  const value = prop(object);
-
-  if (!R.isNil(value)) {
-    if (typeof value === 'number') {
-      return <li>{label}: <FormattedNumber number={value} /></li>;
-    } else {
-      return <li>{label}: {value}</li>;
-    }
-  } else {
-    return null;
   }
 };
 

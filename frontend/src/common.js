@@ -41,6 +41,20 @@ const OutfitLink = ({ outfitName }) => (
   <Link to={`/outfits/${kebabCase(outfitName)}`}>{nbspize(outfitName)}</Link>
 );
 
+const renderAttribute = (object, prop, label) => {
+  const value = prop(object);
+
+  if (!R.isNil(value)) {
+    if (typeof value === 'number') {
+      return <li>{label}: <FormattedNumber number={value} /></li>;
+    } else {
+      return <li>{label}: {value}</li>;
+    }
+  } else {
+    return null;
+  }
+};
+
 const intersperse = (arr, sep) => {
   if (arr.length === 0) {
     return [];
@@ -80,6 +94,7 @@ export {
   ShipLink,
   ShipModificationLink,
   OutfitLink,
+  renderAttribute,
   intersperse,
   orZero,
   damage,

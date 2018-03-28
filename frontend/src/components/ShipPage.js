@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Panel, Image, Nav, NavItem } from 'react-bootstrap';
 import R from 'ramda';
-import { FormattedNumber, kebabCase, OutfitLink, intersperse } from '../common';
+import { FormattedNumber, kebabCase, OutfitLink, renderAttribute, intersperse } from '../common';
 import './ShipPage.css';
 
 const ShipLicenses = ({ licenses }) => {
@@ -100,22 +100,22 @@ const ShipPage = ({ ship, modificationNames }) => (
             <div className="media">
               <div className="media-body">
                 <ul>
-                  <li>cost: <FormattedNumber number={ship.cost} /></li>
-                  {ship.shields && <li>shields: <FormattedNumber number={ship.shields} /></li>}
-                  <li>hull: <FormattedNumber number={ship.hull} /></li>
-                  <li>mass: <FormattedNumber number={ship.mass} /></li>
-                  {ship.cargoSpace && <li>cargo space: <FormattedNumber number={ship.cargoSpace} /></li>}
-                  {ship.requiredCrew && <li>required crew: <FormattedNumber number={ship.requiredCrew} /></li>}
-                  {ship.bunks && <li>bunks: <FormattedNumber number={ship.bunks} /></li>}
-                  {ship.fuelCapacity && <li>fuel capacity: <FormattedNumber number={ship.fuelCapacity} /></li>}
-                  <li>outfit space: <FormattedNumber number={ship.outfitSpace} /></li>
-                  {ship.weaponCapacity && <li>weapon capacity: <FormattedNumber number={ship.weaponCapacity} /></li>}
-                  <li>engine capacity: <FormattedNumber number={ship.engineCapacity} /></li>
-                  <li>guns: <FormattedNumber number={ship.guns || 0} /></li>
-                  <li>turrets: <FormattedNumber number={ship.turrets || 0} /></li>
-                  {ship.drones > 0 && <li>drones: <FormattedNumber number={ship.drones} /></li>}
-                  {ship.fighters > 0 && <li>fighters: <FormattedNumber number={ship.fighters} /></li>}
-                  {ship.ramscoop && <li>ramscoop: <FormattedNumber number={ship.ramscoop} /></li>}
+                  {renderAttribute(ship, R.prop('cost'),    'cost')}
+                  {renderAttribute(ship, R.prop('shields'), 'shields')}
+                  {renderAttribute(ship, R.prop('hull'),    'hull')}
+                  {renderAttribute(ship, R.prop('mass'),    'mass')}
+                  {renderAttribute(ship, R.prop('cargoSpace'), 'cargo space')}
+                  {renderAttribute(ship, R.prop('requiredCrew'), 'required crew')}
+                  {renderAttribute(ship, R.prop('bunks'), 'bunks')}
+                  {renderAttribute(ship, R.prop('fuelCapacity'), 'fuel capacity')}
+                  {renderAttribute(ship, R.prop('outfitSpace'), 'outfit space')}
+                  {renderAttribute(ship, R.prop('weaponCapacity'), 'weapon capacity')}
+                  {renderAttribute(ship, R.prop('engineCapacity'), 'engine capacity')}
+                  {renderAttribute(ship, R.propOr(0, 'guns'), 'guns')}
+                  {renderAttribute(ship, R.propOr(0, 'turrets'), 'turrets')}
+                  {ship.drones > 0 && renderAttribute(ship, R.prop('drones'), 'drones')}
+                  {ship.fighters > 0 && renderAttribute(ship, R.prop('fighters'), 'fighters')}
+                  {renderAttribute(ship, R.prop('ramscoop'), 'ramscoop')}
                   {R.has('selfDestruct', ship) && <li>self-destruct: <FormattedPercentage coefficient={ship.selfDestruct}/></li>}
                 </ul>
 
