@@ -1,12 +1,10 @@
 (ns endless-ships.core
-  (:require [camel-snake-kebab
-             [core :refer [->camelCaseKeyword]]
-             [extras :refer [transform-keys]]]
+  (:require [camel-snake-kebab.core :refer [->camelCaseKeyword]]
+            [camel-snake-kebab.extras :refer [transform-keys]]
             [cheshire.core :refer [generate-string]]
-            [endless-ships
-             [outfits :refer [outfits]]
-             [parser :refer [data]]
-             [ships :refer [modifications ships]]]))
+            [endless-ships.outfits :refer [outfits]]
+            [endless-ships.outfitters :refer [outfitters]]
+            [endless-ships.ships :refer [modifications ships]]))
 
 (def file->race
   {"kestrel.txt" :human
@@ -57,7 +55,8 @@
   ([path]
    (let [data {:ships ships-data
                :shipModifications modifications-data
-               :outfits outfits-data}
+               :outfits outfits-data
+               :outfitters outfitters}
          json (generate-string data {:pretty true})]
      (spit path (str json "\n")))))
 
@@ -77,7 +76,7 @@
                {})
        (sort-by last >))
   ;; get government colors in CSS format
-  (->> data
+  (->> endless-ships.parser/data
        (filter #(= (first %) "government"))
        (map (fn [[_ [name] {[[colors]] "color"}]]
               [name colors]))
