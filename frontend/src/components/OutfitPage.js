@@ -83,7 +83,15 @@ const InstallationsList = ({ installations }) => (
   </Panel.Body>
 );
 
-const OutfitPage = ({ outfit, shipInstallations }) => (
+const PlanetsList = ({ planets }) => (
+  <Panel.Body>
+    <ul className="list-group">
+      {planets.map(({ name, system }) => <li className="list-group-item" key={name}>{name} ({system})</li>)}
+    </ul>
+  </Panel.Body>
+);
+
+const OutfitPage = ({ outfit, shipInstallations, sellingPlanets }) => (
   <div className="app">
     <Row>
       <Col md={12}>
@@ -211,6 +219,14 @@ const OutfitPage = ({ outfit, shipInstallations }) => (
           {shipInstallations.length > 0 && <InstallationsList installations={shipInstallations} />}
         </Panel>
       </Col>
+
+      <Col md={6}>
+        <Panel>
+          <Panel.Heading>Sold at {sellingPlanets.length} planets</Panel.Heading>
+
+          {sellingPlanets.length > 0 && <PlanetsList planets={sellingPlanets} />}
+        </Panel>
+      </Col>
     </Row>
   </div>
 );
@@ -233,7 +249,15 @@ const mapStateToProps = (state, { match: { params: { outfitName } } }) => {
   const outfit = state.outfits.find(outfit => kebabCase(outfit.name) === outfitName);
   const shipInstallations = findShipsWithOutfit(R.concat(state.ships, state.shipModifications), outfit);
 
-  return { outfit, shipInstallations };
+  const outfitters = state.outfitters.filter(outfitter => R.contains(outfit.name, outfitter.outfits));
+  const sellingPlanets = R.pipe(
+    R.map(R.prop('planets')),
+    R.flatten,
+    R.uniq,
+    R.sortBy(R.prop('name'))
+  )(outfitters);
+
+  return { outfit, shipInstallations, sellingPlanets };
 };
 
 export default connect(mapStateToProps)(OutfitPage);
