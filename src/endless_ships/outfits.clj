@@ -6,13 +6,22 @@
     (update m k f)
     m))
 
-(defn- round-to-int [num]
-  (when (some? num)
-    (-> num double Math/round)))
+(defn- float-is-round? [num]
+  (= (-> num int float) num))
+
+(defn- round-to-5-digits [num]
+  (if (integer? num)
+    num
+    (let [float-num (-> (format "%.5g" (float num))
+                        (clojure.string/replace \, \.)
+                        Float/parseFloat)]
+      (if (float-is-round? float-num)
+        (int float-num)
+        float-num))))
 
 (def attribute-convertors
-  (let [times-3600 (comp round-to-int (partial * 3600))
-        times-60 (comp round-to-int (partial * 60))]
+  (let [times-3600 (comp round-to-5-digits (partial * 3600))
+        times-60 (comp round-to-5-digits (partial * 60))]
     {:outfit-space -
      :weapon-capacity -
      :engine-capacity -
@@ -55,8 +64,8 @@
      :cloaking-fuel times-60}))
 
 (def weapon-attribute-convertors
-  (let [times-60 (comp round-to-int (partial * 60))
-        times-100 (comp round-to-int (partial * 100))]
+  (let [times-60 (partial * 60)
+        times-100 (partial * 100)]
     {:ion-damage times-100
      :slowing-damage times-100
      :disruption-damage times-100
@@ -72,9 +81,9 @@
                               (not= per-shot 0))
                      (/ (* per-shot 60) (:reload weapon-attrs)))]
     (when (some? per-second)
-      (merge {:per-second (round-to-int per-second)}
+      (merge {:per-second (round-to-5-digits per-second)}
              (if (> (:reload weapon-attrs) 1)
-               {:per-shot (round-to-int per-shot)}
+               {:per-shot (round-to-5-digits per-shot)}
                {})))))
 
 (defn- normalize-weapon-attrs [outfits]

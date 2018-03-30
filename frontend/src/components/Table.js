@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table as BSTable } from 'react-bootstrap';
 
-import { FormattedNumber } from '../common';
+import { FormattedNumber, floatFormatter } from '../common';
 import { TableHeaders } from '../ordering';
 
 const Table = ({ headerColumns, ordering, toggleOrdering, children }) => {
@@ -37,7 +37,7 @@ const NumberCell = ({ number }) => (
 
 const DecimalCell = ({ decimal }) => (
   <td className="text-right">
-    {decimal && <FormattedNumber number={decimal} isDecimal={true} />}
+    {decimal && <FormattedNumber number={floatFormatter.format(decimal)} isDecimal={true} />}
   </td>
 );
 

@@ -18,7 +18,6 @@ const FormattedNumber = ({ number, isDecimal }) => {
     <NumberFormat value={number}
                   displayType={'text'}
                   thousandSeparator={true}
-                  decimalScale={2}
                   fixedDecimalScale={isDecimal} />
   );
 };
@@ -70,6 +69,11 @@ const orZero = (fn) => {
   };
 };
 
+const floatFormatter = window.Intl.NumberFormat(
+  'en-US',
+  { maximumSignificantDigits: 5 }
+);
+
 const damage = R.curry((damageType, gun) => {
   return R.path(['weapon', damageType, 'perSecond'], gun);
 });
@@ -97,6 +101,7 @@ export {
   renderAttribute,
   intersperse,
   orZero,
+  floatFormatter,
   damage,
   damagePerOutfitSpace
 };
