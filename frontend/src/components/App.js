@@ -3,7 +3,7 @@ import endlessShips from '../reducers';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
 
 import Reference from './Reference';
 import Navigation from './Navigation';
@@ -15,13 +15,13 @@ import OutfitPage from './OutfitPage';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
-const App = () => (
+const App = ({ history }) => (
   <Provider store={createStore(endlessShips)}>
     <Grid>
       <Row>
         <Col lg={12}>
           <Reference>
-            <Router>
+            <Router history={history}>
               <div className="app">
                 <Navigation />
                 <Route exact={true} path="/" component={ShipsList} />

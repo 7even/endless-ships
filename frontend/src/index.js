@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createBrowserHistory } from 'history';
 import App from './components/App';
 import './index.css';
 import 'github-fork-ribbon-css/gh-fork-ribbon.css';
 
-fetch('/ga.json').then(response => response.json()).then(gaSettings => {
+const history = createBrowserHistory();
+
+window.fetch('/ga.json').then(response => response.json()).then(gaSettings => {
   if (gaSettings.gaId) { // eslint-disable-next-line
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ // eslint-disable-next-line
     (i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),
@@ -13,12 +16,14 @@ fetch('/ga.json').then(response => response.json()).then(gaSettings => {
 
     window.ga('create', gaSettings.gaId, 'auto');
     window.ga('send', 'pageview');
+
+    history.listen(location => window.ga('send', 'pageview', location.pathname));
   } else {
     console.log('Google Analytics disabled');
   }
 });
 
 ReactDOM.render(
-  <App />,
+  <App history={history} />,
   document.getElementById('root')
 );
