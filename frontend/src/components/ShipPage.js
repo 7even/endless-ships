@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Row, Col, Panel, Image, Nav, NavItem } from 'react-bootstrap';
+import { Row, Col, Panel, Image, Nav, NavItem, ListGroupItem } from 'react-bootstrap';
 import R from 'ramda';
 import { FormattedNumber, kebabCase, OutfitLink, renderAttribute, intersperse } from '../common';
 import './ShipPage.css';
@@ -33,19 +33,6 @@ const imageURL = (ship) => {
 const FormattedPercentage = ({ coefficient }) => (
   <span><FormattedNumber number={coefficient * 100}/>%</span>
 );
-
-const OutfitItem = ({ name, quantity }) => {
-  if (quantity === 1) {
-    return <li className="list-group-item"><OutfitLink outfitName={name} /></li>;
-  } else {
-    return (
-      <li className="list-group-item">
-        <span className="badge">{quantity}</span>
-        <OutfitLink outfitName={name} />
-      </li>
-    );
-  }
-};
 
 const ShipDescription = ({ description }) => (
   <Row>
@@ -86,6 +73,57 @@ const ShipModifications = ({ ship, modificationNames }) => {
         </Nav>
       </Panel.Body>
     </Panel>
+  );
+};
+
+const OutfitItem = ({ name, quantity }) => {
+  if (quantity === 1) {
+    return <li className="list-group-item"><OutfitLink outfitName={name} /></li>;
+  } else {
+    return (
+      <li className="list-group-item">
+        <span className="badge">{quantity}</span>
+        <OutfitLink outfitName={name} />
+      </li>
+    );
+  }
+};
+
+const OutfitsList = ({ outfits }) => {
+  const outfitCategories = [
+    'Guns',
+    'Turrets',
+    'Secondary Weapons',
+    'Ammunition',
+    'Systems',
+    'Power',
+    'Engines',
+    'Hand to Hand',
+    'Special'
+  ];
+
+  const items = outfitCategories.map(category => {
+    if (R.has(category, outfits)) {
+      const categoryHeader = <ListGroupItem key={category} disabled>{category}</ListGroupItem>;
+      const categoryItems = R.pipe(
+        R.prop(category),
+        R.sortBy(R.path(['outfit', 'name']))
+      )(outfits).map(({ outfit, quantity }) => (
+        <OutfitItem key={outfit.name}
+                    name={outfit.name}
+                    quantity={quantity} />
+      ));
+
+      return [categoryHeader, ...categoryItems];
+    } else {
+      return [];
+    }
+  });
+
+  return (
+    <Panel.Body>
+      <ul className="list-group">{items}</ul>
+    </Panel.Body>
   );
 };
 
@@ -136,11 +174,7 @@ const ShipPage = ({ ship, modificationNames }) => (
         <Panel>
           <Panel.Heading>Default outfits</Panel.Heading>
 
-          <Panel.Body>
-            <ul className="list-group">
-              {ship.outfits.map(outfit => <OutfitItem key={outfit.name} {...outfit} />)}
-            </ul>
-          </Panel.Body>
+          <OutfitsList outfits={ship.outfits} />
         </Panel>
       </Col>
     </Row>
@@ -153,9 +187,18 @@ const mapStateToProps = (state, { match: { params: { shipName, modificationName 
   const ship = state.ships.find(ship => kebabCase(ship.name) === shipName);
   const modifications = state.shipModifications.filter(modification => modification.name === ship.name);
   const selectedModification = modifications.find(modification => kebabCase(modification.modification) === modificationName);
+  const shipWithModification = { ...ship, ...selectedModification };
+
+  const outfits = shipWithModification.outfits.map(({ name, quantity }) => {
+    const outfit = state.outfits.find(outfit => outfit.name === name);
+    return { outfit, quantity };
+  });
 
   return {
-    ship: { ...ship, ...selectedModification },
+    ship: {
+      ...shipWithModification,
+      outfits: R.groupBy(R.path(['outfit', 'category']), outfits)
+    },
     modificationNames: modifications.map(mod => mod.modification)
   };
 };
