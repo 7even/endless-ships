@@ -1,22 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Panel, Image } from 'react-bootstrap';
-import { FormattedNumber, kebabCase } from '../common';
+import { Link } from 'react-router-dom';
+import { Row, Col, Panel, Image, Nav, NavItem } from 'react-bootstrap';
+import R from 'ramda';
+import { FormattedNumber, kebabCase, OutfitLink, renderAttribute, intersperse } from '../common';
 import './ShipPage.css';
-
-const intersperse = (arr, sep) => {
-  if (arr.length === 0) {
-    return [];
-  } else {
-    return arr.slice(1).reduce((xs, x, idx) => xs.concat([sep(idx), x]), [arr[0]]);
-  }
-};
 
 const ShipLicenses = ({ licenses }) => {
   if (licenses.length === 2) {
-    return <p className="licenses">This ship requires {licenses[0]} and {licenses[1]} licenses.</p>;
+    return <p className="italic">This ship requires {licenses[0]} and {licenses[1]} licenses.</p>;
   } else {
-    return <p className="licenses">This ship requires a {licenses[0]} license.</p>;
+    return <p className="italic">This ship requires a {licenses[0]} license.</p>;
   }
 };
 
@@ -36,14 +30,18 @@ const imageURL = (ship) => {
   return "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" + filename;
 };
 
+const FormattedPercentage = ({ coefficient }) => (
+  <span><FormattedNumber number={coefficient * 100}/>%</span>
+);
+
 const OutfitItem = ({ name, quantity }) => {
   if (quantity === 1) {
-    return <li className="list-group-item">{name}</li>;
+    return <li className="list-group-item"><OutfitLink outfitName={name} /></li>;
   } else {
     return (
       <li className="list-group-item">
         <span className="badge">{quantity}</span>
-        {name}
+        <OutfitLink outfitName={name} />
       </li>
     );
   }
@@ -59,7 +57,39 @@ const ShipDescription = ({ description }) => (
   </Row>
 );
 
-const ShipPage = ({ ship }) => (
+const modificationLink = (name, path) => (
+  <NavItem componentClass={Link}
+           key={name}
+           eventKey={name}
+           href={path}
+           to={path}>
+    {name}
+  </NavItem>
+);
+
+const ShipModifications = ({ ship, modificationNames }) => {
+  const items = modificationNames.map(modificationName => {
+    return modificationLink(
+      modificationName,
+      `/ships/${kebabCase(ship.name)}/${kebabCase(modificationName)}`
+    );
+  });
+
+  return (
+    <Panel>
+      <Panel.Heading>Modifications</Panel.Heading>
+
+      <Panel.Body>
+        <Nav bsStyle="pills" stacked={true} activeKey={ship.modification || ship.name}>
+          {modificationLink(ship.name, `/ships/${kebabCase(ship.name)}`)}
+          {items}
+        </Nav>
+      </Panel.Body>
+    </Panel>
+  );
+};
+
+const ShipPage = ({ ship, modificationNames }) => (
   <div className="app">
     <Row>
       <Col md={6}>
@@ -70,24 +100,26 @@ const ShipPage = ({ ship }) => (
             <div className="media">
               <div className="media-body">
                 <ul>
-                  <li>cost: <FormattedNumber number={ship.cost} /></li>
-                  <li>shields: <FormattedNumber number={ship.shields} /></li>
-                  <li>hull: <FormattedNumber number={ship.hull} /></li>
-                  <li>mass: <FormattedNumber number={ship.mass} /></li>
-                  <li>cargo space: <FormattedNumber number={ship.cargoSpace} /></li>
-                  <li>required crew: <FormattedNumber number={ship.requiredCrew} /></li>
-                  <li>bunks: <FormattedNumber number={ship.bunks} /></li>
-                  <li>fuel capacity: <FormattedNumber number={ship.fuelCapacity} /></li>
-                  <li>outfit space: <FormattedNumber number={ship.outfitSpace} /></li>
-                  <li>weapon capacity: <FormattedNumber number={ship.weaponCapacity} /></li>
-                  <li>engine capacity: <FormattedNumber number={ship.engineCapacity} /></li>
-                  <li>guns: <FormattedNumber number={ship.guns} /></li>
-                  <li>turrets: <FormattedNumber number={ship.turrets} /></li>
-                  {ship.drones > 0 && <li>drones: <FormattedNumber number={ship.drones} /></li>}
-                  {ship.fighters > 0 && <li>fighters: <FormattedNumber number={ship.fighters} /></li>}
+                  {renderAttribute(ship, R.prop('cost'),    'cost')}
+                  {renderAttribute(ship, R.prop('shields'), 'shields')}
+                  {renderAttribute(ship, R.prop('hull'),    'hull')}
+                  {renderAttribute(ship, R.prop('mass'),    'mass')}
+                  {renderAttribute(ship, R.prop('cargoSpace'), 'cargo space')}
+                  {renderAttribute(ship, R.prop('requiredCrew'), 'required crew')}
+                  {renderAttribute(ship, R.prop('bunks'), 'bunks')}
+                  {renderAttribute(ship, R.prop('fuelCapacity'), 'fuel capacity')}
+                  {renderAttribute(ship, R.prop('outfitSpace'), 'outfit space')}
+                  {renderAttribute(ship, R.prop('weaponCapacity'), 'weapon capacity')}
+                  {renderAttribute(ship, R.prop('engineCapacity'), 'engine capacity')}
+                  {renderAttribute(ship, R.propOr(0, 'guns'), 'guns')}
+                  {renderAttribute(ship, R.propOr(0, 'turrets'), 'turrets')}
+                  {ship.drones > 0 && renderAttribute(ship, R.prop('drones'), 'drones')}
+                  {ship.fighters > 0 && renderAttribute(ship, R.prop('fighters'), 'fighters')}
+                  {renderAttribute(ship, R.prop('ramscoop'), 'ramscoop')}
+                  {R.has('selfDestruct', ship) && <li>self-destruct: <FormattedPercentage coefficient={ship.selfDestruct}/></li>}
                 </ul>
 
-                {ship.licenses.length > 0 && <ShipLicenses licenses={ship.licenses} />}
+                {ship.licenses && <ShipLicenses licenses={ship.licenses} />}
               </div>
 
               <div className="media-right">
@@ -96,6 +128,8 @@ const ShipPage = ({ ship }) => (
             </div>
           </Panel.Body>
         </Panel>
+
+        {modificationNames.length > 0 && <ShipModifications ship={ship} modificationNames={modificationNames} />}
       </Col>
 
       <Col md={6}>
@@ -115,9 +149,14 @@ const ShipPage = ({ ship }) => (
   </div>
 );
 
-const mapStateToProps = (state, { match: { params: { shipName } } }) => {
+const mapStateToProps = (state, { match: { params: { shipName, modificationName } } }) => {
+  const ship = state.ships.find(ship => kebabCase(ship.name) === shipName);
+  const modifications = state.shipModifications.filter(modification => modification.name === ship.name);
+  const selectedModification = modifications.find(modification => kebabCase(modification.modification) === modificationName);
+
   return {
-    ship: state.ships.find(ship => kebabCase(ship.name) === shipName)
+    ship: { ...ship, ...selectedModification },
+    modificationNames: modifications.map(mod => mod.modification)
   };
 };
 

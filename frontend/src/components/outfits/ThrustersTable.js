@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const effectiveness = thruster => thruster.thrust / thruster.outfitSpace;
 
 const Row = ({ thruster }) => (
   <tr>
-    <TextCell>{thruster.name}</TextCell>
+    <TextCell><OutfitLink outfitName={thruster.name} /></TextCell>
     <NumberCell number={thruster.cost} />
     <NumberCell number={thruster.outfitSpace} />
     <NumberCell number={thruster.thrust} />

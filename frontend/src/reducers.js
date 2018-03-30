@@ -16,9 +16,11 @@ const toggleOrdering = (ordering, columnName) => {
   }
 };
 
-const isLoading = (state = true, action) => (action.type === 'load-data') ? false : state;
-const ships     = (state = [],   action) => (action.type === 'load-data') ? action.data.ships : state;
-const outfits   = (state = [],   action) => (action.type === 'load-data') ? action.data.outfits : state;
+const isLoading         = (state = true, action) => (action.type === 'load-data') ? false : state;
+const ships             = (state = [],   action) => (action.type === 'load-data') ? action.data.ships : state;
+const shipModifications = (state = [],   action) => (action.type === 'load-data') ? action.data.shipModifications : state;
+const outfits           = (state = [],   action) => (action.type === 'load-data') ? action.data.outfits : state;
+const outfitters        = (state = [],   action) => (action.type === 'load-data') ? action.data.outfitters : state;
 
 const filtersCollapsed = (state = true, action) => {
   if (action.type === 'toggle-ship-filters-visibility') {
@@ -178,7 +180,9 @@ const handToHandWeaponsOrdering = (state = initialOrdering('Capture attack'), ac
 export default combineReducers({
   isLoading,
   ships,
+  shipModifications,
   outfits,
+  outfitters,
   shipSettings: combineReducers({
     filtersCollapsed,
     ordering: shipsOrdering,

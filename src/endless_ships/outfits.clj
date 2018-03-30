@@ -6,14 +6,25 @@
     (update m k f)
     m))
 
-(defn- round-to-int [num]
-  (when (some? num)
-    (-> num double Math/round)))
+(defn- float-is-round? [num]
+  (= (-> num int float) num))
+
+(defn- round-to-5-digits [num]
+  (if (integer? num)
+    num
+    (let [float-num (-> (format "%.5g" (float num))
+                        (clojure.string/replace \, \.)
+                        Float/parseFloat)]
+      (if (float-is-round? float-num)
+        (int float-num)
+        float-num))))
 
 (def attribute-convertors
-  (let [times-3600 (comp round-to-int (partial * 3600))
-        times-60 (comp round-to-int (partial * 60))]
+  (let [times-3600 (comp round-to-5-digits (partial * 3600))
+        times-60 (comp round-to-5-digits (partial * 60))]
     {:outfit-space -
+     :weapon-capacity -
+     :engine-capacity -
      ;; thrusters
      :thrust times-3600
      :thrusting-energy times-60
@@ -28,12 +39,14 @@
      :reverse-thrusting-heat times-60
      ;; afterburners
      :afterburner-thrust times-3600
+     :afterburner-energy times-60
      :afterburner-fuel times-60
      :afterburner-heat times-60
      ;; reactors & solar collectors
      :energy-generation times-60
      :heat-generation times-60
      :solar-collection times-60
+     :energy-consumption times-60
      ;; coolers
      :cooling times-60
      :active-cooling times-60
@@ -45,20 +58,33 @@
      ;; hull repair modules
      :hull-repair-rate times-60
      :hull-energy times-60
-     :hull-heat times-60}))
+     :hull-heat times-60
+     ;; cloaking device
+     :cloaking-energy times-60
+     :cloaking-fuel times-60}))
+
+(def weapon-attribute-convertors
+  (let [times-60 (partial * 60)
+        times-100 (partial * 100)]
+    {:ion-damage times-100
+     :slowing-damage times-100
+     :disruption-damage times-100
+     :turret-turn times-60}))
 
 (defn- calculate-damage [weapon-attrs submunition submunition-count damage-type]
   (let [per-shot (if (some? submunition)
-                   (+ (or (get weapon-attrs damage-type) 0)
-                      (* (get-in submunition [:weapon damage-type])
+                   (+ (get weapon-attrs damage-type 0)
+                      (* (get-in submunition [:weapon damage-type] 0)
                          (or submunition-count 1)))
                    (get weapon-attrs damage-type))
-        per-second (when (some? per-shot)
+        per-second (when (and (some? per-shot)
+                              (not= per-shot 0))
                      (/ (* per-shot 60) (:reload weapon-attrs)))]
-    (merge {:per-second (round-to-int per-second)}
-           (if (> (:reload weapon-attrs) 1)
-             {:per-shot (round-to-int per-shot)}
-             {}))))
+    (when (some? per-second)
+      (merge {:per-second (round-to-5-digits per-second)}
+             (if (> (:reload weapon-attrs) 1)
+               {:per-shot (round-to-5-digits per-shot)}
+               {})))))
 
 (defn- normalize-weapon-attrs [outfits]
   (map
@@ -79,21 +105,27 @@
              range (if (some? submunition)
                      (let [total-lifetime (+ lifetime (get-in submunition [:weapon :lifetime]))]
                        (* velocity total-lifetime))
-                     (* velocity lifetime))]
+                     (* velocity lifetime))
+             converted-weapon-attrs (reduce (fn [attrs [attr-name convertor]]
+                                              (update-if-present attrs attr-name convertor))
+                                            weapon-attrs
+                                            weapon-attribute-convertors)]
          (assoc outfit
                 :weapon
-                (merge weapon-attrs
+                (merge converted-weapon-attrs
                        {:shots-per-second shots-per-second
                         :range range}
                        (reduce (fn [damage-attrs damage-type]
-                                 (assoc damage-attrs
-                                        damage-type
-                                        (calculate-damage weapon-attrs
-                                                          submunition
-                                                          submunition-count
-                                                          damage-type)))
+                                 (if-let [attr-value (calculate-damage converted-weapon-attrs
+                                                                       submunition
+                                                                       submunition-count
+                                                                       damage-type)]
+                                   (assoc damage-attrs damage-type attr-value)
+                                   damage-attrs))
                                {}
-                               [:shield-damage :hull-damage]))))
+                               [:shield-damage :hull-damage :heat-damage
+                                :ion-damage :disruption-damage :slowing-damage
+                                :firing-energy :firing-heat :firing-fuel]))))
        (dissoc outfit :weapon)))
    outfits))
 

@@ -1,12 +1,10 @@
 (ns endless-ships.core
-  (:require [camel-snake-kebab
-             [core :refer [->camelCaseKeyword]]
-             [extras :refer [transform-keys]]]
+  (:require [camel-snake-kebab.core :refer [->camelCaseKeyword]]
+            [camel-snake-kebab.extras :refer [transform-keys]]
             [cheshire.core :refer [generate-string]]
-            [endless-ships
-             [outfits :refer [outfits]]
-             [parser :refer [data]]
-             [ships :refer [ships]]]))
+            [endless-ships.outfits :refer [outfits]]
+            [endless-ships.outfitters :refer [outfitters]]
+            [endless-ships.ships :refer [modifications ships]]))
 
 (def file->race
   {"kestrel.txt" :human
@@ -28,15 +26,17 @@
                  (select-keys [:name :sprite :licenses :file
                                :cost :category :hull :shields :mass
                                :engine-capacity :weapon-capacity :fuel-capacity
-                               :outfit-space :cargo-space
+                               :outfits :outfit-space :cargo-space
                                :required-crew :bunks :description
-                               :guns :turrets :drones :fighters])
-                 (assoc :outfits (->> (:outfits %)
-                                      (map (fn [[name quantity]]
-                                             {:name name
-                                              :quantity quantity}))
-                                      vec))
+                               :guns :turrets :drones :fighters
+                               :self-destruct :ramscoop])
                  (assoc :race (get file->race (:file %) :other))
+                 (dissoc :file)))
+       (map #(transform-keys ->camelCaseKeyword %))))
+
+(def modifications-data
+  (->> modifications
+       (map #(-> %
                  (dissoc :file)))
        (map #(transform-keys ->camelCaseKeyword %))))
 
@@ -54,7 +54,9 @@
    (generate-json "build/data.json"))
   ([path]
    (let [data {:ships ships-data
-               :outfits outfits-data}
+               :shipModifications modifications-data
+               :outfits outfits-data
+               :outfitters outfitters}
          json (generate-string data {:pretty true})]
      (spit path (str json "\n")))))
 
@@ -74,7 +76,7 @@
                {})
        (sort-by last >))
   ;; get government colors in CSS format
-  (->> data
+  (->> endless-ships.parser/data
        (filter #(= (first %) "government"))
        (map (fn [[_ [name] {[[colors]] "color"}]]
               [name colors]))

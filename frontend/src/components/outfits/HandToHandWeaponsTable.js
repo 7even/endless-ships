@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell } from '../Table';
+import { OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const Row = ({ weapon }) => {
   return (
     <tr>
-      <TextCell>{weapon.name}</TextCell>
+      <TextCell><OutfitLink outfitName={weapon.name} /></TextCell>
       <NumberCell number={weapon.cost} />
       <NumberCell number={weapon.captureAttack} />
       <NumberCell number={weapon.captureDefense} />

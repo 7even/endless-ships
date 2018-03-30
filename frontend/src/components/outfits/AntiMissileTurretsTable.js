@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const Row = ({ turret }) => {
   return (
     <tr>
-      <TextCell>{turret.name}</TextCell>
+      <TextCell><OutfitLink outfitName={turret.name} /></TextCell>
       <NumberCell number={turret.cost} />
       <NumberCell number={turret.outfitSpace} />
       <NumberCell number={turret.weapon.antiMissile} />

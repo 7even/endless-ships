@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const effectiveness = battery => battery.energyCapacity / battery.outfitSpace;
 
 const Row = ({ battery }) => (
   <tr>
-    <TextCell>{battery.name}</TextCell>
+    <TextCell><OutfitLink outfitName={battery.name} /></TextCell>
     <NumberCell number={battery.cost} />
     <NumberCell number={battery.outfitSpace} />
     <NumberCell number={battery.energyCapacity} />

@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const effectiveness = generator => generator.shieldGeneration / generator.outfitSpace;
 
 const Row = ({ shieldGenerator }) => (
   <tr>
-    <TextCell>{shieldGenerator.name}</TextCell>
+    <TextCell><OutfitLink outfitName={shieldGenerator.name} /></TextCell>
     <NumberCell number={shieldGenerator.cost} />
     <NumberCell number={shieldGenerator.outfitSpace} />
     <NumberCell number={shieldGenerator.shieldGeneration} />

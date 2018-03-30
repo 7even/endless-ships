@@ -1,14 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import { FormattedNumber, kebabCase, nbsp, nbspize, renderLicenses } from '../common';
+import { FormattedNumber, nbsp, nbspize, renderLicenses, ShipLink } from '../common';
 import { TextCell, RightCell, NumberCell } from './Table';
-
-const LinkCell = ({ text }) => (
-  <TextCell>
-    <Link to={`/ships/${kebabCase(text)}`}>{text}</Link>
-  </TextCell>
-);
 
 const CrewAndBunks = ({ crew, bunks }) => {
   if (crew > 0) {
@@ -30,7 +23,7 @@ const renderLabel = (text, style = text) => (
 
 const ShipRow = ({ ship }) => (
   <tr>
-    <LinkCell text={nbspize(ship.name)} />
+    <TextCell><ShipLink shipName={ship.name} /></TextCell>
     <TextCell>{renderLabel(ship.race)}</TextCell>
     <NumberCell number={ship.cost} />
     <TextCell>{nbspize(ship.category)}</TextCell>

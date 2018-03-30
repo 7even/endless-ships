@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink } from '../../common';
 import { sortByColumn } from '../../ordering';
 
 const totalEnergyGeneration = (reactor) => {
@@ -14,7 +14,7 @@ const effectiveness = reactor => totalEnergyGeneration(reactor) / reactor.outfit
 
 const Row = ({ reactor }) => (
   <tr>
-    <TextCell>{reactor.name}</TextCell>
+    <TextCell><OutfitLink outfitName={reactor.name} /></TextCell>
     <NumberCell number={reactor.cost} />
     <NumberCell number={reactor.outfitSpace} />
     <NumberCell number={totalEnergyGeneration(reactor)} />

@@ -3,22 +3,19 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Table, { TextCell, NumberCell, DecimalCell } from '../Table';
-import { renderLicenses } from '../../common';
+import { renderLicenses, OutfitLink, orZero, damage, damagePerOutfitSpace } from '../../common';
 import { sortByColumn } from '../../ordering';
-
-const shieldDamagePerOutfitSpace = gun => gun.weapon.shieldDamage.perSecond / gun.outfitSpace;
-const hullDamagePerOutfitSpace   = gun => gun.weapon.hullDamage.perSecond / gun.outfitSpace;
 
 const Row = ({ turret }) => {
   return (
     <tr>
-      <TextCell>{turret.name}</TextCell>
+      <TextCell><OutfitLink outfitName={turret.name} /></TextCell>
       <NumberCell number={turret.cost} />
       <NumberCell number={turret.outfitSpace} />
-      <NumberCell number={turret.weapon.shieldDamage.perSecond} />
-      <DecimalCell decimal={shieldDamagePerOutfitSpace(turret)} />
-      <NumberCell number={turret.weapon.hullDamage.perSecond} />
-      <DecimalCell decimal={hullDamagePerOutfitSpace(turret)} />
+      <NumberCell number={damage('shieldDamage', turret)} />
+      <DecimalCell decimal={damagePerOutfitSpace('shieldDamage', turret)} />
+      <NumberCell number={damage('hullDamage', turret)} />
+      <DecimalCell decimal={damagePerOutfitSpace('hullDamage', turret)} />
       <NumberCell number={turret.weapon.range}/>
       <TextCell>{turret.weapon.shotsPerSecond}</TextCell>
       <TextCell>{renderLicenses(turret.licenses)}</TextCell>
@@ -30,10 +27,10 @@ const columns = new Map([
   ['Name',                  R.prop('name')],
   ['Cost',                  R.prop('cost')],
   ['Outfit sp.',            R.prop('outfitSpace')],
-  ['Shield damage',         R.path(['weapon', 'shieldDamage', 'perSecond'])],
-  ['Shield damage / space', shieldDamagePerOutfitSpace],
-  ['Hull damage',           R.path(['weapon', 'hullDamage', 'perSecond'])],
-  ['Hull damage / space',   hullDamagePerOutfitSpace],
+  ['Shield damage',         orZero(damage('shieldDamage'))],
+  ['Shield damage / space', damagePerOutfitSpace('shieldDamage')],
+  ['Hull damage',           orZero(damage('hullDamage'))],
+  ['Hull damage / space',   damagePerOutfitSpace('hullDamage')],
   ['Range',                 R.path(['weapon', 'range'])],
   ['Fire rate',             null],
   ['Licenses',              null]
@@ -51,8 +48,8 @@ const mapStateToProps = (state) => {
   const filterAndSortTurrets = R.pipe(
     R.filter(R.propEq('category', 'Turrets')),
     R.filter(turret => R.or(
-      R.path(['weapon', 'shieldDamage', 'perSecond'], turret),
-      R.path(['weapon', 'hullDamage', 'perSecond'], turret)
+      damage('shieldDamage', turret),
+      damage('hullDamage', turret)
     )),
     R.partialRight(sortByColumn, [columns, state.outfitSettings.turretsOrdering])
   );

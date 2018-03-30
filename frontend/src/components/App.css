@@ -53,3 +53,7 @@
 .label-drak {
     background-color: #000;
 }
+
+p.italic {
+    font-style: italic;
+}
