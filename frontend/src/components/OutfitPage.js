@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Panel, Image } from 'react-bootstrap';
+import { Row, Col, Panel, Image, Label } from 'react-bootstrap';
 import R from 'ramda';
 import { kebabCase, ShipLink, ShipModificationLink, OutfitLink, renderAttribute, intersperse } from '../common';
 
@@ -86,7 +86,7 @@ const InstallationsList = ({ installations }) => (
 const PlanetsList = ({ planets }) => (
   <Panel.Body>
     <ul className="list-group">
-      {planets.map(({ name, system }) => <li className="list-group-item" key={name}>{name} ({system})</li>)}
+      {planets.map(({ name, system }) => <li className="list-group-item" key={name}>{name} <Label>{system}</Label></li>)}
     </ul>
   </Panel.Body>
 );
