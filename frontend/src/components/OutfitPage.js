@@ -232,17 +232,24 @@ const OutfitPage = ({ outfit, shipInstallations, sellingPlanets }) => (
 );
 
 const findShipsWithOutfit = (ships, outfit) => {
-  return ships.map(ship => {
-    const shipOutfit = R.or(ship.outfits, []).find(
-      ({ name }) => name === outfit.name
-    );
+  return R.pipe(
+    R.map(ship => {
+      const shipOutfit = R.or(ship.outfits, []).find(
+        ({ name }) => name === outfit.name
+      );
 
-    return {
-      shipName: ship.name,
-      shipModification: ship.modification,
-      quantity: shipOutfit ? shipOutfit.quantity : 0
-    };
-  }).filter(({ quantity }) => quantity > 0);
+      return {
+        shipName: ship.name,
+        shipModification: ship.modification,
+        quantity: shipOutfit ? shipOutfit.quantity : 0
+      };
+    }),
+    R.filter(({ quantity }) => quantity > 0),
+    R.sortWith([
+      R.descend(R.prop('quantity')),
+      R.ascend(({ shipName, shipModification }) => shipModification || shipName)
+    ])
+  )(ships);
 };
 
 const mapStateToProps = (state, { match: { params: { outfitName } } }) => {
