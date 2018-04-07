@@ -179,7 +179,7 @@ const ShipPage = ({ ship, modificationNames }) => (
       </Col>
     </Row>
 
-    {ship.description.length > 0 && <ShipDescription description={ship.description}/>}
+    {ship.description && ship.description.length > 0 && <ShipDescription description={ship.description}/>}
   </div>
 );
 
