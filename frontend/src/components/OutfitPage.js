@@ -231,26 +231,30 @@ const OutfitPage = ({ outfit, shipInstallations, sellingPlanets }) => (
   </div>
 );
 
-const findShipsWithOutfit = (ships, outfit) => {
-  return R.pipe(
-    R.map(ship => {
+const findShipsWithOutfit = (ships, outfit) => R.pipe(
+  R.reduce(
+    (ships, ship) => {
       const shipOutfit = R.or(ship.outfits, []).find(
         ({ name }) => name === outfit.name
       );
 
-      return {
-        shipName: ship.name,
-        shipModification: ship.modification,
-        quantity: shipOutfit ? shipOutfit.quantity : 0
-      };
-    }),
-    R.filter(({ quantity }) => quantity > 0),
-    R.sortWith([
-      R.descend(R.prop('quantity')),
-      R.ascend(({ shipName, shipModification }) => shipModification || shipName)
-    ])
-  )(ships);
-};
+      if (shipOutfit) {
+        return ships.concat({
+          shipName:         ship.name,
+          shipModification: ship.modification,
+          quantity:         shipOutfit.quantity
+        });
+      } else {
+        return ships;
+      }
+    },
+    []
+  ),
+  R.sortWith([
+    R.descend(R.prop('quantity')),
+    R.ascend(({ shipName, shipModification }) => shipModification || shipName)
+  ])
+)(ships);
 
 const mapStateToProps = (state, { match: { params: { outfitName } } }) => {
   const outfit = state.outfits.find(outfit => kebabCase(outfit.name) === outfitName);
