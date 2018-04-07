@@ -32,7 +32,3 @@ $ ruby -rwebrick -e'WEBrick::HTTPServer.new(:Port => 8000, :DocumentRoot => Dir.
 ```
 
 Then point your browser to [http://localhost:8000](http://localhost:8000).
-
-## Roadmap / what can be improved
-
-* add a page with outfit tables (one table per category) and separate pages describing each outfit in detail
