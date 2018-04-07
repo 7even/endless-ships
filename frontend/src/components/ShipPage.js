@@ -154,6 +154,7 @@ const ShipPage = ({ ship, modificationNames }) => (
                   {ship.drones > 0 && renderAttribute(ship, R.prop('drones'), 'drones')}
                   {ship.fighters > 0 && renderAttribute(ship, R.prop('fighters'), 'fighters')}
                   {renderAttribute(ship, R.prop('ramscoop'), 'ramscoop')}
+                  {renderAttribute(ship, R.prop('cloak'), 'cloak')}
                   {R.has('selfDestruct', ship) && <li>self-destruct: <FormattedPercentage coefficient={ship.selfDestruct}/></li>}
                 </ul>
 
