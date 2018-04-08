@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Col, Panel, Image, Nav, NavItem, ListGroupItem } from 'react-bootstrap';
 import R from 'ramda';
-import { FormattedNumber, kebabCase, OutfitLink, renderAttribute, intersperse } from '../common';
+import { FormattedNumber, kebabCase, OutfitLink, renderAttribute, intersperse, totalShipCost } from '../common';
 import './ShipPage.css';
 
 const ShipLicenses = ({ licenses }) => {
@@ -138,10 +138,10 @@ const ShipPage = ({ ship, modificationNames }) => (
             <div className="media">
               <div className="media-body">
                 <ul>
-                  {renderAttribute(ship, R.prop('cost'),    'cost')}
+                  {renderAttribute(ship, totalShipCost, 'cost')}
                   {renderAttribute(ship, R.prop('shields'), 'shields')}
-                  {renderAttribute(ship, R.prop('hull'),    'hull')}
-                  {renderAttribute(ship, R.prop('mass'),    'mass')}
+                  {renderAttribute(ship, R.prop('hull'), 'hull')}
+                  {renderAttribute(ship, R.prop('mass'), 'mass')}
                   {renderAttribute(ship, R.prop('cargoSpace'), 'cargo space')}
                   {renderAttribute(ship, R.prop('requiredCrew'), 'required crew')}
                   {renderAttribute(ship, R.prop('bunks'), 'bunks')}

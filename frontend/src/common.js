@@ -88,6 +88,8 @@ const damagePerOutfitSpace = R.curry((damageType, gun) => {
   }
 });
 
+const totalShipCost = (ship) => ship.emptyHullCost + ship.outfitsCost;
+
 export {
   FormattedNumber,
   kebabCase,
@@ -103,5 +105,6 @@ export {
   orZero,
   floatFormatter,
   damage,
-  damagePerOutfitSpace
+  damagePerOutfitSpace,
+  totalShipCost
 };

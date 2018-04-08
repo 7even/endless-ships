@@ -3,11 +3,12 @@ import R from 'ramda';
 
 import ShipsTable from './ShipsTable';
 import { sortByColumn } from '../ordering';
+import { totalShipCost } from '../common';
 
 const columns = new Map([
   ['Name',         R.prop('name')],
   ['Race',         null],
-  ['Cost',         R.propOr(0, 'cost')],
+  ['Cost',         totalShipCost],
   ['Category',     null],
   ['Hull',         R.propOr(0, 'hull')],
   ['Shields',      R.propOr(0, 'shields')],

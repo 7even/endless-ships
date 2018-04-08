@@ -25,7 +25,7 @@ const ShipRow = ({ ship }) => (
   <tr>
     <TextCell><ShipLink shipName={ship.name} /></TextCell>
     <TextCell>{renderLabel(ship.race)}</TextCell>
-    <NumberCell number={ship.cost} />
+    <NumberCell number={ship.emptyHullCost + ship.outfitsCost} />
     <TextCell>{nbspize(ship.category)}</TextCell>
     <NumberCell number={ship.hull} />
     <NumberCell number={ship.shields} />
