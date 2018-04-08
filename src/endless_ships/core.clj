@@ -29,16 +29,21 @@
        (map #(dissoc % :file))
        (map #(transform-keys ->camelCaseKeyword %))))
 
-(defn- outfits-cost [ship]
-  (reduce (fn [cost {:keys [name quantity]}]
-            (let [outfit (->> outfits-data
-                              (filter #(= (:name %) name))
-                              first)]
-              (+ cost
-                 (* (get outfit :cost 0)
-                    quantity))))
-          0
-          (:outfits ship)))
+(defn- assoc-outfits-cost [ship]
+  (let [outfits (:outfits ship)]
+    (if (empty? outfits)
+      ship
+      (assoc ship
+             :outfits-cost
+             (reduce (fn [cost {:keys [name quantity]}]
+                       (let [outfit (->> outfits-data
+                                         (filter #(= (:name %) name))
+                                         first)]
+                         (+ cost
+                            (* (get outfit :cost 0)
+                               quantity))))
+                     0
+                     outfits)))))
 
 (def ships-data
   (->> ships
@@ -54,7 +59,7 @@
                  (assoc :race (get file->race (:file %) :other))
                  (dissoc :file)
                  (rename-keys {:cost :empty-hull-cost})
-                 (assoc :outfits-cost (outfits-cost %))))
+                 assoc-outfits-cost))
        (map #(transform-keys ->camelCaseKeyword %))))
 
 (def modifications-data
@@ -62,7 +67,7 @@
        (map #(-> %
                  (dissoc :file)
                  (rename-keys {:cost :empty-hull-cost})
-                 (assoc :outfits-cost (outfits-cost %))))
+                 assoc-outfits-cost))
        (map #(transform-keys ->camelCaseKeyword %))))
 
 (defn generate-json
