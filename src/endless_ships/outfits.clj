@@ -25,6 +25,7 @@
     {:outfit-space -
      :weapon-capacity -
      :engine-capacity -
+     :cost #(if (integer? %) % (Integer/parseInt %))
      ;; thrusters
      :thrust times-3600
      :thrusting-energy times-60
