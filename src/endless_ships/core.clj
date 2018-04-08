@@ -2,6 +2,7 @@
   (:require [camel-snake-kebab.core :refer [->camelCaseKeyword]]
             [camel-snake-kebab.extras :refer [transform-keys]]
             [cheshire.core :refer [generate-string]]
+            [clojure.set :refer [rename-keys]]
             [endless-ships.outfits :refer [outfits]]
             [endless-ships.outfitters :refer [outfitters]]
             [endless-ships.ships :refer [modifications ships]]))
@@ -19,6 +20,26 @@
    "drak.txt" :drak
    "ships.txt" :human})
 
+(def outfits-data
+  (->> outfits
+       (remove #(#{"deprecated outfits.txt"
+                   "indigenous.txt"
+                   "nanobots.txt"
+                   "transport missions.txt"} (:file %)))
+       (map #(dissoc % :file))
+       (map #(transform-keys ->camelCaseKeyword %))))
+
+(defn- outfits-cost [ship]
+  (reduce (fn [cost {:keys [name quantity]}]
+            (let [outfit (->> outfits-data
+                              (filter #(= (:name %) name))
+                              first)]
+              (+ cost
+                 (* (get outfit :cost 0)
+                    quantity))))
+          0
+          (:outfits ship)))
+
 (def ships-data
   (->> ships
        (filter #(some? (file->race (:file %))))
@@ -31,22 +52,17 @@
                                :guns :turrets :drones :fighters
                                :self-destruct :ramscoop])
                  (assoc :race (get file->race (:file %) :other))
-                 (dissoc :file)))
+                 (dissoc :file)
+                 (rename-keys {:cost :empty-hull-cost})
+                 (assoc :outfits-cost (outfits-cost %))))
        (map #(transform-keys ->camelCaseKeyword %))))
 
 (def modifications-data
   (->> modifications
        (map #(-> %
-                 (dissoc :file)))
-       (map #(transform-keys ->camelCaseKeyword %))))
-
-(def outfits-data
-  (->> outfits
-       (remove #(#{"deprecated outfits.txt"
-                   "indigenous.txt"
-                   "nanobots.txt"
-                   "transport missions.txt"} (:file %)))
-       (map #(dissoc % :file))
+                 (dissoc :file)
+                 (rename-keys {:cost :empty-hull-cost})
+                 (assoc :outfits-cost (outfits-cost %))))
        (map #(transform-keys ->camelCaseKeyword %))))
 
 (defn generate-json
