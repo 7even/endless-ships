@@ -1,6 +1,7 @@
 import React from 'react';
 
 const licenseLabelStyles = {
+  'City-Ship':          'human',
   'Navy':               'human',
   'Carrier':            'human',
   'Cruiser':            'human',
@@ -11,7 +12,8 @@ const licenseLabelStyles = {
   'Wanderer Outfits':   'wanderer',
   'Coalition':          'coalition',
   'Heliarch':           'coalition',
-  'Remnant':            'remnant'
+  'Remnant':            'remnant',
+  'Remnant Capital':    'remnant'
 };
 
 const LicenseLabel = ({ license }) => {
