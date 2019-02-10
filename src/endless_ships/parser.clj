@@ -33,7 +33,7 @@
    :5-indented-block transform-block
    :6-indented-block transform-block
    :string identity
-   :integer #(Integer/parseInt %)
+   :integer #(Long/parseLong %)
    :float #(Float/parseFloat (str/replace % "," "."))})
 
 (defn parse [data]
