@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import R from 'ramda';
 
 const toggleFilter  = (filter = {}, value) => ({ ...filter, [value]: !filter[value] });
-const initialFilter = (values) => R.uniq(R.flatten(values)).reduce(toggleFilter, {});
+const initialFilter = (values) => R.reject(R.isNil, R.uniq(R.flatten(values))).reduce(toggleFilter, {});
 
 const toggleOrdering = (ordering, columnName) => {
   if (ordering.columnName === columnName) {
