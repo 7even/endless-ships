@@ -27,7 +27,7 @@
                    "nanobots.txt"
                    "transport missions.txt"} (:file %)))
        (map #(dissoc % :file))
-       (map #(transform-keys ->camelCaseKeyword %))))
+       #_(map #(transform-keys ->camelCaseKeyword %))))
 
 (defn- assoc-outfits-cost [ship]
   (let [outfits (:outfits ship)]
@@ -60,7 +60,7 @@
                  (dissoc :file)
                  (rename-keys {:cost :empty-hull-cost})
                  assoc-outfits-cost))
-       (map #(transform-keys ->camelCaseKeyword %))))
+       #_(map #(transform-keys ->camelCaseKeyword %))))
 
 (def modifications-data
   (->> modifications
@@ -68,7 +68,7 @@
                  (dissoc :file)
                  (rename-keys {:cost :empty-hull-cost})
                  assoc-outfits-cost))
-       (map #(transform-keys ->camelCaseKeyword %))))
+       #_(map #(transform-keys ->camelCaseKeyword %))))
 
 (defn generate-json
   ([]
@@ -80,6 +80,17 @@
                :outfitters outfitters}
          json (generate-string data {:pretty true})]
      (spit path (str json "\n")))))
+
+(defn generate-edn
+  ([]
+   (generate-edn "build/data.edn"))
+  ([path]
+   (let [data {:ships ships-data
+               :ship-modifications modifications-data
+               :outfits outfits-data
+               :outfitters outfitters}
+         edn (with-out-str (clojure.pprint/pprint data))]
+     (spit path edn))))
 
 (comment
   ;; generate data for frontend development
