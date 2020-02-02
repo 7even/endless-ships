@@ -1,0 +1,12 @@
+{:source-paths ["src/cljs"]
+ :dependencies [[re-frame "0.11.0"]
+                [reagent "0.9.1"]
+                [day8.re-frame/http-fx "v0.2.0"]
+                [bidi "2.1.6"]
+                [kibu/pushy "0.3.8"]
+                [cider/cider-nrepl "0.21.0"]]
+ :builds {:main {:target :browser
+                 :modules {:main {:init-fn endless-ships.core/init}}
+                 :devtools {:http-root "public"
+                            :http-port 3000
+                            :after-load endless-ships.core/render}}}}

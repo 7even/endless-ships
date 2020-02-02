@@ -3,3 +3,6 @@
 /build
 /ga.edn
 data.edn
+/.shadow-cljs
+/public/js
+/node_modules
