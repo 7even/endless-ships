@@ -1,8 +1,5 @@
 (ns endless-ships.core
-  (:require [camel-snake-kebab.core :refer [->camelCaseKeyword]]
-            [camel-snake-kebab.extras :refer [transform-keys]]
-            [cheshire.core :refer [generate-string]]
-            [clojure.set :refer [rename-keys]]
+  (:require [clojure.set :refer [rename-keys]]
             [endless-ships.outfits :refer [outfits]]
             [endless-ships.outfitters :refer [outfitters]]
             [endless-ships.ships :refer [modifications ships]]))
@@ -26,8 +23,7 @@
                    "indigenous.txt"
                    "nanobots.txt"
                    "transport missions.txt"} (:file %)))
-       (map #(dissoc % :file))
-       #_(map #(transform-keys ->camelCaseKeyword %))))
+       (map #(dissoc % :file))))
 
 (defn- assoc-outfits-cost [ship]
   (let [outfits (:outfits ship)]
@@ -59,27 +55,14 @@
                  (assoc :race (get file->race (:file %) :other))
                  (dissoc :file)
                  (rename-keys {:cost :empty-hull-cost})
-                 assoc-outfits-cost))
-       #_(map #(transform-keys ->camelCaseKeyword %))))
+                 assoc-outfits-cost))))
 
 (def modifications-data
   (->> modifications
        (map #(-> %
                  (dissoc :file)
                  (rename-keys {:cost :empty-hull-cost})
-                 assoc-outfits-cost))
-       #_(map #(transform-keys ->camelCaseKeyword %))))
-
-(defn generate-json
-  ([]
-   (generate-json "build/data.json"))
-  ([path]
-   (let [data {:ships ships-data
-               :shipModifications modifications-data
-               :outfits outfits-data
-               :outfitters outfitters}
-         json (generate-string data {:pretty true})]
-     (spit path (str json "\n")))))
+                 assoc-outfits-cost))))
 
 (defn generate-edn
   ([]
@@ -94,7 +77,7 @@
 
 (comment
   ;; generate data for frontend development
-  (generate-json "frontend/public/data.json")
+  (generate-edn "frontend/public/data.edn")
   ;; get a list of all possible attribute names
   (->> ships-data
        (map keys)

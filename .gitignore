@@ -1,5 +1,5 @@
 /.nrepl-history
 /.nrepl-port
 /build
-/ga.json
-data.json
+/ga.edn
+data.edn
