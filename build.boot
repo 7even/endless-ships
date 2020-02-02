@@ -1,4 +1,4 @@
-(set-env! :source-paths #{"src"}
+(set-env! :source-paths #{"src/clj"}
           :resource-paths #{"resources"}
           :dependencies '[[org.clojure/clojure "1.8.0"]
                           [instaparse "1.4.5"]
