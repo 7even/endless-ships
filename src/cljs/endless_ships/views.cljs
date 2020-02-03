@@ -1,6 +1,7 @@
 (ns endless-ships.views
   (:require [re-frame.core :as rf]
-            [endless-ships.subs :as subs]))
+            [endless-ships.subs :as subs]
+            [endless-ships.views.ships-list :refer [ships-list]]))
 
 (defn interface []
   [:div.container
@@ -10,4 +11,4 @@
        [:div.app "Loading..."]
        (if @(rf/subscribe [::subs/loading-failed?])
          [:div.app "Failed to load data"]
-         [:div.app "Loaded"]))]]])
+         [ships-list]))]]])

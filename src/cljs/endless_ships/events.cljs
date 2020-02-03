@@ -7,7 +7,8 @@
                  (fn [{db :db} _]
                    {:db {:loading? true
                          :loading-failed? false
-                         :ships []}
+                         :ships {}
+                         :settings {:ships {:ordering {:column-name nil}}}}
                     :http-xhrio {:method :get
                                  :uri "/data.edn"
                                  :response-format (ajax/edn-response-format)
@@ -18,10 +19,28 @@
                  (fn [db [_ data]]
                    (assoc db
                           :loading? false
-                          :ships (:ships data))))
+                          :ships (reduce (fn [ships {:keys [name] :as ship}]
+                                           (assoc ships name ship))
+                                         {}
+                                         (:ships data)))))
 
 (rf/reg-event-db ::data-failed-to-load
                  (fn [db _]
                    (assoc db
                           :loading? false
                           :loading-failed? true)))
+
+(defn- toggle-ordering [db entity-type column]
+  (update-in db
+             [:settings entity-type :ordering]
+             (fn [{:keys [column-name order]}]
+               (cond
+                 (not= column-name column) {:column-name column
+                                            :order "desc"}
+                 (= order "asc") {:column-name nil}
+                 :else {:column-name column
+                        :order "asc"}))))
+
+(rf/reg-event-db ::toggle-ordering
+                 (fn [db [_ entity-type column]]
+                   (toggle-ordering db entity-type column)))

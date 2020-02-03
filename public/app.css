@@ -6,6 +6,10 @@
     margin-bottom: 20px;
 }
 
+.table-header {
+    cursor: pointer;
+}
+
 .label-human {
     background-color: #0068b5;
 }
