@@ -3,8 +3,11 @@
             [endless-ships.subs :as subs]))
 
 (defn interface []
-  (if @(rf/subscribe [::subs/loading?])
-    [:div "Loading..."]
-    (if @(rf/subscribe [::subs/loading-failed?])
-      [:div "Failed to load data"]
-      [:div "Loaded"])))
+  [:div.container
+   [:div.row
+    [:div.col-lg-12
+     (if @(rf/subscribe [::subs/loading?])
+       [:div.app "Loading..."]
+       (if @(rf/subscribe [::subs/loading-failed?])
+         [:div.app "Failed to load data"]
+         [:div.app "Loaded"]))]]])
