@@ -77,7 +77,7 @@
 
 (comment
   ;; generate data for frontend development
-  (generate-edn "frontend/public/data.edn")
+  (generate-edn "public/data.edn")
   ;; get a list of all possible attribute names
   (->> ships-data
        (map keys)
