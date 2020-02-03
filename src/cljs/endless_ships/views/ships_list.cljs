@@ -3,30 +3,8 @@
             [endless-ships.subs :as subs]
             [endless-ships.views.table :refer [table left-cell right-cell]]
             [endless-ships.views.utils :refer [license-label nbsp nbspize]]
+            [endless-ships.utils.ships :refer [total-cost or-zero columns]]
             [clojure.string :as str]))
-
-(defn total-cost [{:keys [empty-hull-cost outfits-cost]}]
-  (+ empty-hull-cost outfits-cost))
-
-(defn or-zero [prop]
-  #(or (prop %)
-       0))
-
-(def columns
-  [["Name"         :name]
-   ["Race"         nil]
-   ["Cost"         total-cost]
-   ["Category"     nil]
-   ["Hull"         (or-zero :hull)]
-   ["Shields"      (or-zero :shields)]
-   ["Mass"         (or-zero :mass)]
-   ["Engine cap."  (or-zero :engine-capacity)]
-   ["Weapon cap."  (or-zero :weapon-capacity)]
-   ["Fuel cap."    (or-zero :fuel-capacity)]
-   ["Outfit sp."   (or-zero :outfit-space)]
-   ["Cargo sp."    (or-zero :cargo-space)]
-   ["Crew / bunks" (or-zero :bunks)]
-   ["Licenses"     nil]])
 
 (defn race-label [race]
   ^{:key race} [:span.label {:class (str "label-" (name race))} race])

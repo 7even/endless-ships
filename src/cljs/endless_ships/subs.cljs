@@ -1,5 +1,6 @@
 (ns endless-ships.subs
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as rf]
+            [endless-ships.utils.ships :as ships]))
 
 (rf/reg-sub ::loading?
             (fn [db]
@@ -9,13 +10,30 @@
             (fn [db]
               (:loading-failed? db)))
 
+(rf/reg-sub ::ships
+            (fn [db]
+              (-> db :ships vals)))
+
 (rf/reg-sub ::ships-ordering
             (fn [db]
               (get-in db [:settings :ships :ordering])))
 
 (rf/reg-sub ::ship-names
-            (fn [db]
-              (keys (:ships db))))
+            (fn []
+              [(rf/subscribe [::ships])
+               (rf/subscribe [::ships-ordering])])
+            (fn [[ships {:keys [column-name order]}]]
+              (let [prop (get ships/columns column-name)
+                    sorted (if (some? column-name)
+                             (sort (fn [ship1 ship2]
+                                     (let [ship1-prop (prop ship1)
+                                           ship2-prop (prop ship2)]
+                                       (if (= order "asc")
+                                         (compare ship1-prop ship2-prop)
+                                         (compare ship2-prop ship1-prop))))
+                                   ships)
+                             ships)]
+                (map :name sorted))))
 
 (rf/reg-sub ::ship
             (fn [db [_ name]]
