@@ -41,29 +41,24 @@
                (rf/subscribe [::ships-race-filter])
                (rf/subscribe [::ships-category-filter])
                (rf/subscribe [::ships-license-filter])])
-            (fn [[ships
-                  {:keys [column-name order]}
-                  race-filter
-                  category-filter
-                  license-filter]]
-              (let [prop (get ships/columns column-name)
-                    filtering (fn [ship]
-                                (and (get race-filter (:race ship))
-                                     (get category-filter (:category ship))
-                                     (not-any? (fn [license]
-                                                 (not (get license-filter license)))
-                                               (get ship :licenses []))))
-                    filtered (filter filtering ships)
-                    sorted (if (some? column-name)
-                             (sort (fn [ship1 ship2]
-                                     (let [ship1-prop (prop ship1)
-                                           ship2-prop (prop ship2)]
-                                       (if (= order "asc")
-                                         (compare ship1-prop ship2-prop)
-                                         (compare ship2-prop ship1-prop))))
-                                   filtered)
-                             filtered)]
-                (map :name sorted))))
+            (fn [[all-ships ordering race-filter category-filter license-filter]]
+              (let [ordering-prop (get ships/columns (:column-name ordering))
+                    ships (->> all-ships
+                               (filter (fn [ship]
+                                         (and (get race-filter (:race ship))
+                                              (get category-filter (:category ship))
+                                              (not-any? (fn [license]
+                                                          (not (get license-filter license)))
+                                                        (get ship :licenses [])))))
+                               (sort (if (some? (:column-name ordering))
+                                       (fn [ship1 ship2]
+                                         (let [ship1-prop (ordering-prop ship1)
+                                               ship2-prop (ordering-prop ship2)]
+                                           (if (= (:order ordering) "asc")
+                                             (compare ship1-prop ship2-prop)
+                                             (compare ship2-prop ship1-prop))))
+                                       (constantly 0))))]
+                (map :name ships))))
 
 (rf/reg-sub ::ship
             (fn [db [_ name]]
