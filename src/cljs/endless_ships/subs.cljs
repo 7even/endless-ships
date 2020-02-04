@@ -18,6 +18,22 @@
             (fn [db]
               (get-in db [:settings :ships :ordering])))
 
+(rf/reg-sub ::ship-filters-collapsed?
+            (fn [db]
+              (get-in db [:settings :ships :filters-collapsed?])))
+
+(rf/reg-sub ::ships-race-filter
+            (fn [db]
+              (get-in db [:settings :ships :race-filter])))
+
+(rf/reg-sub ::ships-category-filter
+            (fn [db]
+              (get-in db [:settings :ships :category-filter])))
+
+(rf/reg-sub ::ships-license-filter
+            (fn [db]
+              (get-in db [:settings :ships :license-filter])))
+
 (rf/reg-sub ::ship-names
             (fn []
               [(rf/subscribe [::ships])

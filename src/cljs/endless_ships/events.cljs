@@ -9,6 +9,7 @@
                          :loading-failed? false
                          :ships {}
                          :settings {:ships {:ordering {:column-name nil}
+                                            :filters-collapsed? true
                                             :race-filter {}
                                             :category-filter {}
                                             :license-filter {}}}}
@@ -68,3 +69,27 @@
 (rf/reg-event-db ::toggle-ordering
                  (fn [db [_ entity-type column]]
                    (toggle-ordering db entity-type column)))
+
+(rf/reg-event-db ::toggle-ship-filters-visibility
+                 (fn [db]
+                   (update-in db
+                              [:settings :ships :filters-collapsed?]
+                              not)))
+
+(rf/reg-event-db ::toggle-ships-race-filter
+                 (fn [db [_ race]]
+                   (update-in db
+                              [:settings :ships :race-filter race]
+                              not)))
+
+(rf/reg-event-db ::toggle-ships-category-filter
+                 (fn [db [_ category]]
+                   (update-in db
+                              [:settings :ships :category-filter category]
+                              not)))
+
+(rf/reg-event-db ::toggle-ships-license-filter
+                 (fn [db [_ license]]
+                   (update-in db
+                              [:settings :ships :license-filter license]
+                              not)))
