@@ -8,21 +8,45 @@
                    {:db {:loading? true
                          :loading-failed? false
                          :ships {}
-                         :settings {:ships {:ordering {:column-name nil}}}}
+                         :settings {:ships {:ordering {:column-name nil}
+                                            :race-filter {}
+                                            :category-filter {}
+                                            :license-filter {}}}}
                     :http-xhrio {:method :get
                                  :uri "/data.edn"
                                  :response-format (ajax/edn-response-format)
                                  :on-success [::data-loaded]
                                  :on-failure [::data-failed-to-load]}}))
 
+(defn- toggle-filter [filter value]
+  (update filter value not))
+
+(defn- initial-filter [values]
+  (->> values
+       (into #{})
+       (reduce toggle-filter {})))
+
 (rf/reg-event-db ::data-loaded
                  (fn [db [_ data]]
-                   (assoc db
-                          :loading? false
-                          :ships (reduce (fn [ships {:keys [name] :as ship}]
-                                           (assoc ships name ship))
-                                         {}
-                                         (:ships data)))))
+                   (-> db
+                       (assoc :loading? false
+                              :ships (reduce (fn [ships {:keys [name] :as ship}]
+                                               (assoc ships name ship))
+                                             {}
+                                             (:ships data)))
+                       (update-in [:settings :ships]
+                                  merge
+                                  {:race-filter (->> (:ships data)
+                                                     (map :race)
+                                                     initial-filter)
+                                   :category-filter (->> (:ships data)
+                                                         (map :category)
+                                                         initial-filter)
+                                   :license-filter (->> (:ships data)
+                                                        (map :licenses)
+                                                        (apply concat)
+                                                        (keep identity)
+                                                        initial-filter)}))))
 
 (rf/reg-event-db ::data-failed-to-load
                  (fn [db _]
