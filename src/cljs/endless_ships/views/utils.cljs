@@ -1,5 +1,7 @@
 (ns endless-ships.views.utils
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str])
+  (:import (goog.i18n NumberFormat)
+           (goog.i18n.NumberFormat Format)))
 
 (def license-label-styles
   {"City-Ship"          "human"
@@ -24,3 +26,7 @@
 
 (defn nbspize [s]
   (str/replace s #" " nbsp))
+
+(defn format-number [num]
+  (let [formatter (NumberFormat. Format/DECIMAL)]
+    (.format formatter (str num))))

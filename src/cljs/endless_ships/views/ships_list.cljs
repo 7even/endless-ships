@@ -2,7 +2,7 @@
   (:require [re-frame.core :as rf]
             [endless-ships.subs :as subs]
             [endless-ships.views.table :refer [table left-cell right-cell]]
-            [endless-ships.views.utils :refer [license-label nbsp nbspize]]
+            [endless-ships.views.utils :refer [license-label nbsp nbspize format-number]]
             [endless-ships.utils.ships :refer [total-cost or-zero columns]]
             [clojure.string :as str]))
 
@@ -11,14 +11,14 @@
 
 (defn crew-and-bunks [{:keys [required-crew bunks]}]
   (if (pos? required-crew)
-    [:td (str required-crew
-              nbsp "/" nbsp
-              bunks)]
-    [:td]))
+    [right-cell (str (format-number required-crew)
+                     nbsp "/" nbsp
+                     (format-number bunks))]
+    [right-cell]))
 
 (defn license-labels [{:keys [licenses]}]
   (let [labels (map license-label licenses)]
-    [:td (interpose " " labels)]))
+    [left-cell (interpose " " labels)]))
 
 (defn ship-row [name]
   (let [{:keys [race category hull shields mass
@@ -27,16 +27,16 @@
     [:tr
      [left-cell (nbspize name)]
      [left-cell (race-label race)]
-     [right-cell (total-cost ship)]
+     [right-cell (format-number (total-cost ship))]
      [left-cell (nbspize category)]
-     [right-cell hull]
-     [right-cell shields]
-     [right-cell mass]
-     [right-cell engine-capacity]
-     [right-cell weapon-capacity]
-     [right-cell fuel-capacity]
-     [right-cell outfit-space]
-     [right-cell cargo-space]
+     [right-cell (format-number hull)]
+     [right-cell (format-number shields)]
+     [right-cell (format-number mass)]
+     [right-cell (format-number engine-capacity)]
+     [right-cell (format-number weapon-capacity)]
+     [right-cell (format-number fuel-capacity)]
+     [right-cell (format-number outfit-space)]
+     [right-cell (format-number cargo-space)]
      [crew-and-bunks ship]
      [license-labels ship]]))
 
