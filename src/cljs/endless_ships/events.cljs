@@ -25,7 +25,7 @@
 (defn- initial-filter [values]
   (->> values
        (into #{})
-       (reduce toggle-filter {})))
+       (reduce toggle-filter (sorted-map))))
 
 (rf/reg-event-db ::data-loaded
                  (fn [db [_ data]]
