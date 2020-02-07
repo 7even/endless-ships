@@ -1,7 +1,8 @@
 (ns endless-ships.events
   (:require [re-frame.core :as rf]
             [day8.re-frame.http-fx]
-            [ajax.edn :as ajax]))
+            [ajax.edn :as ajax]
+            [endless-ships.views.utils :refer [kebabize]]))
 
 (rf/reg-event-fx ::initialize
                  (fn [{db :db} _]
@@ -33,7 +34,9 @@
                    (-> db
                        (assoc :loading? false
                               :ships (reduce (fn [ships {:keys [name] :as ship}]
-                                               (assoc ships name ship))
+                                               (assoc ships
+                                                      (kebabize name)
+                                                      ship))
                                              {}
                                              (:ships data)))
                        (update-in [:settings :ships]

@@ -1,6 +1,7 @@
 (ns endless-ships.subs
   (:require [re-frame.core :as rf]
-            [endless-ships.utils.ships :as ships]))
+            [endless-ships.utils.ships :as ships]
+            [endless-ships.views.utils :refer [kebabize]]))
 
 (rf/reg-sub ::loading?
             (fn [db]
@@ -66,4 +67,4 @@
 
 (rf/reg-sub ::ship
             (fn [db [_ name]]
-              (get-in db [:ships name])))
+              (get-in db [:ships (kebabize name)])))
