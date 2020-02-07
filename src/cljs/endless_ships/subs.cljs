@@ -10,6 +10,10 @@
             (fn [db]
               (:loading-failed? db)))
 
+(rf/reg-sub ::route
+            (fn [db]
+              (:route db)))
+
 (rf/reg-sub ::ships
             (fn [db]
               (-> db :ships vals)))

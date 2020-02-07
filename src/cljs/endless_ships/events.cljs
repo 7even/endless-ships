@@ -7,6 +7,7 @@
                  (fn [{db :db} _]
                    {:db {:loading? true
                          :loading-failed? false
+                         :route [:ships {}]
                          :ships {}
                          :settings {:ships {:ordering {:column-name nil}
                                             :filters-collapsed? true
@@ -54,6 +55,10 @@
                    (assoc db
                           :loading? false
                           :loading-failed? true)))
+
+(rf/reg-event-db ::navigate-to
+                 (fn [db [_ route]]
+                   (assoc db :route route)))
 
 (defn- toggle-ordering [db entity-type column]
   (update-in db

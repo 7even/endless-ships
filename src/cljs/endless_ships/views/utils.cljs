@@ -27,6 +27,11 @@
 (defn nbspize [s]
   (str/replace s #" " nbsp))
 
+(defn kebabize [s]
+  (-> s
+      (str/replace #"\s+" "-")
+      str/lower-case))
+
 (defn format-number [num]
   (let [formatter (NumberFormat. Format/DECIMAL)]
     (.format formatter (str num))))

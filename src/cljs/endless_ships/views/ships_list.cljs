@@ -4,8 +4,9 @@
             [endless-ships.events :as events]
             [endless-ships.subs :as subs]
             [endless-ships.views.table :refer [table left-cell right-cell]]
-            [endless-ships.views.utils :refer [license-label nbsp nbspize format-number]]
+            [endless-ships.views.utils :refer [license-label nbsp nbspize kebabize format-number]]
             [endless-ships.utils.ships :refer [total-cost or-zero columns]]
+            [endless-ships.routes :as routes]
             [clojure.string :as str]
             ["react-bootstrap" :refer [Collapse]]))
 
@@ -66,7 +67,10 @@
                 engine-capacity weapon-capacity fuel-capacity
                 outfit-space cargo-space] :as ship} @(rf/subscribe [::subs/ship name])]
     [:tr
-     [left-cell (nbspize name)]
+     [left-cell
+      ^{:key name} [:a
+                    {:href (routes/url-for :ship :ship/name (kebabize name))}
+                    (nbspize name)]]
      [left-cell (race-label race)]
      [right-cell (format-number (total-cost ship))]
      [left-cell (nbspize category)]
