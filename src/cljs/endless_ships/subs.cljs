@@ -72,3 +72,7 @@
 (rf/reg-sub ::outfits
             (fn [db]
               (:outfits db)))
+
+(rf/reg-sub ::ship-modification
+            (fn [db [_ ship-name modification-name]]
+              (get-in db [:ship-modifications ship-name modification-name])))

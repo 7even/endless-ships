@@ -10,6 +10,8 @@
                          :loading-failed? false
                          :route [:ships {}]
                          :ships {}
+                         :ship-modifications {}
+                         :outfits {}
                          :settings {:ships {:ordering {:column-name nil}
                                             :filters-collapsed? true
                                             :race-filter {}
@@ -24,7 +26,14 @@
 (defn- index-by-name [coll]
   (reduce (fn [indexed {:keys [name] :as item}]
             (assoc indexed (kebabize name) item))
+          {}
           coll))
+
+(defn- group-modifications [modifications]
+  (reduce (fn [grouped {:keys [name modification] :as mod}]
+            (assoc-in grouped [(kebabize name) (kebabize modification)] mod))
+          {}
+          modifications))
 
 (defn- toggle-filter [filter value]
   (update filter value not))
@@ -39,6 +48,7 @@
                    (-> db
                        (assoc :loading? false
                               :ships (index-by-name (:ships data))
+                              :ship-modifications (group-modifications (:ship-modifications data))
                               :outfits (index-by-name (:outfits data)))
                        (update-in [:settings :ships]
                                   merge
