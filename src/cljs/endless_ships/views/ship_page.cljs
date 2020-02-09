@@ -1,7 +1,7 @@
 (ns endless-ships.views.ship-page
   (:require [re-frame.core :as rf]
             [endless-ships.subs :as subs]
-            [endless-ships.views.utils :refer [render-attribute render-percentage]]
+            [endless-ships.views.utils :refer [render-attribute render-percentage nbspize kebabize]]
             [endless-ships.utils.ships :refer [total-cost or-zero]]))
 
 (defn- render-licenses [[license1 license2]]
@@ -21,8 +21,47 @@
                    (str (-> ship :sprite first (js/window.encodeURI)) ".png"))]
     (str "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" filename)))
 
+(def outfit-categories
+  ["Guns"
+   "Turrets"
+   "Secondary Weapons"
+   "Ammunition"
+   "Systems"
+   "Power"
+   "Engines"
+   "Hand to Hand"
+   "Special"])
+
+(defn outfit-item [name quantity]
+  (if (= quantity 1)
+    [:li.list-group-item (nbspize name)]
+    [:li.list-group-item
+     [:span.badge quantity]
+     (nbspize name)]))
+
+(defn outfits-list [outfits]
+  (let [items (->> outfit-categories
+                   (map (fn [category]
+                          (when (contains? outfits category)
+                            (let [header ^{:key category} [:span.list-group-item.disabled category]
+                                  items (->> (get outfits category)
+                                             (sort-by #(get-in % [:outfit :name]))
+                                             (map (fn [{:keys [outfit quantity]}]
+                                                    ^{:key (:name outfit)}
+                                                    [outfit-item (:name outfit) quantity])))]
+                              (cons header items)))))
+                   (keep identity))]
+    [:ul.list-group items]))
+
 (defn ship-page [ship-name ship-modification]
-  (let [ship @(rf/subscribe [::subs/ship ship-name])]
+  (let [ship @(rf/subscribe [::subs/ship ship-name])
+        outfits @(rf/subscribe [::subs/outfits])
+        ship-outfits (->> (:outfits ship)
+                          (map (fn [{:keys [name quantity]}]
+                                 (let [outfit (get outfits (kebabize name))]
+                                   {:outfit outfit
+                                    :quantity quantity})))
+                          (group-by #(get-in % [:outfit :category])))]
     [:div.app
      [:div.row
       [:div.col-md-6
@@ -55,4 +94,8 @@
            (when (some? (:licenses ship))
              (render-licenses (:licenses ship)))]
           [:div.media-right
-           [:img.ship-sprite {:src (image-url ship)}]]]]]]]]))
+           [:img.ship-sprite {:src (image-url ship)}]]]]]]
+      [:div.col-md-6
+       [:div.panel.panel-default
+        [:div.panel-heading "Default outfits"]
+        [:div.panel-body (outfits-list ship-outfits)]]]]]))

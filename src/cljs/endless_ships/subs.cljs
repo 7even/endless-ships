@@ -68,3 +68,7 @@
 (rf/reg-sub ::ship
             (fn [db [_ name]]
               (get-in db [:ships (kebabize name)])))
+
+(rf/reg-sub ::outfits
+            (fn [db]
+              (:outfits db)))
