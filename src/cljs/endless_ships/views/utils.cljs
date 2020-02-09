@@ -35,3 +35,15 @@
 (defn format-number [num]
   (let [formatter (NumberFormat. Format/DECIMAL)]
     (.format formatter (str num))))
+
+(defn render-attribute [m prop label]
+  (let [v (prop m)]
+    (when (some? v)
+      (if (number? v)
+        [:li (str label ": " (format-number v))]
+        [:li (str label ": " v)]))))
+
+(defn render-percentage [m prop label]
+  (let [v (prop m)]
+    (when (some? v)
+      [:li (str label ": " (format-number (* v 100)) "%")])))
