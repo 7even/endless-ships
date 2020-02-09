@@ -21,6 +21,22 @@
                    (str (-> ship :sprite first (js/window.encodeURI)) ".png"))]
     (str "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" filename)))
 
+(defn ship-modifications [ship-name selected-modification-slug modification-names]
+  [:div.panel.panel-default
+   [:div.panel-heading "Modifications"]
+   [:div.panel-body
+    [:ul.nav.nav-pills.nav-stacked
+     [:li {:role "presentation"
+           :class (when (nil? selected-modification-slug) "active")}
+      [:a {:href (str "/ships/" (kebabize ship-name))} ship-name]]
+     (for [modification-name modification-names]
+       ^{:key modification-name}
+       [:li {:role "presentation"
+             :class (when (= (kebabize modification-name) selected-modification-slug) "active")}
+        [:a
+         {:href (str "/ships/" (kebabize ship-name) "/" (kebabize modification-name))}
+         modification-name]])]]])
+
 (def outfit-categories
   ["Guns"
    "Turrets"
@@ -61,7 +77,8 @@
                                  (let [outfit (get outfits (kebabize name))]
                                    {:outfit outfit
                                     :quantity quantity})))
-                          (group-by #(get-in % [:outfit :category])))]
+                          (group-by #(get-in % [:outfit :category])))
+        modification-names @(rf/subscribe [::subs/ship-modifications-names ship-name])]
     [:div.app
      [:div.row
       [:div.col-md-6
@@ -94,7 +111,9 @@
            (when (some? (:licenses ship))
              (render-licenses (:licenses ship)))]
           [:div.media-right
-           [:img.ship-sprite {:src (image-url ship)}]]]]]]
+           [:img.ship-sprite {:src (image-url ship)}]]]]]
+       (when (seq modification-names)
+         (ship-modifications (:name ship) ship-modification modification-names))]
       [:div.col-md-6
        [:div.panel.panel-default
         [:div.panel-heading "Default outfits"]
