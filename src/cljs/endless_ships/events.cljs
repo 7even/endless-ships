@@ -21,6 +21,11 @@
                                  :on-success [::data-loaded]
                                  :on-failure [::data-failed-to-load]}}))
 
+(defn- index-by-name [coll]
+  (reduce (fn [indexed {:keys [name] :as item}]
+            (assoc indexed (kebabize name) item))
+          coll))
+
 (defn- toggle-filter [filter value]
   (update filter value not))
 
@@ -33,12 +38,8 @@
                  (fn [db [_ data]]
                    (-> db
                        (assoc :loading? false
-                              :ships (reduce (fn [ships {:keys [name] :as ship}]
-                                               (assoc ships
-                                                      (kebabize name)
-                                                      ship))
-                                             {}
-                                             (:ships data)))
+                              :ships (index-by-name (:ships data))
+                              :outfits (index-by-name (:outfits data)))
                        (update-in [:settings :ships]
                                   merge
                                   {:race-filter (->> (:ships data)
