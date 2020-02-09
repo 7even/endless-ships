@@ -4,6 +4,23 @@
             [endless-ships.views.utils :refer [render-attribute render-percentage]]
             [endless-ships.utils.ships :refer [total-cost or-zero]]))
 
+(defn- render-licenses [[license1 license2]]
+  (if (some? license2)
+    [:p.italic (str "This ship requires " license1 " and " license2 " licenses.")]
+    [:p.italic (str "This ship requires a " license1 " license.")]))
+
+(defn- image-url [ship]
+  (let [filename (cond
+                   (= (:name ship) "Shuttle")
+                   "ship/shuttle=0.png"
+
+                   (last (:sprite ship))
+                   (str (-> ship :sprite first (js/window.encodeURI)) "-0.png")
+
+                   :else
+                   (str (-> ship :sprite first (js/window.encodeURI)) ".png"))]
+    (str "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" filename)))
+
 (defn ship-page [ship-name ship-modification]
   (let [ship @(rf/subscribe [::subs/ship ship-name])]
     [:div.app
@@ -34,4 +51,8 @@
               (render-attribute ship :fighters "fighters"))
             (render-attribute ship :ramscoop "ramscoop")
             (render-attribute ship :cloak "cloak")
-            (render-percentage ship :self-destruct "self-destruct")]]]]]]]]))
+            (render-percentage ship :self-destruct "self-destruct")]
+           (when (some? (:licenses ship))
+             (render-licenses (:licenses ship)))]
+          [:div.media-right
+           [:img.ship-sprite {:src (image-url ship)}]]]]]]]]))

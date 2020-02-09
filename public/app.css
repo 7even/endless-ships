@@ -53,3 +53,10 @@
 p.italic {
     font-style: italic;
 }
+
+img.ship-sprite {
+    max-width:  220px;
+    max-height: 220px;
+    width:      auto;
+    height:     auto;
+}
