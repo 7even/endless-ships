@@ -3,7 +3,7 @@
             [re-frame.core :as rf]
             [endless-ships.events :as events]
             [endless-ships.views :as views]
-            endless-ships.routes))
+            [endless-ships.routes :as routes]))
 
 (defn render []
   (ra/render [views/interface]
@@ -11,4 +11,5 @@
 
 (defn init []
   (rf/dispatch-sync [::events/initialize])
+  (routes/start!)
   (render))

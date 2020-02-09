@@ -21,4 +21,6 @@
 (def url-for
   (partial bidi/path-for routes))
 
-(pushy/start! (pushy/pushy dispatch-route parse-url))
+(defn start! []
+  (let [history (pushy/pushy dispatch-route parse-url)]
+    (pushy/start! history)))
