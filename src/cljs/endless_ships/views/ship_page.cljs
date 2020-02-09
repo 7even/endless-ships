@@ -72,13 +72,17 @@
 (defn ship-page [ship-name ship-modification]
   (let [ship @(rf/subscribe [::subs/ship ship-name])
         outfits @(rf/subscribe [::subs/outfits])
-        ship-outfits (->> (:outfits ship)
+        modification-names @(rf/subscribe [::subs/ship-modifications-names ship-name])
+        selected-modification (if (some? ship-modification)
+                                @(rf/subscribe [::subs/ship-modification ship-name ship-modification])
+                                {})
+        ship-with-modification (merge ship selected-modification)
+        ship-outfits (->> (:outfits ship-with-modification)
                           (map (fn [{:keys [name quantity]}]
                                  (let [outfit (get outfits (kebabize name))]
                                    {:outfit outfit
                                     :quantity quantity})))
-                          (group-by #(get-in % [:outfit :category])))
-        modification-names @(rf/subscribe [::subs/ship-modifications-names ship-name])]
+                          (group-by #(get-in % [:outfit :category])))]
     [:div.app
      [:div.row
       [:div.col-md-6
@@ -88,30 +92,30 @@
          [:div.media
           [:div.media-body
            [:ul
-            (render-attribute ship total-cost "cost")
-            (render-attribute ship :shields "shields")
-            (render-attribute ship :hull "hull")
-            (render-attribute ship :mass "mass")
-            (render-attribute ship :cargo-space "cargo space")
-            (render-attribute ship :required-crew "required crew")
-            (render-attribute ship :bunks "bunks")
-            (render-attribute ship :fuel-capacity "fuel capacity")
-            (render-attribute ship :outfit-space "outfit space")
-            (render-attribute ship :weapon-capacity "weapon capacity")
-            (render-attribute ship :engine-capacity "engine capacity")
-            (render-attribute ship (or-zero :guns) "guns")
-            (render-attribute ship (or-zero :turrets) "turrets")
-            (when (pos? (:drones ship))
-              (render-attribute ship :drones "drones"))
-            (when (pos? (:fighters ship))
-              (render-attribute ship :fighters "fighters"))
-            (render-attribute ship :ramscoop "ramscoop")
-            (render-attribute ship :cloak "cloak")
-            (render-percentage ship :self-destruct "self-destruct")]
-           (when (some? (:licenses ship))
-             (render-licenses (:licenses ship)))]
+            (render-attribute ship-with-modification total-cost "cost")
+            (render-attribute ship-with-modification :shields "shields")
+            (render-attribute ship-with-modification :hull "hull")
+            (render-attribute ship-with-modification :mass "mass")
+            (render-attribute ship-with-modification :cargo-space "cargo space")
+            (render-attribute ship-with-modification :required-crew "required crew")
+            (render-attribute ship-with-modification :bunks "bunks")
+            (render-attribute ship-with-modification :fuel-capacity "fuel capacity")
+            (render-attribute ship-with-modification :outfit-space "outfit space")
+            (render-attribute ship-with-modification :weapon-capacity "weapon capacity")
+            (render-attribute ship-with-modification :engine-capacity "engine capacity")
+            (render-attribute ship-with-modification (or-zero :guns) "guns")
+            (render-attribute ship-with-modification (or-zero :turrets) "turrets")
+            (when (pos? (:drones ship-with-modification))
+              (render-attribute ship-with-modification :drones "drones"))
+            (when (pos? (:fighters ship-with-modification))
+              (render-attribute ship-with-modification :fighters "fighters"))
+            (render-attribute ship-with-modification :ramscoop "ramscoop")
+            (render-attribute ship-with-modification :cloak "cloak")
+            (render-percentage ship-with-modification :self-destruct "self-destruct")]
+           (when (some? (:licenses ship-with-modification))
+             (render-licenses (:licenses ship-with-modification)))]
           [:div.media-right
-           [:img.ship-sprite {:src (image-url ship)}]]]]]
+           [:img.ship-sprite {:src (image-url ship-with-modification)}]]]]]
        (when (seq modification-names)
          (ship-modifications (:name ship) ship-modification modification-names))]
       [:div.col-md-6
