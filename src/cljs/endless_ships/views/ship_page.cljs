@@ -121,4 +121,10 @@
       [:div.col-md-6
        [:div.panel.panel-default
         [:div.panel-heading "Default outfits"]
-        [:div.panel-body (outfits-list ship-outfits)]]]]]))
+        [:div.panel-body (outfits-list ship-outfits)]]]]
+     (when (seq (:description ship-with-modification))
+       [:div.row
+        [:div.col-md-12
+         [:div.well
+          (interpose [:span [:br] [:br]]
+                     (:description ship-with-modification))]]])]))
