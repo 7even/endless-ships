@@ -7,11 +7,7 @@
             [endless-ships.views.utils :refer [license-label nbsp nbspize kebabize format-number]]
             [endless-ships.utils.ships :refer [total-cost or-zero columns]]
             [endless-ships.routes :as routes]
-            [clojure.string :as str]
-            ["react-bootstrap" :refer [Collapse]]))
-
-(def collapse
-  (ra/adapt-react-class Collapse))
+            [clojure.string :as str]))
 
 (defn checkbox-group [filter toggling-event]
   (for [[item checked?] filter]
@@ -23,30 +19,35 @@
                    (str/capitalize (name item))]]))
 
 (defn ships-filter []
-  (let [collapsed? @(rf/subscribe [::subs/ship-filters-collapsed?])
-        race-filter @(rf/subscribe [::subs/ships-race-filter])
-        category-filter @(rf/subscribe [::subs/ships-category-filter])
-        license-filter @(rf/subscribe [::subs/ships-license-filter])]
-    [:div.filters-group
-     [collapse {:in (not collapsed?)}
-      [:div.container-fluid
-       [:div.row
-        [:div.col-lg-2.col-md-3
-         [:strong "Race"]
-         (checkbox-group race-filter ::events/toggle-ships-race-filter)]
-        [:div.col-lg-2.col-md-3
-         [:strong "Category"]
-         (checkbox-group category-filter ::events/toggle-ships-category-filter)]
-        [:div.col-lg-2.col-md-3
-         [:strong "License"]
-         (checkbox-group license-filter ::events/toggle-ships-license-filter)]]]]
-     [:button.btn.btn-default
-      {:type "button"
-       :on-click #(rf/dispatch [::events/toggle-ship-filters-visibility])}
-      "Filters "
-      (if collapsed?
-        [:span.glyphicon.glyphicon-menu-down]
-        [:span.glyphicon.glyphicon-menu-up])]]))
+  (let [height (ra/atom nil)]
+    (fn []
+      (let [collapsed? @(rf/subscribe [::subs/ship-filters-collapsed?])
+            race-filter @(rf/subscribe [::subs/ships-race-filter])
+            category-filter @(rf/subscribe [::subs/ships-category-filter])
+            license-filter @(rf/subscribe [::subs/ships-license-filter])]
+        [:div.filters-group
+         [:div {:style {:overflow "hidden"
+                        :transition "max-height 0.8s"
+                        :max-height (if collapsed? 0 @height)}}
+          [:div.container-fluid
+           {:ref #(when % (reset! height (.-clientHeight %)))}
+           [:div.row
+            [:div.col-lg-2.col-md-3
+             [:strong "Race"]
+             (checkbox-group race-filter ::events/toggle-ships-race-filter)]
+            [:div.col-lg-2.col-md-3
+             [:strong "Category"]
+             (checkbox-group category-filter ::events/toggle-ships-category-filter)]
+            [:div.col-lg-2.col-md-3
+             [:strong "License"]
+             (checkbox-group license-filter ::events/toggle-ships-license-filter)]]]]
+         [:button.btn.btn-default
+          {:type "button"
+           :on-click #(rf/dispatch [::events/toggle-ship-filters-visibility])}
+          "Filters "
+          (if collapsed?
+            [:span.glyphicon.glyphicon-menu-down]
+            [:span.glyphicon.glyphicon-menu-up])]]))))
 
 (defn race-label [race]
   ^{:key race} [:span.label {:class (str "label-" (name race))} race])
