@@ -7,7 +7,8 @@
 (def routes
   ["/" {"" :ships
         ["ships/" :ship/name] :ship
-        ["ships/" :ship/name "/" [#"[A-Za-z0-9\-\(\)\,]+" :ship/modification]] :ship-modification}])
+        ["ships/" :ship/name "/" [#"[A-Za-z0-9\-\(\)\,]+" :ship/modification]] :ship-modification
+        "outfits" :outfits}])
 
 (defn- parse-url [url]
   (let [{:keys [handler route-params]
