@@ -12,7 +12,8 @@
                          :ships {}
                          :ship-modifications {}
                          :outfits {}
-                         :settings {:ships {:ordering {:column-name nil}
+                         :settings {:ships {:ordering {:column-name "Name"
+                                                       :order :asc}
                                             :filters-collapsed? true
                                             :race-filter {}
                                             :category-filter {}
@@ -80,10 +81,10 @@
              (fn [{:keys [column-name order]}]
                (cond
                  (not= column-name column) {:column-name column
-                                            :order "desc"}
-                 (= order "asc") {:column-name nil}
+                                            :order :desc}
+                 (= order :asc) {:column-name nil}
                  :else {:column-name column
-                        :order "asc"}))))
+                        :order :asc}))))
 
 (rf/reg-event-db ::toggle-ordering
                  (fn [db [_ entity-type column]]

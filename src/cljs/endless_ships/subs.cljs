@@ -59,7 +59,7 @@
                                        (fn [ship1 ship2]
                                          (let [ship1-prop (ordering-prop ship1)
                                                ship2-prop (ordering-prop ship2)]
-                                           (if (= (:order ordering) "asc")
+                                           (if (= (:order ordering) :asc)
                                              (compare ship1-prop ship2-prop)
                                              (compare ship2-prop ship1-prop))))
                                        (constantly 0))))]

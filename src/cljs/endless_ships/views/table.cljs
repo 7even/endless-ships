@@ -11,7 +11,7 @@
                        text)
                icon (when (and (some? prop)
                                (= (:column-name ordering) text))
-                      (if (= (:order ordering) "asc")
+                      (if (= (:order ordering) :asc)
                         [:span.glyphicon.glyphicon-sort-by-attributes]
                         [:span.glyphicon.glyphicon-sort-by-attributes-alt]))]
            ^{:key text} [:th.text-center title " " icon]))])
