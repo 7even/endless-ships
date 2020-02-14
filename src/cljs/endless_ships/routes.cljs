@@ -4,11 +4,15 @@
             [pushy.core :as pushy]
             [endless-ships.events :as events]))
 
+(def name-pattern
+  #"[A-Za-z0-9\-\(\)\,\"]+")
+
 (def routes
   ["/" {"" :ships
         ["ships/" :ship/name] :ship
-        ["ships/" :ship/name "/" [#"[A-Za-z0-9\-\(\)\,]+" :ship/modification]] :ship-modification
-        "outfits" :outfits}])
+        ["ships/" :ship/name "/" [name-pattern :ship/modification]] :ship-modification
+        "outfits" :outfits
+        ["outfits/" [name-pattern :outfit/name]] :outfit}])
 
 (defn- parse-url [url]
   (let [{:keys [handler route-params]

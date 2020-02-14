@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]
             [endless-ships.subs :as subs]
             [endless-ships.views.utils :refer [render-attribute render-percentage nbspize kebabize]]
-            [endless-ships.utils.ships :refer [total-cost or-zero]]))
+            [endless-ships.utils.ships :refer [total-cost or-zero]]
+            [endless-ships.routes :as routes]))
 
 (defn- render-licenses [[license1 license2]]
   (if (some? license2)
@@ -49,11 +50,12 @@
    "Special"])
 
 (defn outfit-item [name quantity]
-  (if (= quantity 1)
-    [:li.list-group-item (nbspize name)]
-    [:li.list-group-item
-     [:span.badge quantity]
-     (nbspize name)]))
+  (let [link [:a
+              {:href (routes/url-for :outfit :outfit/name (kebabize name))}
+              (nbspize name)]]
+    (if (= quantity 1)
+      [:li.list-group-item link]
+      [:li.list-group-item [:span.badge quantity] link])))
 
 (defn outfits-list [outfits]
   (let [items (->> outfit-categories

@@ -4,7 +4,8 @@
             [endless-ships.views.navigation :refer [navigation]]
             [endless-ships.views.ships-list :refer [ships-list]]
             [endless-ships.views.ship-page :refer [ship-page]]
-            [endless-ships.views.outfits :refer [outfits]]))
+            [endless-ships.views.outfits :refer [outfits]]
+            [endless-ships.views.outfit-page :refer [outfit-page]]))
 
 (defn current-page []
   (let [[route params] @(rf/subscribe [::subs/route])]
@@ -13,6 +14,7 @@
       :ship [ship-page (:ship/name params) nil]
       :ship-modification [ship-page (:ship/name params) (:ship/modification params)]
       :outfits [outfits]
+      :outfit [outfit-page (:outfit/name params)]
       [:div (str "Route unknown: " route)])))
 
 (defn interface []
