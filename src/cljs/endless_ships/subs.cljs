@@ -86,3 +86,24 @@
 (rf/reg-sub ::outfit
             (fn [db [_ name]]
               (get-in db [:outfits (kebabize name)])))
+
+(rf/reg-sub ::outfit-installations
+            (fn [db [_ name]]
+              (->> (concat (-> db :ships vals)
+                           (->> (:ship-modifications db)
+                                vals
+                                (mapcat vals)))
+                   (reduce (fn [installations ship]
+                             (if-let [ship-outfit (->> (:outfits ship)
+                                                       (filter #(= (:name %) name))
+                                                       first)]
+                               (conj installations
+                                     {:ship-name (:name ship)
+                                      :ship-modification (:modification ship)
+                                      :quantity (:quantity ship-outfit)})
+                               installations))
+                           [])
+                   (sort-by (juxt (fn [{:keys [quantity]}]
+                                    (- quantity))
+                                  (fn [{:keys [ship-name ship-modification]}]
+                                    (or ship-modification ship-name)))))))

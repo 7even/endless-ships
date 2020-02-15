@@ -47,7 +47,8 @@
    (render-attribute weapon :anti-missile "anti-missile")])
 
 (defn outfit-page [outfit-name]
-  (let [outfit @(rf/subscribe [::subs/outfit outfit-name])]
+  (let [outfit @(rf/subscribe [::subs/outfit outfit-name])
+        installations @(rf/subscribe [::subs/outfit-installations (:name outfit)])]
     [:div.app
      [:div.row
       [:div.col-md-12
@@ -151,4 +152,25 @@
                [:p.italic "This outfit cannot be plundered."])]]]
           [:div.media-right
            (when (contains? outfit :thumbnail)
-             [:img {:src (image-url outfit)}])]]]]]]]))
+             [:img {:src (image-url outfit)}])]]]]]]
+     [:div.row
+      [:div.col-md-6
+       [:div.panel.panel-default
+        [:div.panel-heading (str "Installed on " (count installations) " ships")]
+        (when (seq installations)
+          [:div.panel-body
+           [:ul.list-group
+            (for [{:keys [ship-name ship-modification quantity]} installations]
+              (let [link (if (some? ship-modification)
+                           [:a
+                            {:href (str "/ships/" (kebabize ship-name) "/" (kebabize ship-modification))}
+                            (nbspize ship-modification)]
+                           [:a
+                            {:href (str "/ships/" (kebabize ship-name))}
+                            (nbspize ship-name)])]
+                ^{:key [ship-name ship-modification]}
+                (if (= quantity 1)
+                  [:li.list-group-item link]
+                  [:li.list-group-item
+                   [:span.badge quantity]
+                   link])))]])]]]]))
