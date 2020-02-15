@@ -124,6 +124,8 @@
               (render-attribute outfit :cargo-scan-speed "cargo scan speed")
               (render-attribute outfit :outfit-scan-power "outfit scan power")
               (render-attribute outfit :outfit-scan-speed "outfit scan speed")
+              (render-attribute outfit :asteroid-scan-power "asteroid scan power")
+              (render-attribute outfit :tactical-scan-power "tactical scan power")
               (render-attribute outfit :scan-interference "scan interference")
               (render-attribute outfit :radar-jamming "radar jamming")
               (render-attribute outfit :cloak "cloak")
@@ -147,6 +149,7 @@
               (render-attribute outfit :thunderhead-capacity "thunderhead capacity")
               (render-attribute outfit :torpedo-capacity "torpedo capacity")
               (render-attribute outfit :typhoon-capacity "typhoon capacity")
+              (render-attribute outfit :emp-torpedo-capacity "EMP torpedo capacity")
               (when (contains? outfit :weapon)
                 [weapon-attributes (:weapon outfit)])]
              (when (contains? outfit :unplunderable)
