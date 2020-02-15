@@ -107,3 +107,12 @@
                                     (- quantity))
                                   (fn [{:keys [ship-name ship-modification]}]
                                     (or ship-modification ship-name)))))))
+
+(rf/reg-sub ::outfit-planets
+            (fn [db [_ name]]
+              (->> (:outfitters db)
+                   (filter (fn [{:keys [outfits]}]
+                             (outfits name)))
+                   (mapcat :planets)
+                   (into #{})
+                   (sort-by :name))))

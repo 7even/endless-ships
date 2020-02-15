@@ -48,7 +48,8 @@
 
 (defn outfit-page [outfit-name]
   (let [outfit @(rf/subscribe [::subs/outfit outfit-name])
-        installations @(rf/subscribe [::subs/outfit-installations (:name outfit)])]
+        installations @(rf/subscribe [::subs/outfit-installations (:name outfit)])
+        planets @(rf/subscribe [::subs/outfit-planets (:name outfit)])]
     [:div.app
      [:div.row
       [:div.col-md-12
@@ -173,4 +174,15 @@
                   [:li.list-group-item link]
                   [:li.list-group-item
                    [:span.badge quantity]
-                   link])))]])]]]]))
+                   link])))]])]]
+      [:div.col-md-6
+       [:div.panel.panel-default
+        [:div.panel-heading (str "Sold at " (count planets) " planets")]
+        (when (seq planets)
+          [:div.panel-body
+           [:ul.list-group
+            (for [{:keys [name system]} planets]
+              ^{:key name} [:li.list-group-item
+                            name
+                            " "
+                            [:span.label.label-default system]])]])]]]]))

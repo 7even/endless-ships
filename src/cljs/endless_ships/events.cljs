@@ -12,6 +12,7 @@
                          :ships {}
                          :ship-modifications {}
                          :outfits {}
+                         :outfitters []
                          :settings {:ships {:ordering {:column-name "Name"
                                                        :order :asc}
                                             :filters-collapsed? true
@@ -36,6 +37,13 @@
           {}
           modifications))
 
+(defn- process-outfitters [outfitters]
+  (map (fn [outfitter]
+         (-> outfitter
+             (dissoc :name)
+             (update :outfits set)))
+       outfitters))
+
 (defn- toggle-filter [filter value]
   (update filter value not))
 
@@ -50,7 +58,8 @@
                        (assoc :loading? false
                               :ships (index-by-name (:ships data))
                               :ship-modifications (group-modifications (:ship-modifications data))
-                              :outfits (index-by-name (:outfits data)))
+                              :outfits (index-by-name (:outfits data))
+                              :outfitters (process-outfitters (:outfitters data)))
                        (update-in [:settings :ships]
                                   merge
                                   {:race-filter (->> (:ships data)
