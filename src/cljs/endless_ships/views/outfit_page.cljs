@@ -179,13 +179,13 @@
                             (nbspize ship-modification)]
                            [:a
                             {:href (str "/ships/" (kebabize ship-name))}
-                            (nbspize ship-name)])]
-                ^{:key [ship-name ship-modification]}
+                            (nbspize ship-name)])
+                    key [ship-name ship-modification]]
                 (if (= quantity 1)
-                  [:li.list-group-item link]
-                  [:li.list-group-item
-                   [:span.badge quantity]
-                   link])))]])]]
+                  ^{:key key} [:li.list-group-item link]
+                  ^{:key key} [:li.list-group-item
+                               [:span.badge quantity]
+                               link])))]])]]
       [:div.col-md-6
        [:div.panel.panel-default
         [:div.panel-heading (str "Sold at " (count planets) " planets")]
