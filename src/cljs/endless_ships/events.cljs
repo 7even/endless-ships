@@ -19,7 +19,8 @@
                                             :race-filter {}
                                             :category-filter {}
                                             :license-filter {}}
-                                    :thrusters {:ordering {:column-name "Thrust per space"}}}}
+                                    :thrusters {:ordering {:column-name "Thrust per space"}}
+                                    :steerings {:ordering {:column-name "Turn per space"}}}}
                     :http-xhrio {:method :get
                                  :uri "/data.edn"
                                  :response-format (ajax/edn-response-format)

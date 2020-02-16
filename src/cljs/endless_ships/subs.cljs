@@ -122,16 +122,20 @@
                    (into #{})
                    (sort-by :name))))
 
-(rf/reg-sub ::thrusters-ordering
-            (fn [db]
-              (get-in db [:settings :thrusters :ordering])))
+(rf/reg-sub ::outfits-ordering
+            (fn [db [_ outfit-type]]
+              (get-in db [:settings outfit-type :ordering])))
 
-(rf/reg-sub ::thruster-names
-            (fn []
+(def outfit-type-filters
+  {:thrusters #(contains? % :thrust)
+   :steerings #(contains? % :turn)})
+
+(rf/reg-sub ::outfit-names
+            (fn [[_ outfit-type]]
               [(rf/subscribe [::outfits])
-               (rf/subscribe [::thrusters-ordering])])
-            (fn [[outfits ordering]]
+               (rf/subscribe [::outfits-ordering outfit-type])])
+            (fn [[outfits ordering] [_ outfit-type]]
               (->> (vals outfits)
-                   (filter #(contains? % :thrust))
-                   (sort-with-settings (:thrusters outfits/columns) ordering)
+                   (filter (get outfit-type-filters outfit-type))
+                   (sort-with-settings (get outfits/columns outfit-type) ordering)
                    (map :name))))
