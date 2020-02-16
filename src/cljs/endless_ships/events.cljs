@@ -18,7 +18,8 @@
                                             :filters-collapsed? true
                                             :race-filter {}
                                             :category-filter {}
-                                            :license-filter {}}}}
+                                            :license-filter {}}
+                                    :thrusters {:ordering {:column-name "Thrust per space"}}}}
                     :http-xhrio {:method :get
                                  :uri "/data.edn"
                                  :response-format (ajax/edn-response-format)

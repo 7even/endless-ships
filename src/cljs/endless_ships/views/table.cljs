@@ -17,7 +17,7 @@
            ^{:key text} [:th.text-center title " " icon]))])
 
 (defn table [entity-type header-columns ordering rows]
-  [:table.table-striped.table-bordered.table-condensed.table-hover
+  [:table.table.table-striped.table-bordered.table-condensed.table-hover
    [:thead [table-headers entity-type header-columns ordering]]
    [:tbody rows]])
 
