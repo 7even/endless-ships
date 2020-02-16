@@ -4,6 +4,13 @@
             [endless-ships.views.utils :refer [render-attribute kebabize nbspize]]
             [endless-ships.routes :as routes]))
 
+(defn- render-license [outfit]
+  (let [[license] (:licenses outfit)]
+    (when (some? license)
+      [:p.italic
+       {:style {:margin-top 20}}
+       (str "This outfit requires a " license " license.")])))
+
 (defn- image-url [outfit]
   (let [filename (str (-> outfit :thumbnail js/window.encodeURI) ".png")]
     (str "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" filename)))
@@ -63,7 +70,8 @@
              (if (seq (:description outfit))
                (interpose [:span [:br] [:br]]
                           (:description outfit))
-               [:p.italic "No description."])]
+               [:p.italic "No description."])
+             (render-license outfit)]
             [:div.col-md-4
              [:ul
               (render-attribute outfit :category "category")
