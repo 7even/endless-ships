@@ -45,7 +45,20 @@
                                              "Outfit sp."       {:value :outfit-space}
                                              "Energy capacity"  {:value :energy-capacity}
                                              "Energy per space" {:value #(/ (:energy-capacity %)
-                                                                            (:outfit-space %))})}))
+                                                                            (:outfit-space %))})}
+             :coolers {:header "Coolers"
+                       :filter #(or (contains? % :cooling)
+                                    (contains? % :active-cooling))
+                       :initial-ordering {:column-name "Cooling per space"
+                                          :order :desc}
+                       :columns (let [total-cooling #(+ (get % :cooling 0)
+                                                        (get % :active-cooling 0))]
+                                  (array-map "Cost"              {:value :cost}
+                                             "Outfit sp."        {:value :outfit-space}
+                                             "Cooling"           {:value total-cooling}
+                                             "Cooling per space" {:value #(/ (total-cooling %)
+                                                                             (:outfit-space %))}
+                                             "Cooling energy"    {:value :cooling-energy}))}))
 
 (defn columns-for [type]
   (->> (conj (get-in types [type :columns])
