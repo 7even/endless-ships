@@ -1,5 +1,8 @@
 (ns endless-ships.utils.outfits)
 
+(defn- damage [damage-type gun]
+  (get-in gun [:weapon damage-type :per-second]))
+
 (def types
   (array-map :thrusters {:header "Thrusters"
                          :filter #(contains? % :thrust)
@@ -81,7 +84,21 @@
                          :columns (array-map "Outfit sp."         {:value :outfit-space}
                                              "Ramscoop"           {:value :ramscoop}
                                              "Ramscoop per space" {:value #(/ (:ramscoop %)
-                                                                              (:outfit-space %))})}))
+                                                                              (:outfit-space %))})}
+             :guns {:header "Guns"
+                    :filter #(= (:category %) "Guns")
+                    :initial-ordering {:column-name "Shield damage / space"
+                                       :order :desc}
+                    :columns (array-map "Outfit sp."            {:value :outfit-space}
+                                        "Shield damage"         {:value (partial damage :shield-damage)}
+                                        "Shield damage / space" {:value #(/ (damage :shield-damage %)
+                                                                            (:outfit-space %))}
+                                        "Hull damage"           {:value (partial damage :hull-damage)}
+                                        "Hull damage / space"   {:value #(/ (damage :hull-damage %)
+                                                                            (:outfit-space %))}
+                                        "Range"                 {:value #(get-in % [:weapon :range])}
+                                        "Fire rate"             {:value #(get-in % [:weapon :shots-per-second])
+                                                                 :orderable? false})}))
 
 (defn columns-for [type]
   (->> (conj (get-in types [type :columns])
@@ -89,4 +106,5 @@
                           :orderable? false}])
        (concat [["Name" {:value :name}]
                 ["Cost" {:value :cost}]])
-       (into (array-map))))
+       (apply concat)
+       (apply array-map)))

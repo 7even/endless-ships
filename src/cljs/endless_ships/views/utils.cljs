@@ -33,12 +33,14 @@
       str/lower-case))
 
 (defn format-number [num]
-  (let [rounded (-> num
-                    (* 10)
-                    js/Math.round
-                    (/ 10))
-        formatter (NumberFormat. Format/DECIMAL)]
-    (.format formatter (str rounded))))
+  (if (number? num)
+    (let [rounded (-> num
+                      (* 10)
+                      js/Math.round
+                      (/ 10))
+          formatter (NumberFormat. Format/DECIMAL)]
+      (.format formatter (str rounded)))
+    num))
 
 (defn render-attribute [m prop label]
   (let [v (prop m)]
