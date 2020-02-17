@@ -73,7 +73,15 @@
                                                "Hull per space"   {:value #(/ (:hull-repair-rate %)
                                                                               (:outfit-space %))}
                                                "Hull energy"      {:value :hull-energy}
-                                               "Hull heat"        {:value :hull-heat})}))
+                                               "Hull heat"        {:value :hull-heat})}
+             :ramscoops {:header "Ramscoops"
+                         :filter #(contains? % :ramscoop)
+                         :initial-ordering {:column-name "Ramscoop per space"
+                                            :order :desc}
+                         :columns (array-map "Outfit sp."         {:value :outfit-space}
+                                             "Ramscoop"           {:value :ramscoop}
+                                             "Ramscoop per space" {:value #(/ (:ramscoop %)
+                                                                              (:outfit-space %))})}))
 
 (defn columns-for [type]
   (->> (conj (get-in types [type :columns])
