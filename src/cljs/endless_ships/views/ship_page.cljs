@@ -29,14 +29,12 @@
     [:ul.nav.nav-pills.nav-stacked
      [:li {:role "presentation"
            :class (when (nil? selected-modification-slug) "active")}
-      [:a {:href (str "/ships/" (kebabize ship-name))} ship-name]]
+      (routes/ship-link ship-name)]
      (for [modification-name modification-names]
        ^{:key modification-name}
        [:li {:role "presentation"
              :class (when (= (kebabize modification-name) selected-modification-slug) "active")}
-        [:a
-         {:href (str "/ships/" (kebabize ship-name) "/" (kebabize modification-name))}
-         modification-name]])]]])
+        (routes/ship-modification-link ship-name modification-name)])]]])
 
 (def outfit-categories
   ["Guns"
@@ -50,9 +48,7 @@
    "Special"])
 
 (defn outfit-item [name quantity]
-  (let [link [:a
-              {:href (routes/url-for :outfit :outfit/name (kebabize name))}
-              (nbspize name)]]
+  (let [link (routes/outfit-link name)]
     (if (= quantity 1)
       [:li.list-group-item link]
       [:li.list-group-item [:span.badge quantity] link])))

@@ -17,11 +17,7 @@
 
 (defn- render-ammo [outfit]
   (when (contains? outfit :ammo)
-    [:li
-     "ammo: "
-     [:a
-      {:href (routes/url-for :outfit :outfit/name (kebabize (:ammo outfit)))}
-      (nbspize (:ammo outfit))]]))
+    [:li "ammo: " (routes/outfit-link (:ammo outfit))]))
 
 (defn weapon-attributes [weapon]
   [:div
@@ -174,12 +170,8 @@
            [:ul.list-group
             (for [{:keys [ship-name ship-modification quantity]} installations]
               (let [link (if (some? ship-modification)
-                           [:a
-                            {:href (str "/ships/" (kebabize ship-name) "/" (kebabize ship-modification))}
-                            (nbspize ship-modification)]
-                           [:a
-                            {:href (str "/ships/" (kebabize ship-name))}
-                            (nbspize ship-name)])
+                           (routes/ship-modification-link ship-name ship-modification)
+                           (routes/ship-link ship-name))
                     key [ship-name ship-modification]]
                 (if (= quantity 1)
                   ^{:key key} [:li.list-group-item link]

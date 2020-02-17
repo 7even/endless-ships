@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]
             [bidi.bidi :as bidi]
             [pushy.core :as pushy]
-            [endless-ships.events :as events]))
+            [endless-ships.events :as events]
+            [endless-ships.views.utils :refer [kebabize nbspize]]))
 
 (def name-pattern
   #"[A-Za-z0-9\-\(\)\,\"]+")
@@ -29,3 +30,15 @@
 (defn start! []
   (let [history (pushy/pushy dispatch-route parse-url)]
     (pushy/start! history)))
+
+(defn ship-link [name]
+  (let [url (url-for :ship :ship/name (kebabize name))]
+    [:a {:href url} (nbspize name)]))
+
+(defn ship-modification-link [name modification]
+  (let [url (str "/ships/" (kebabize name) "/" (kebabize modification))]
+    [:a {:href url} (nbspize modification)]))
+
+(defn outfit-link [name]
+  (let [url (url-for :outfit :outfit/name (kebabize name))]
+    [:a {:href url} (nbspize name)]))

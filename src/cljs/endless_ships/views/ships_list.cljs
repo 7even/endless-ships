@@ -69,9 +69,7 @@
                 outfit-space cargo-space] :as ship} @(rf/subscribe [::subs/ship name])]
     [:tr
      [left-cell
-      ^{:key name} [:a
-                    {:href (routes/url-for :ship :ship/name (kebabize name))}
-                    (nbspize name)]]
+      ^{:key name} [routes/ship-link name]]
      [left-cell (race-label race)]
      [right-cell (format-number (total-cost ship))]
      [left-cell (nbspize category)]

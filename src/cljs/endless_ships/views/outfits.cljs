@@ -6,10 +6,6 @@
             [endless-ships.subs :as subs]
             [endless-ships.routes :as routes]))
 
-(defn outfit-link [name]
-  (let [url (routes/url-for :outfit :outfit/name (kebabize name))]
-    [:a {:href url} (nbspize name)]))
-
 (defn outfits []
   [:div.app
    (->> utils/types
@@ -19,7 +15,7 @@
                                       (let [outfit @(rf/subscribe [::subs/outfit name])]
                                         ^{:key name}
                                         [:tr
-                                         [left-cell ^{:key name} [outfit-link name]]
+                                         [left-cell ^{:key name} [routes/outfit-link name]]
                                          (map (fn [{:keys [value]}]
                                                 ^{:key (value outfit)}
                                                 [right-cell (format-number (value outfit))])
