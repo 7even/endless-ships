@@ -17,7 +17,7 @@
                                         [:tr
                                          [left-cell ^{:key name} [routes/outfit-link name]]
                                          (map (fn [{:keys [value]}]
-                                                ^{:key (value outfit)}
+                                                ^{:key (or (value outfit) 0)}
                                                 [right-cell (format-number (value outfit))])
                                               (-> type-attrs :columns vals))
                                          [left-cell (->> (:licenses outfit)

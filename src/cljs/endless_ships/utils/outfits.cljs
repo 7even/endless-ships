@@ -22,7 +22,20 @@
                                              "Turn per space" {:value #(/ (:turn %)
                                                                           (:outfit-space %))}
                                              "Turn. energy"   {:value :turning-energy}
-                                             "Turn. heat"     {:value :turning-heat})}))
+                                             "Turn. heat"     {:value :turning-heat})}
+             :reactors {:header "Reactors"
+                        :filter #(or (contains? % :energy-generation)
+                                     (contains? % :solar-collection))
+                        :initial-ordering {:column-name "Energy per space"
+                                           :order :desc}
+                        :columns (let [energy-generation #(+ (get % :energy-generation 0)
+                                                             (get % :solar-collection 0))]
+                                   (array-map "Cost"              {:value :cost}
+                                              "Outfit sp."        {:value :outfit-space}
+                                              "Energy generation" {:value energy-generation}
+                                              "Energy per space"  {:value #(/ (energy-generation %)
+                                                                              (:outfit-space %))}
+                                              "Heat generation"   {:value :heat-generation}))}))
 
 (defn columns-for [type]
   (->> (conj (get-in types [type :columns])
