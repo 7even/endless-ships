@@ -35,7 +35,17 @@
                                               "Energy generation" {:value energy-generation}
                                               "Energy per space"  {:value #(/ (energy-generation %)
                                                                               (:outfit-space %))}
-                                              "Heat generation"   {:value :heat-generation}))}))
+                                              "Heat generation"   {:value :heat-generation}))}
+             :batteries {:header "Batteries"
+                         :filter #(and (contains? % :energy-capacity)
+                                       (#{"Power" "Systems"} (:category %)))
+                         :initial-ordering {:column-name "Energy per space"
+                                            :order :desc}
+                         :columns (array-map "Cost"             {:value :cost}
+                                             "Outfit sp."       {:value :outfit-space}
+                                             "Energy capacity"  {:value :energy-capacity}
+                                             "Energy per space" {:value #(/ (:energy-capacity %)
+                                                                            (:outfit-space %))})}))
 
 (defn columns-for [type]
   (->> (conj (get-in types [type :columns])
