@@ -16,9 +16,9 @@
                                         ^{:key name}
                                         [:tr
                                          [left-cell ^{:key name} [routes/outfit-link name]]
-                                         (map (fn [{:keys [value]}]
-                                                ^{:key (or (value outfit) 0)}
-                                                [right-cell (format-number (value outfit))])
+                                         (map-indexed (fn [idx {:keys [value]}]
+                                                        ^{:key [(or (value outfit) 0) idx]}
+                                                        [right-cell (format-number (value outfit))])
                                               (-> type-attrs :columns vals))
                                          [left-cell (->> (:licenses outfit)
                                                          (map license-label)

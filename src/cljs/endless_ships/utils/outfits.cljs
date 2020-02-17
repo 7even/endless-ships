@@ -58,7 +58,29 @@
                                              "Cooling"           {:value total-cooling}
                                              "Cooling per space" {:value #(/ (total-cooling %)
                                                                              (:outfit-space %))}
-                                             "Cooling energy"    {:value :cooling-energy}))}))
+                                             "Cooling energy"    {:value :cooling-energy}))}
+             :shields {:header "Shield generators"
+                       :filter #(contains? % :shield-generation)
+                       :initial-ordering {:column-name "Shield per space"
+                                          :order :desc}
+                       :columns (array-map "Cost"              {:value :cost}
+                                           "Outfit sp."        {:value :outfit-space}
+                                           "Shield generation" {:value :shield-generation}
+                                           "Shield per space"  {:value #(/ (:shield-generation %)
+                                                                           (:outfit-space %))}
+                                           "Shield energy"     {:value :shield-energy}
+                                           "Shield heat"       {:value :shield-heat})}
+             :hull-repair {:header "Hull repair modules"
+                           :filter #(contains? % :hull-repair-rate)
+                           :initial-ordering {:column-name "Hull per space"
+                                              :order :desc}
+                           :columns (array-map "Cost"             {:value :cost}
+                                               "Outfit sp."       {:value :outfit-space}
+                                               "Hull repair rate" {:value :hull-repair-rate}
+                                               "Hull per space"   {:value #(/ (:hull-repair-rate %)
+                                                                              (:outfit-space %))}
+                                               "Hull energy"      {:value :hull-energy}
+                                               "Hull heat"        {:value :hull-heat})}))
 
 (defn columns-for [type]
   (->> (conj (get-in types [type :columns])
