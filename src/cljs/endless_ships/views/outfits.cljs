@@ -16,10 +16,11 @@
                                         ^{:key name}
                                         [:tr
                                          [left-cell ^{:key name} [routes/outfit-link name]]
+                                         [right-cell (format-number (:cost outfit))]
                                          (map-indexed (fn [idx {:keys [value]}]
                                                         ^{:key [(or (value outfit) 0) idx]}
                                                         [right-cell (format-number (value outfit))])
-                                              (-> type-attrs :columns vals))
+                                                      (-> type-attrs :columns vals))
                                          [left-cell (->> (:licenses outfit)
                                                          (map license-label)
                                                          (interpose " "))]])))
