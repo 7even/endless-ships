@@ -3,13 +3,14 @@
             [endless-ships.events :as events]))
 
 (defn table-headers [entity-type columns ordering]
-  [:tr (for [[text prop] columns]
-         (let [title (if (some? prop)
+  [:tr (for [[text {:keys [orderable?]
+                    :or {orderable? true}}] columns]
+         (let [title (if orderable?
                        [:a.table-header
                         {:on-click #(rf/dispatch [::events/toggle-ordering entity-type text])}
                         text]
                        text)
-               icon (when (and (some? prop)
+               icon (when (and orderable?
                                (= (:column-name ordering) text))
                       (if (= (:order ordering) :asc)
                         [:span.glyphicon.glyphicon-sort-by-attributes]

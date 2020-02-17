@@ -41,7 +41,7 @@
               (get-in db [:settings :ships :license-filter])))
 
 (defn- sort-with-settings [columns ordering coll]
-  (let [ordering-prop (get columns (:column-name ordering))]
+  (let [ordering-prop (get-in columns [(:column-name ordering) :value])]
     (sort (if (some? (:column-name ordering))
             (fn [item1 item2]
               (let [item1-prop (ordering-prop item1)
@@ -126,16 +126,12 @@
             (fn [db [_ outfit-type]]
               (get-in db [:settings outfit-type :ordering])))
 
-(def outfit-type-filters
-  {:thrusters #(contains? % :thrust)
-   :steerings #(contains? % :turn)})
-
 (rf/reg-sub ::outfit-names
             (fn [[_ outfit-type]]
               [(rf/subscribe [::outfits])
                (rf/subscribe [::outfits-ordering outfit-type])])
             (fn [[outfits ordering] [_ outfit-type]]
               (->> (vals outfits)
-                   (filter (get outfit-type-filters outfit-type))
-                   (sort-with-settings (get outfits/columns outfit-type) ordering)
+                   (filter (get-in outfits/types [outfit-type :filter]))
+                   (sort-with-settings (outfits/columns-for outfit-type) ordering)
                    (map :name))))

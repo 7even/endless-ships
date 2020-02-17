@@ -8,17 +8,20 @@
        0))
 
 (def columns
-  (array-map "Name"         :name
-             "Race"         nil
-             "Cost"         total-cost
-             "Category"     nil
-             "Hull"         (or-zero :hull)
-             "Shields"      (or-zero :shields)
-             "Mass"         (or-zero :mass)
-             "Engine cap."  (or-zero :engine-capacity)
-             "Weapon cap."  (or-zero :weapon-capacity)
-             "Fuel cap."    (or-zero :fuel-capacity)
-             "Outfit sp."   (or-zero :outfit-space)
-             "Cargo sp."    (or-zero :cargo-space)
-             "Crew / bunks" (or-zero :bunks)
-             "Licenses"     nil))
+  (array-map "Name"         {:value :name}
+             "Race"         {:value :race
+                             :orderable? false}
+             "Cost"         {:value total-cost}
+             "Category"     {:value :category
+                             :orderable? false}
+             "Hull"         {:value (or-zero :hull)}
+             "Shields"      {:value (or-zero :shields)}
+             "Mass"         {:value (or-zero :mass)}
+             "Engine cap."  {:value (or-zero :engine-capacity)}
+             "Weapon cap."  {:value (or-zero :weapon-capacity)}
+             "Fuel cap."    {:value (or-zero :fuel-capacity)}
+             "Outfit sp."   {:value (or-zero :outfit-space)}
+             "Cargo sp."    {:value (or-zero :cargo-space)}
+             "Crew / bunks" {:value (or-zero :bunks)}
+             "Licenses"     {:value :licenses
+                             :orderable? false}))

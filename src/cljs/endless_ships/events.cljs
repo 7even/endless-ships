@@ -2,7 +2,16 @@
   (:require [re-frame.core :as rf]
             [day8.re-frame.http-fx]
             [ajax.edn :as ajax]
-            [endless-ships.views.utils :refer [kebabize]]))
+            [endless-ships.views.utils :refer [kebabize]]
+            [endless-ships.utils.outfits :as outfits]))
+
+(def initial-outfit-settings
+  (reduce (fn [settings [name {:keys [initial-ordering]}]]
+            (assoc settings
+                   name
+                   {:ordering initial-ordering}))
+          {}
+          outfits/types))
 
 (rf/reg-event-fx ::initialize
                  (fn [{db :db} _]
@@ -13,14 +22,13 @@
                          :ship-modifications {}
                          :outfits {}
                          :outfitters []
-                         :settings {:ships {:ordering {:column-name "Name"
-                                                       :order :asc}
-                                            :filters-collapsed? true
-                                            :race-filter {}
-                                            :category-filter {}
-                                            :license-filter {}}
-                                    :thrusters {:ordering {:column-name "Thrust per space"}}
-                                    :steerings {:ordering {:column-name "Turn per space"}}}}
+                         :settings (merge {:ships {:ordering {:column-name "Name"
+                                                              :order :asc}
+                                                   :filters-collapsed? true
+                                                   :race-filter {}
+                                                   :category-filter {}
+                                                   :license-filter {}}}
+                                          initial-outfit-settings)}
                     :http-xhrio {:method :get
                                  :uri "/data.edn"
                                  :response-format (ajax/edn-response-format)
