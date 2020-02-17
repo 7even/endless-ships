@@ -1,7 +1,8 @@
 (ns endless-ships.views.ship-page
   (:require [re-frame.core :as rf]
             [endless-ships.subs :as subs]
-            [endless-ships.views.utils :refer [render-attribute render-percentage nbspize kebabize]]
+            [endless-ships.views.utils :refer [render-attribute render-percentage
+                                               render-description nbspize kebabize]]
             [endless-ships.utils.ships :refer [total-cost or-zero]]
             [endless-ships.routes :as routes]))
 
@@ -124,5 +125,4 @@
        [:div.row
         [:div.col-md-12
          [:div.well
-          (interpose [:span [:br] [:br]]
-                     (:description ship-with-modification))]]])]))
+          (render-description ship-with-modification)]]])]))

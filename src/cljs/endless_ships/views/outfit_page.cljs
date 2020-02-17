@@ -1,7 +1,8 @@
 (ns endless-ships.views.outfit-page
   (:require [re-frame.core :as rf]
             [endless-ships.subs :as subs]
-            [endless-ships.views.utils :refer [render-attribute kebabize nbspize]]
+            [endless-ships.views.utils :refer [render-attribute render-description
+                                               kebabize nbspize]]
             [endless-ships.routes :as routes]))
 
 (defn- render-license [outfit]
@@ -64,8 +65,7 @@
            [:div.row
             [:div.col-md-4
              (if (seq (:description outfit))
-               (interpose [:span [:br] [:br]]
-                          (:description outfit))
+               (render-description outfit)
                [:p.italic "No description."])
              (render-license outfit)]
             [:div.col-md-4

@@ -51,3 +51,11 @@
   (let [v (prop m)]
     (when (some? v)
       [:li (str label ": " (format-number (* v 100)) "%")])))
+
+(defn render-description [entity]
+  (->> (:description entity)
+       (map-indexed (fn [idx paragraph]
+                      [paragraph
+                       ^{:key idx} [:span [:br] [:br]]]))
+       (apply concat)
+       butlast))
