@@ -9,4 +9,4 @@
                  :modules {:main {:init-fn endless-ships.core/init}}
                  :devtools {:http-root "public"
                             :http-port 3000
-                            :after-load endless-ships.core/render}}}}
+                            :after-load endless-ships.core/load}}}}
