@@ -98,7 +98,53 @@
                                                                             (:outfit-space %))}
                                         "Range"                 {:value #(get-in % [:weapon :range])}
                                         "Fire rate"             {:value #(get-in % [:weapon :shots-per-second])
-                                                                 :orderable? false})}))
+                                                                 :orderable? false})}
+             :secondary {:header "Secondary weapons"
+                         :filter #(= (:category %) "Secondary Weapons")
+                         :initial-ordering {:column-name "Shield damage / space"
+                                            :order :desc}
+                         :columns (array-map "Outfit sp."            {:value :outfit-space}
+                                             "Shield damage"         {:value (partial damage :shield-damage)}
+                                             "Shield damage / space" {:value #(/ (damage :shield-damage %)
+                                                                                 (:outfit-space %))}
+                                             "Hull damage"           {:value (partial damage :hull-damage)}
+                                             "Hull damage / space"   {:value #(/ (damage :hull-damage %)
+                                                                                 (:outfit-space %))}
+                                             "Range"                 {:value #(get-in % [:weapon :range])}
+                                             "Fire rate"             {:value #(get-in % [:weapon :shots-per-second])
+                                                                      :orderable? false})}
+             :turrets {:header "Turrets"
+                       :filter #(and (= (:category %) "Turrets")
+                                     (or (some? (damage :shield-damage %))
+                                         (some? (damage :hull-damage %))))
+                       :initial-ordering {:column-name "Shield damage / space"
+                                          :order :desc}
+                       :columns (array-map "Outfit sp."            {:value :outfit-space}
+                                           "Shield damage"         {:value (partial damage :shield-damage)}
+                                           "Shield damage / space" {:value #(/ (damage :shield-damage %)
+                                                                               (:outfit-space %))}
+                                           "Hull damage"           {:value (partial damage :hull-damage)}
+                                           "Hull damage / space"   {:value #(/ (damage :hull-damage %)
+                                                                               (:outfit-space %))}
+                                           "Range"                 {:value #(get-in % [:weapon :range])}
+                                           "Fire rate"             {:value #(get-in % [:weapon :shots-per-second])
+                                                                    :orderable? false})}
+             :anti-missile {:header "Anti-missile turrets"
+                            :filter #(-> % :weapon (contains? :anti-missile))
+                            :initial-ordering {:column-name "Anti-missile"
+                                               :order :desc}
+                            :columns (array-map "Outfit sp."   {:value :outfit-space}
+                                                "Anti-missile" {:value #(get-in % [:weapon :anti-missile])}
+                                                "Range"        {:value #(get-in % [:weapon :range])}
+                                                "Fire rate"    {:value #(get-in % [:weapon :shots-per-second])
+                                                                :orderable? false})}
+             :hand-to-hand {:header "Hand to Hand"
+                            :filter #(= (:category %) "Hand to Hand")
+                            :initial-ordering {:column-name "Capture attack"
+                                               :order :desc}
+                            :columns (array-map "Capture attack"  {:value :capture-attack}
+                                                "Capture defense" {:value :capture-defense}
+                                                "Illegal"         {:value :illegal})}))
 
 (defn columns-for [type]
   (->> (conj (get-in types [type :columns])
