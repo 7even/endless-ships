@@ -17,10 +17,11 @@
   "Build the site into build/ directory."
   []
   (dosh "rm" "-rf" "./build")
-  (binding [*sh-dir* "./frontend"]
-    (dosh "yarn" "install")
-    (dosh "yarn" "run" "build"))
-  (dosh "mv" "./frontend/build" "./build")
+  (dosh "yarn" "install")
+  (dosh "shadow-cljs" "release" "main")
+  (dosh "mkdir" "-p" "./build/js")
+  (dosh "cp" "./public/index.html" "./public/app.css" "./build")
+  (dosh "cp" "./public/js/main.js" "./build/js")
   (generate-edn)
   (if (.exists (clojure.java.io/as-file "ga.edn"))
     (dosh "cp" "./ga.edn" "./build")))
