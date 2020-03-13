@@ -22,6 +22,8 @@
     [handler route-params]))
 
 (defn- dispatch-route [matched-route]
+  (if (some? js/window.ga)
+    (js/window.ga "send" "pageview" js/location.pathname))
   (rf/dispatch [::events/navigate-to matched-route]))
 
 (def url-for

@@ -1,7 +1,7 @@
 /.nrepl-history
 /.nrepl-port
 /build
-/ga.edn
+/ga.json
 data.edn
 /.shadow-cljs
 /public/js
