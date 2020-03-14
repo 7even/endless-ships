@@ -18,12 +18,12 @@
    "marauders.txt" :pirate
    "coalition ships.txt" :coalition
    "drak.txt" :drak
-   "ships.txt" :human})
+   "ships.txt" :human
+   "indigenous.txt" :indigenous})
 
 (def outfits-data
   (->> outfits
        (remove #(#{"deprecated outfits.txt"
-                   "indigenous.txt"
                    "nanobots.txt"
                    "transport missions.txt"} (:file %)))
        (map #(dissoc % :file))
