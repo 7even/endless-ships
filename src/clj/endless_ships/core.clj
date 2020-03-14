@@ -1,5 +1,7 @@
 (ns endless-ships.core
-  (:require [clojure.set :refer [rename-keys]]
+  (:require [clojure.java.shell :refer [sh]]
+            [clojure.set :refer [rename-keys]]
+            [clojure.string :as str]
             [endless-ships.outfits :refer [outfits]]
             [endless-ships.outfitters :refer [outfitters]]
             [endless-ships.ships :refer [modifications ships]]))
@@ -64,6 +66,17 @@
                  (rename-keys {:cost :empty-hull-cost})
                  assoc-outfits-cost))))
 
+(def game-version
+  (let [git-cmd (fn [& args]
+                  (->> (concat ["git"] args [:dir "./resources/game"])
+                       (apply sh)
+                       :out
+                       str/trim))
+        commit-hash (git-cmd "rev-parse" "HEAD")
+        commit-date (git-cmd "show" "-s" "--format=%ci" "HEAD")]
+    {:hash commit-hash
+     :date commit-date}))
+
 (defn generate-edn
   ([]
    (generate-edn "build/data.edn"))
@@ -71,7 +84,8 @@
    (let [data {:ships ships-data
                :ship-modifications modifications-data
                :outfits outfits-data
-               :outfitters outfitters}
+               :outfitters outfitters
+               :version game-version}
          edn (with-out-str (clojure.pprint/pprint data))]
      (spit path edn))))
 
