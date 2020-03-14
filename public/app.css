@@ -60,3 +60,8 @@ img.ship-sprite {
     width:      auto;
     height:     auto;
 }
+
+.game-version {
+    float: right;
+    padding: 10px 15px;
+}

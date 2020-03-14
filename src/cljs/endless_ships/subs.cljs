@@ -135,3 +135,7 @@
                    (filter (get-in outfits/types [outfit-type :filter]))
                    (sort-with-settings (outfits/columns-for outfit-type) ordering)
                    (map :name))))
+
+(rf/reg-sub ::game-version
+            (fn [db]
+              (:version db)))
