@@ -50,6 +50,10 @@
     background-color: #000;
 }
 
+.label-indigenous {
+    background-color: #777;
+}
+
 p.italic {
     font-style: italic;
 }
