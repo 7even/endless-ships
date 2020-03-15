@@ -16,6 +16,10 @@
                    (= (:name ship) "Shuttle")
                    "ship/shuttle=0.png"
 
+                   (and (= (:name ship) "Void Sprite")
+                        (not (contains? ship :modification)))
+                   "ship/void sprite adult-00.png"
+
                    (last (:sprite ship))
                    (str (-> ship :sprite first (js/window.encodeURI)) "-0.png")
 
