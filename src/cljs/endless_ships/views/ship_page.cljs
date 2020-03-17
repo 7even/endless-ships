@@ -12,19 +12,27 @@
     [:p.italic (str "This ship requires a " license1 " license.")]))
 
 (defn- image-url [ship]
-  (let [filename (cond
-                   (= (:name ship) "Shuttle")
-                   "ship/shuttle=0.png"
+  (let [suffix (cond
+                 (= (:name ship) "Shuttle")
+                 "=0.png"
 
-                   (and (= (:name ship) "Void Sprite")
-                        (not (contains? ship :modification)))
-                   "ship/void sprite adult-00.png"
+                 (and (= (:name ship) "Void Sprite")
+                      (not (contains? ship :modification)))
+                 "-00.png"
 
-                   (last (:sprite ship))
-                   (str (-> ship :sprite first (js/window.encodeURI)) "-0.png")
+                 (= (:name ship) "Maeri'het")
+                 "-00.png"
 
-                   :else
-                   (str (-> ship :sprite first (js/window.encodeURI)) ".png"))]
+                 (last (:sprite ship))
+                 "-0.png"
+
+                 :else
+                 ".png")
+        filename (-> ship
+                     :sprite
+                     first
+                     js/window.encodeURI
+                     (str suffix))]
     (str "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" filename)))
 
 (defn ship-modifications [ship-name selected-modification-slug modification-names]
