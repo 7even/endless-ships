@@ -11,7 +11,7 @@ data = (0-indented-block / <newline> / <comment>)+
 line = <space>? string (<space> token)* <#'[ \t]*#.*'>? <newline>
 
 <token> = string | number
-string = #'[a-zA-Z0-9=?><*/+\-\'_]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
+string = #'[a-zA-Z0-9=?\(\)><*/+\-\'_]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
 space = #'[, ]+'
 tab = '\t'
 newline = #'[ \t]*\n'

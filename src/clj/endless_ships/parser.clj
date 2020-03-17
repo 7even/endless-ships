@@ -86,4 +86,8 @@
        (reduce (fn [counts object]
                  (update counts object #(inc (or % 0))))
                {})
-       (sort-by last >)))
+       (sort-by last >))
+
+  ;; parsing errors
+  (->> data
+       (filter #(keyword? (first %)))))
