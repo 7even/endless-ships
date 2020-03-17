@@ -25,3 +25,8 @@
   (generate-edn)
   (if (.exists (clojure.java.io/as-file "ga.json"))
     (dosh "cp" "./ga.json" "./build")))
+
+(deftask generate-data
+  "Generate the data.edn file in public/ for local development."
+  []
+  (generate-edn "public/data.edn"))
