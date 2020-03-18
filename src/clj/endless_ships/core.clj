@@ -13,7 +13,7 @@
    "wanderer ships.txt" :wanderer
    "quarg ships.txt" :quarg
    "remnant ships.txt" :remnant
-   "ka'het ships.txt" :kahet
+   "ka'het ships.txt" :ka'het
    "korath ships.txt" :korath
    "marauders.txt" :pirate
    "coalition ships.txt" :coalition

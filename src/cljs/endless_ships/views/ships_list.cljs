@@ -50,7 +50,9 @@
             [:span.glyphicon.glyphicon-menu-up])]]))))
 
 (defn race-label [race]
-  ^{:key race} [:span.label {:class (str "label-" (name race))} race])
+  ^{:key race} [:span.label
+                {:class (str "label-" (-> race name kebabize))}
+                race])
 
 (defn crew-and-bunks [{:keys [required-crew bunks]}]
   (if (pos? required-crew)
