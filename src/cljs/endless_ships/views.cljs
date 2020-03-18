@@ -1,6 +1,5 @@
 (ns endless-ships.views
   (:require [re-frame.core :as rf]
-            ["dayjs" :as dayjs]
             [endless-ships.subs :as subs]
             [endless-ships.views.navigation :refer [navigation]]
             [endless-ships.views.ships-list :refer [ships-list]]
@@ -24,9 +23,7 @@
      [:a {:href (str "https://github.com/endless-sky/endless-sky/commit/" hash)
           :target :blank}
       "endless-sky@" (subs hash 0 7)]
-     " ("
-     (.format (dayjs date) "YYYY-MM-DD")
-     ")"]))
+     " (" date ")"]))
 
 (defn interface []
   [:div.container

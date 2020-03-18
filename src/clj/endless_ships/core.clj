@@ -74,7 +74,9 @@
                        :out
                        str/trim))
         commit-hash (git-cmd "rev-parse" "HEAD")
-        commit-date (git-cmd "show" "-s" "--format=%ci" "HEAD")]
+        commit-date (-> (git-cmd "show" "-s" "--format=%ci" "HEAD")
+                        (str/split #" ")
+                        first)]
     {:hash commit-hash
      :date commit-date}))
 
