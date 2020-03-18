@@ -8,7 +8,7 @@
    "Navy"               "human"
    "Carrier"            "human"
    "Cruiser"            "human"
-   "Militia Carrier"    "human"
+   "Militia"            "human"
    "Unfettered Militia" "hai"
    "Wanderer"           "wanderer"
    "Wanderer Military"  "wanderer"
