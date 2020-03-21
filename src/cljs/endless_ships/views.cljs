@@ -18,11 +18,15 @@
       [:div (str "Route unknown: " route)])))
 
 (defn game-version []
-  (let [{:keys [hash date]} @(rf/subscribe [::subs/game-version])]
+  (let [{:keys [hash date tag]} @(rf/subscribe [::subs/game-version])]
     [:div.game-version
-     [:a {:href (str "https://github.com/endless-sky/endless-sky/commit/" hash)
-          :target :blank}
-      "endless-sky@" (subs hash 0 7)]
+     (if (some? tag)
+       [:a {:href (str "https://github.com/endless-sky/endless-sky/releases/tag/" tag)
+            :target :blank}
+        "Endless Sky " tag]
+       [:a {:href (str "https://github.com/endless-sky/endless-sky/commit/" hash)
+            :target :blank}
+        "endless-sky@" (subs hash 0 7)])
      " (" date ")"]))
 
 (defn interface []

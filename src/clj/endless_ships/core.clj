@@ -76,9 +76,13 @@
         commit-hash (git-cmd "rev-parse" "HEAD")
         commit-date (-> (git-cmd "show" "-s" "--format=%ci" "HEAD")
                         (str/split #" ")
-                        first)]
-    {:hash commit-hash
-     :date commit-date}))
+                        first)
+        [tag commits-since-tag] (-> (git-cmd "describe" "HEAD")
+                                    (str/split #"-"))]
+    (merge {:hash commit-hash
+            :date commit-date}
+           (when (nil? commits-since-tag)
+             {:tag tag}))))
 
 (defn generate-edn
   ([]
