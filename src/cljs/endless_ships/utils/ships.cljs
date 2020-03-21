@@ -9,8 +9,7 @@
 
 (def columns
   (array-map "Name"         {:value :name}
-             "Race"         {:value :race
-                             :orderable? false}
+             "Race"         {:value :race}
              "Cost"         {:value total-cost}
              "Category"     {:value :category
                              :orderable? false}
@@ -23,5 +22,4 @@
              "Outfit sp."   {:value (or-zero :outfit-space)}
              "Cargo sp."    {:value (or-zero :cargo-space)}
              "Crew / bunks" {:value (or-zero :bunks)}
-             "Licenses"     {:value :licenses
-                             :orderable? false}))
+             "Licenses"     {:value :licenses}))
