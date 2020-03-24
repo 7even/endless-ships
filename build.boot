@@ -2,7 +2,8 @@
           :resource-paths #{"resources"}
           :dependencies '[[org.clojure/clojure "1.8.0"]
                           [instaparse "1.4.5"]
-                          [camel-snake-kebab "0.4.0"]])
+                          [camel-snake-kebab "0.4.0"]
+                          [buddy/buddy-core "1.6.0"]])
 
 (require '[clojure.string :as str]
          '[endless-ships.core :refer [generate-edn]])
@@ -36,4 +37,4 @@
 (deftask generate-data
   "Generate the data.edn file in public/ for local development."
   []
-  (generate-edn "public/data.edn"))
+  (generate-edn {:dir "public"}))

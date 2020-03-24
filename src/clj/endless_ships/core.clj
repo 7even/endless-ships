@@ -1,5 +1,7 @@
 (ns endless-ships.core
-  (:require [clojure.java.shell :refer [sh]]
+  (:require [buddy.core.codecs :refer [bytes->hex]]
+            [buddy.core.hash :refer [sha1]]
+            [clojure.java.shell :refer [sh]]
             [clojure.set :refer [rename-keys]]
             [clojure.string :as str]
             [endless-ships.outfits :refer [outfits]]
@@ -85,20 +87,28 @@
              {:tag tag}))))
 
 (defn generate-edn
-  ([]
-   (generate-edn "build/data.edn"))
-  ([path]
+  ([] (generate-edn {}))
+  ([{:keys [dir with-hash?]
+     :or {dir "build"
+          with-hash? false}}]
    (let [data {:ships ships-data
                :ship-modifications modifications-data
                :outfits outfits-data
                :outfitters outfitters
                :version game-version}
-         edn (with-out-str (clojure.pprint/pprint data))]
-     (spit path edn))))
+         edn (with-out-str (clojure.pprint/pprint data))
+         filename (->> ["data"
+                        (when with-hash? (bytes->hex (sha1 edn)))
+                        "edn"]
+                       (keep identity)
+                       (str/join "."))
+         path (str dir "/" filename)]
+     (spit path edn)
+     filename)))
 
 (comment
   ;; generate data for frontend development
-  (generate-edn "public/data.edn")
+  (generate-edn {:dir "public"})
   ;; get a list of all possible attribute names
   (->> ships-data
        (map keys)
