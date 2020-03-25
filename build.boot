@@ -21,16 +21,21 @@
   (dosh "rm" "-rf" "./build")
   (dosh "yarn" "install")
   (dosh "shadow-cljs" "release" "main")
-  (let [js-filename (-> (slurp "./public/js/manifest.edn")
+  (dosh "mkdir" "-p" "./build/js")
+  (let [edn-filename (generate-edn {:with-hash? true})
+        js-filename (-> (slurp "./public/js/manifest.edn")
                         read-string
                         first
                         :output-name)
-        html (str/replace (slurp "./public/index.html") "main.js" js-filename)]
-    (dosh "mkdir" "-p" "./build/js")
+        html (str/replace (slurp "./public/index.html")
+                          "main.js"
+                          js-filename)
+        js (str/replace (slurp (str "./public/js/" js-filename))
+                        "data.edn"
+                        edn-filename)]
     (spit "./build/index.html" html)
+    (spit (str "./build/js/" js-filename) js)
     (dosh "cp" "./public/app.css" "./public/ga.json" "./build")
-    (dosh "cp" (str "./public/js/" js-filename) "./build/js")
-    (generate-edn)
     (if (.exists (clojure.java.io/as-file "ga.json"))
       (dosh "cp" "./ga.json" "./build"))))
 
