@@ -6,7 +6,6 @@
                 [kibu/pushy "0.3.8"]
                 [cider/cider-nrepl "0.21.0"]]
  :builds {:main {:target :browser
-                 :module-hash-names true
                  :modules {:main {:init-fn endless-ships.core/init}}
                  :devtools {:http-root "public"
                             :http-port 3000
