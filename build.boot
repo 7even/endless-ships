@@ -18,7 +18,7 @@
    (repl :server true)))
 
 (defn- filename-with-hash [filename content]
-  (let [sha1-hash (-> content sha1 bytes->hex)
+  (let [sha1-hash (-> content sha1 bytes->hex (subs 0 10))
         [name extension] (str/split filename #"\.")]
     (str/join "." [name sha1-hash extension])))
 
