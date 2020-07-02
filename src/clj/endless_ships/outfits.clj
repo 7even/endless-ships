@@ -104,7 +104,8 @@
              submunition (when (some? submunition-name)
                            (first (filter #(= (:name %) submunition-name) outfits)))
              range (if (some? submunition)
-                     (let [total-lifetime (+ lifetime (get-in submunition [:weapon :lifetime]))]
+                     (let [total-lifetime (+ (or lifetime 0)
+                                             (get-in submunition [:weapon :lifetime]))]
                        (* velocity total-lifetime))
                      (* velocity lifetime))
              converted-weapon-attrs (reduce (fn [attrs [attr-name convertor]]
