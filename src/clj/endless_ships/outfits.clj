@@ -90,7 +90,7 @@
 (defn- normalize-weapon-attrs [outfits]
   (map
    (fn [{category :category
-         {:keys [reload velocity lifetime shield-damage hull-damage]
+         {:keys [reload velocity velocity-override lifetime shield-damage hull-damage]
           [submunition-name submunition-count] :submunition
           :as weapon-attrs} :weapon
          :as outfit}]
@@ -104,9 +104,10 @@
              submunition (when (some? submunition-name)
                            (first (filter #(= (:name %) submunition-name) outfits)))
              range (if (some? submunition)
-                     (let [total-lifetime (+ (or lifetime 0)
+                     (let [final-velocity (or velocity-override velocity)
+                           total-lifetime (+ (or lifetime 0)
                                              (get-in submunition [:weapon :lifetime]))]
-                       (* velocity total-lifetime))
+                       (* final-velocity total-lifetime))
                      (* velocity lifetime))
              converted-weapon-attrs (reduce (fn [attrs [attr-name convertor]]
                                               (update-if-present attrs attr-name convertor))
