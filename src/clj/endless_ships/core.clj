@@ -19,7 +19,8 @@
    "coalition ships.txt" :coalition
    "drak.txt" :drak
    "ships.txt" :human
-   "indigenous.txt" :indigenous})
+   "indigenous.txt" :indigenous
+   "sheragi ships.txt" :sheragi})
 
 (def outfits-data
   (->> outfits

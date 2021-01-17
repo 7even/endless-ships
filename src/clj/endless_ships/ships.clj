@@ -61,8 +61,7 @@
        (filter #(and (= (first %) "ship")
                      (= (-> % second count) 1)
                      (not= (second %) ["Unknown Ship Type"])))
-       (map #(-> %
-                 process-ship
+       (map #(-> (process-ship %)
                  (dissoc :modification)))))
 
 (def modifications
