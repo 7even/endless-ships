@@ -78,7 +78,7 @@
         commit-date (-> (git-cmd "show" "-s" "--format=%ci" "HEAD")
                         (str/split #" ")
                         first)
-        [tag commits-since-tag] (-> (git-cmd "describe" "HEAD")
+        [tag commits-since-tag] (-> (git-cmd "describe" "--tags" "HEAD")
                                     (str/split #"-"))]
     (merge {:hash commit-hash
             :date commit-date}
