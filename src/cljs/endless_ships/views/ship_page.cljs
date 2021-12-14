@@ -16,15 +16,11 @@
                  (= (:name ship) "Shuttle")
                  "=0.png"
 
-                 (and (= (:name ship) "Void Sprite")
-                      (not (contains? ship :modification)))
-                 "-00.png"
-
-                 (= (:name ship) "Maeri'het")
-                 "-00.png"
+                 (#{"Archon" "Hallucination"} (:name ship))
+                 "-0.png"
 
                  (last (:sprite ship))
-                 "-0.png"
+                 "-00.png"
 
                  :else
                  ".png")

@@ -1,5 +1,6 @@
 (ns endless-ships.outfits
-  (:require [endless-ships.parser :refer [->map data]]))
+  (:require [clojure.string :as str]
+            [endless-ships.parser :refer [->map data]]))
 
 (defn- update-if-present [m k f]
   (if (contains? m k)
@@ -134,7 +135,9 @@
 
 (def outfits
   (->> data
-       (filter #(= (first %) "outfit"))
+       (filter (fn [[type [name]]]
+                 (and (= type "outfit")
+                      (not (str/starts-with? name "_")))))
        (map (fn [[_
                   [name]
                   {description-attrs "description"
