@@ -6,8 +6,9 @@
 (def license-label-styles
   {"City-Ship"          "human"
    "Navy"               "human"
-   "Carrier"            "human"
-   "Cruiser"            "human"
+   "Navy Carrier"       "human"
+   "Navy Cruiser"       "human"
+   "Navy Auxiliary"     "human"
    "Militia"            "human"
    "Unfettered Militia" "hai"
    "Wanderer"           "wanderer"
