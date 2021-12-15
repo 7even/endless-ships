@@ -8,7 +8,7 @@ data = (0-indented-block / <newline> / <comment>)+
 5-indented-block = <tab> <tab> <tab> <tab> <tab> line
 6-indented-block = <tab> <tab> <tab> <tab> <tab> <tab> line
 
-line = <space>? string (<space> token)* <#'[ \t]*#.*'>? <newline>
+line = <space>? string ((<space> / <tab>) token)* <#'[ \t]*#.*'>? <newline>
 
 <token> = string | number
 string = #'[a-zA-Z0-9=?\(\)><*/+\-\'_]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
