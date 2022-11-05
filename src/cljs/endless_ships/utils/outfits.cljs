@@ -24,6 +24,19 @@
                                                                           (:outfit-space %))}
                                              "Turn. energy"   {:value :turning-energy}
                                              "Turn. heat"     {:value :turning-heat})}
+             :afterburners {:header "Afterburners"
+                         :filter #(contains? % :afterburner-thrust)
+                         :initial-ordering {:column-name "Thrust per space"
+                                            :order :desc}
+                         :columns (array-map "Outfit sp."       {:value :outfit-space}
+                                             "Thrust"           {:value :afterburner-thrust}
+                                             "Thrust per space" {:value #(/ (:afterburner-thrust %)
+                                                                            (:outfit-space %))}
+                                             "Thr. fuel"        {:value :afterburner-fuel}
+                                             "Thrust per fuel"  {:value #(/ (:afterburner-thrust %)
+                                                                            (:afterburner-fuel %))}
+                                             "Thr. energy"      {:value :afterburner-energy}
+                                             "Thr. heat"        {:value :afterburner-heat})}
              :reactors {:header "Reactors"
                         :filter #(or (contains? % :energy-generation)
                                      (contains? % :solar-collection))
