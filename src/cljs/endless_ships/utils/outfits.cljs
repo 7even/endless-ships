@@ -25,8 +25,9 @@
                                              "Turn. energy"   {:value :turning-energy}
                                              "Turn. heat"     {:value :turning-heat})}
              :reactors {:header "Reactors"
-                        :filter #(or (contains? % :energy-generation)
-                                     (contains? % :solar-collection))
+                        :filter #(and (or (contains? % :energy-generation)
+                                          (contains? % :solar-collection))
+                                      (= (:category %) "Power"))
                         :initial-ordering {:column-name "Energy per space"
                                            :order :desc}
                         :columns (let [energy-generation #(+ (get % :energy-generation 0)
