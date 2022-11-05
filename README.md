@@ -4,7 +4,30 @@ This is a tool for generating a website with reference information about the [En
 
 The generator works by parsing the game's sources (specifically `data/*.txt` files) to get all game data so the information always stays up-to-date.
 
-## Installation
+## Installation (docker)
+
+You can install, build, and run this quickly with [Docker](https://www.docker.com/).
+
+Clone the project:
+
+```sh
+$ git clone git@github.com:7even/endless-ships.git
+$ cd endless-ships
+```
+
+Build and run (this may take a few minutes to complete):
+
+```sh
+docker run --rm -d -p 8000:80 $(docker build -q .)
+```
+
+Then connect to it with [http://localhost:8000](http://localhost:8000).
+
+To take it down afterwards, you can use `docker kill $(docker ps -q)`.
+
+## Installation (manual)
+
+Alternatively, you can build it manually in your own environment.
 
 First you need to clone the project and pull the game which is linked as a git submodule:
 
