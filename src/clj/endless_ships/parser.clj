@@ -48,7 +48,7 @@
    (->> files
         (mapcat (fn [file]
                   (let [filename (.getName file)
-                        objects (-> file slurp parse)]
+                        objects (-> file slurp (str "\n") parse)]
                     (map #(assoc-in % [2 "file"] filename) objects))))
         doall)))
 
