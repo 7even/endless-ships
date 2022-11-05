@@ -137,7 +137,8 @@
   (->> data
        (filter (fn [[type [name]]]
                  (and (= type "outfit")
-                      (not (str/starts-with? name "_")))))
+                      (not (str/starts-with? name "_"))
+                      (not (contains? #{"Imaginary Weapon" "Timer Weapon" "Mouthparts?"} name)))))
        (map (fn [[_
                   [name]
                   {description-attrs "description"
