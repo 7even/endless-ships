@@ -1,0 +1,11 @@
+/.nrepl-history
+/.nrepl-port
+/build
+/ga.json
+data.edn
+/.shadow-cljs
+/public/js
+/node_modules
+/Dockerfile
+/.dockerignore
+/README.md
