@@ -144,13 +144,17 @@
                                                                     :orderable? false})}
              :anti-missile {:header "Anti-missile turrets"
                             :filter #(-> % :weapon (contains? :anti-missile))
-                            :initial-ordering {:column-name "Anti-missile"
+                            :initial-ordering {:column-name "Anti-missile rate"
                                                :order :desc}
-                            :columns (array-map "Outfit sp."   {:value :outfit-space}
-                                                "Anti-missile" {:value #(get-in % [:weapon :anti-missile])}
-                                                "Range"        {:value #(get-in % [:weapon :range])}
-                                                "Fire rate"    {:value #(get-in % [:weapon :shots-per-second])
-                                                                :orderable? false})}
+                            :columns (array-map "Outfit sp."        {:value :outfit-space}
+                                                "Anti-missile rate" {:value #(if (= (get-in % [:weapon :shots-per-second]) "continuous")
+                                                                                 (/ 1 0)
+                                                                                 (* (get-in % [:weapon :anti-missile])
+                                                                                    (get-in % [:weapon :shots-per-second])))}
+                                                "Anti-missile"      {:value #(get-in % [:weapon :anti-missile])}
+                                                "Range"             {:value #(get-in % [:weapon :range])}
+                                                "Fire rate"         {:value #(get-in % [:weapon :shots-per-second])
+                                                                     :orderable? false})}
              :hand-to-hand {:header "Hand to Hand"
                             :filter #(= (:category %) "Hand to Hand")
                             :initial-ordering {:column-name "Capture attack"
