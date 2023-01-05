@@ -28,5 +28,7 @@
                      ordering @(rf/subscribe [::subs/outfits-ordering type])]
                  ^{:key type} [:div
                                [:h2 (:header type-attrs)]
-                               [table type (utils/columns-for type) ordering rows]])))
+                               [table type (utils/columns-for type) ordering rows]
+                               (when-let [footer (:footer type-attrs)]
+                                 footer)])))
         doall)])

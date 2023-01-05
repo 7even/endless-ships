@@ -3,6 +3,58 @@
 (defn- damage [damage-type gun]
   (get-in gun [:weapon damage-type :per-second]))
 
+(def ^:private missile-strength-for-am
+  16)
+
+(defn- anti-missile-effectiveness
+  "Chances to destroy a missile are determined with the following algorithm:
+  (> (rand-int anti-missile-strength)
+     (rand-int missile-strength))
+
+  If the first number is higher, the missile will be destroyed.
+
+  If anti-missile strength is 5 and missile strength is 3, then all possible combinations
+  can be represented as a matrix (where \"+\" means a hit and \"-\" means a miss):
+
+  |---+---+---+---+---+---|
+  |   | 0 | 1 | 2 | 3 | 4 |
+  |---+---+---+---+---+---|
+  | 0 | - | + | + | + | + |
+  | 1 | - | - | + | + | + |
+  | 2 | - | - | - | + | + |
+  |---+---+---+---+---+---|
+
+  Then the square part of the matrix contains equal parts of hits and misses,
+  except for the diagonal which goes to misses (since anti-missile random number must be
+  strictly bigger than the missile random number).
+
+  The remaining rectangle part to the right only contains hits (it's only present when
+  anti-missile strength is higher than missile strength).
+
+  Total percentage of hits can be calculated by adding hits from the square and hits
+  from the rectangle, then dividing the result by total square of the matrix.
+
+  Multiplying this percentage by the rate of fire gives us an average number of missiles destroyed
+  per second.
+
+  Note: \"continuous\" rate of fire means \"firing at every frame of the game\", so the actual
+  rate of fire equals the framerate which is 60 fps."
+  [{{a :anti-missile
+     rate :shots-per-second} :weapon}]
+  (let [m missile-strength-for-am
+        square-side (min a m)
+        square (Math/pow square-side 2)
+        half-of-diagonal (/ square-side 2)
+        remainder (max 0
+                       (* (- a m) m))
+        total (* a m)]
+    (* (/ (+ (- (/ square 2) half-of-diagonal)
+             remainder)
+          total)
+       (if (= rate "continuous")
+         60
+         rate))))
+
 (def types
   (array-map :thrusters {:header "Thrusters"
                          :filter #(contains? % :thrust)
@@ -145,17 +197,15 @@
                                                                     :orderable? false})}
              :anti-missile {:header "Anti-missile turrets"
                             :filter #(-> % :weapon (contains? :anti-missile))
-                            :initial-ordering {:column-name "Anti-missile rate"
+                            :initial-ordering {:column-name "Effectiveness *"
                                                :order :desc}
                             :columns (array-map "Outfit sp."        {:value :outfit-space}
-                                                "Anti-missile rate" {:value #(if (= (get-in % [:weapon :shots-per-second]) "continuous")
-                                                                                 (/ 1 0)
-                                                                                 (* (get-in % [:weapon :anti-missile])
-                                                                                    (get-in % [:weapon :shots-per-second])))}
+                                                "Effectiveness *"   {:value anti-missile-effectiveness}
                                                 "Anti-missile"      {:value #(get-in % [:weapon :anti-missile])}
                                                 "Range"             {:value #(get-in % [:weapon :range])}
                                                 "Fire rate"         {:value #(get-in % [:weapon :shots-per-second])
-                                                                     :orderable? false})}
+                                                                     :orderable? false})
+                            :footer "* Effectiveness is an average number of missiles with missile strength = 16 (e.g. Heavy Rockets) destroyed per second"}
              :hand-to-hand {:header "Hand to Hand"
                             :filter #(= (:category %) "Hand to Hand")
                             :initial-ordering {:column-name "Capture attack"
