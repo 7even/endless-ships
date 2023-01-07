@@ -76,6 +76,16 @@
                                                                           (:outfit-space %))}
                                              "Turn. energy"   {:value :turning-energy}
                                              "Turn. heat"     {:value :turning-heat})}
+             :reversers {:header "Reverse Thrusters"
+                         :filter #(contains? % :reverse-thrust)
+                         :initial-ordering {:column-name "Reverse thr. per space"
+                                            :order :desc}
+                         :columns (array-map "Outfit sp."             {:value :outfit-space}
+                                             "Reverse thrust"         {:value :reverse-thrust}
+                                             "Reverse thr. per space" {:value #(/ (:reverse-thrust %)
+                                                                                  (:outfit-space %))}
+                                             "Reverse thr. energy"    {:value :reverse-thrusting-energy}
+                                             "Reverse thr. heat"      {:value :reverse-thrusting-heat})}
              :afterburners {:header "Afterburners"
                             :filter #(contains? % :afterburner-thrust)
                             :initial-ordering {:column-name "Thrust per space"
@@ -102,6 +112,15 @@
                                               "Energy per space"  {:value #(/ (energy-generation %)
                                                                               (:outfit-space %))}
                                               "Heat generation"   {:value :heat-generation}))}
+             :solar-panels {:header "Solar Panels"
+                            :filter #(contains? % :solar-collection)
+                            :initial-ordering {:column-name "Solar collection per space"
+                                               :order :desc}
+                            :columns (array-map "Outfit sp."                 {:value :outfit-space}
+                                                "Solar collection"           {:value :solar-collection}
+                                                "Solar collection per space" {:value #(/ (:solar-collection %)
+                                                                                         (:outfit-space %))}
+                                                "Solar heat"                 {:value :solar-heat})}
              :batteries {:header "Batteries"
                          :filter #(and (contains? % :energy-capacity)
                                        (#{"Power" "Systems"} (:category %)))
@@ -143,6 +162,26 @@
                                                                               (:outfit-space %))}
                                                "Hull energy"      {:value :hull-energy}
                                                "Hull heat"        {:value :hull-heat})}
+             :outfit-scanners {:header "Outfit Scanners"
+                               :filter #(contains? % :outfit-scan-power)
+                               :initial-ordering {:column-name "Outfit scan power"
+                                                  :order :desc}
+                               :columns (array-map "Outfit sp."        {:value :outfit-space}
+                                                   "Outfit scan power" {:value :outfit-scan-power}
+                                                   "Outfit scan speed" {:value :outfit-scan-speed})}
+             :cargo-scanners {:header "Cargo Scanners"
+                              :filter #(contains? % :cargo-scan-power)
+                              :initial-ordering {:column-name "Cargo scan power"
+                                                 :order :desc}
+                              :columns (array-map "Outfit sp."       {:value :outfit-space}
+                                                  "Cargo scan power" {:value :cargo-scan-power}
+                                                  "Cargo scan speed" {:value :cargo-scan-speed})}
+             :tactical-scanners {:header "Tactical Scanners"
+                                 :filter #(contains? % :tactical-scan-power)
+                                 :initial-ordering {:column-name "Tactical scan power"
+                                                    :order :desc}
+                                 :columns (array-map "Outfit sp."          {:value :outfit-space}
+                                                     "Tactical scan power" {:value :tactical-scan-power})}
              :ramscoops {:header "Ramscoops"
                          :filter #(contains? % :ramscoop)
                          :initial-ordering {:column-name "Ramscoop per space"
@@ -151,6 +190,15 @@
                                              "Ramscoop"           {:value :ramscoop}
                                              "Ramscoop per space" {:value #(/ (:ramscoop %)
                                                                               (:outfit-space %))})}
+             :fuel-tanks {:header "Fuel tanks"
+                          :filter #(and (contains? % :fuel-capacity)
+                                        (= (:category %) "Systems"))
+                          :initial-ordering {:column-name "Fuel cap. per space"
+                                             :order :desc}
+                          :columns (array-map "Outfit sp."          {:value :outfit-space}
+                                              "Fuel capacity"       {:value :fuel-capacity}
+                                              "Fuel cap. per space" {:value #(/ (:fuel-capacity %)
+                                                                                (:outfit-space %))})}
              :guns {:header "Guns"
                     :filter #(= (:category %) "Guns")
                     :initial-ordering {:column-name "Shield damage / space"
