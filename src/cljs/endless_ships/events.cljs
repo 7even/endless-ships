@@ -14,27 +14,27 @@
           outfits/types))
 
 (rf/reg-event-fx ::initialize
-                 (fn [{db :db} _]
-                   {:db {:loading? true
-                         :loading-failed? false
-                         :route [:ships {}]
-                         :ships {}
-                         :ship-modifications {}
-                         :outfits {}
-                         :outfitters []
-                         :version {}
-                         :settings (merge {:ships {:ordering {:column-name "Name"
-                                                              :order :asc}
-                                                   :filters-collapsed? true
-                                                   :race-filter {}
-                                                   :category-filter {}
-                                                   :license-filter {}}}
-                                          initial-outfit-settings)}
-                    :http-xhrio {:method :get
-                                 :uri "/data.edn"
-                                 :response-format (ajax/edn-response-format)
-                                 :on-success [::data-loaded]
-                                 :on-failure [::data-failed-to-load]}}))
+  (fn [{db :db} _]
+    {:db {:loading? true
+          :loading-failed? false
+          :route [:ships {}]
+          :ships {}
+          :ship-modifications {}
+          :outfits {}
+          :outfitters []
+          :version {}
+          :settings (merge {:ships {:ordering {:column-name "Name"
+                                               :order :asc}
+                                    :filters-collapsed? true
+                                    :race-filter {}
+                                    :category-filter {}
+                                    :license-filter {}}}
+                           initial-outfit-settings)}
+     :http-xhrio {:method :get
+                  :uri "/data.edn"
+                  :response-format (ajax/edn-response-format)
+                  :on-success [::data-loaded]
+                  :on-failure [::data-failed-to-load]}}))
 
 (defn- index-by-name [coll]
   (reduce (fn [indexed {:keys [name] :as item}]
@@ -64,34 +64,34 @@
        (reduce toggle-filter (sorted-map))))
 
 (rf/reg-event-fx ::data-loaded
-                 (fn [{:keys [db]} [_ data]]
-                   {:db (-> db
-                            (assoc :loading? false
-                                   :ships (index-by-name (:ships data))
-                                   :ship-modifications (group-modifications (:ship-modifications data))
-                                   :outfits (index-by-name (:outfits data))
-                                   :outfitters (process-outfitters (:outfitters data))
-                                   :version (:version data))
-                            (update-in [:settings :ships]
-                                       merge
-                                       {:race-filter (->> (:ships data)
-                                                          (map :race)
-                                                          initial-filter)
-                                        :category-filter (->> (:ships data)
-                                                              (map :category)
-                                                              initial-filter)
-                                        :license-filter (->> (:ships data)
-                                                             (map :licenses)
-                                                             (apply concat)
-                                                             (keep identity)
-                                                             initial-filter)}))
-                    :endless-ships.routes/start! nil}))
+  (fn [{:keys [db]} [_ data]]
+    {:db (-> db
+             (assoc :loading? false
+                    :ships (index-by-name (:ships data))
+                    :ship-modifications (group-modifications (:ship-modifications data))
+                    :outfits (index-by-name (:outfits data))
+                    :outfitters (process-outfitters (:outfitters data))
+                    :version (:version data))
+             (update-in [:settings :ships]
+                        merge
+                        {:race-filter (->> (:ships data)
+                                           (map :race)
+                                           initial-filter)
+                         :category-filter (->> (:ships data)
+                                               (map :category)
+                                               initial-filter)
+                         :license-filter (->> (:ships data)
+                                              (map :licenses)
+                                              (apply concat)
+                                              (keep identity)
+                                              initial-filter)}))
+     :endless-ships.routes/start! nil}))
 
 (rf/reg-event-db ::data-failed-to-load
-                 (fn [db _]
-                   (assoc db
-                          :loading? false
-                          :loading-failed? true)))
+  (fn [db _]
+    (assoc db
+           :loading? false
+           :loading-failed? true)))
 
 (defn- page-title [db [handler route-params]]
   (case handler
@@ -116,13 +116,13 @@
               (:name outfit))))
 
 (rf/reg-fx ::set-page-title
-           (fn [title]
-             (set! js/document.title title)))
+  (fn [title]
+    (set! js/document.title title)))
 
 (rf/reg-event-fx ::navigate-to
-                 (fn [{:keys [db]} [_ route]]
-                   {:db (assoc db :route route)
-                    ::set-page-title (str (page-title db route) " | Endless Sky encyclopedia")}))
+  (fn [{:keys [db]} [_ route]]
+    {:db (assoc db :route route)
+     ::set-page-title (str (page-title db route) " | Endless Sky encyclopedia")}))
 
 (defn- toggle-ordering [db entity-type column]
   (update-in db
@@ -136,29 +136,29 @@
                         :order :asc}))))
 
 (rf/reg-event-db ::toggle-ordering
-                 (fn [db [_ entity-type column]]
-                   (toggle-ordering db entity-type column)))
+  (fn [db [_ entity-type column]]
+    (toggle-ordering db entity-type column)))
 
 (rf/reg-event-db ::toggle-ship-filters-visibility
-                 (fn [db]
-                   (update-in db
-                              [:settings :ships :filters-collapsed?]
-                              not)))
+  (fn [db]
+    (update-in db
+               [:settings :ships :filters-collapsed?]
+               not)))
 
 (rf/reg-event-db ::toggle-ships-race-filter
-                 (fn [db [_ race]]
-                   (update-in db
-                              [:settings :ships :race-filter race]
-                              not)))
+  (fn [db [_ race]]
+    (update-in db
+               [:settings :ships :race-filter race]
+               not)))
 
 (rf/reg-event-db ::toggle-ships-category-filter
-                 (fn [db [_ category]]
-                   (update-in db
-                              [:settings :ships :category-filter category]
-                              not)))
+  (fn [db [_ category]]
+    (update-in db
+               [:settings :ships :category-filter category]
+               not)))
 
 (rf/reg-event-db ::toggle-ships-license-filter
-                 (fn [db [_ license]]
-                   (update-in db
-                              [:settings :ships :license-filter license]
-                              not)))
+  (fn [db [_ license]]
+    (update-in db
+               [:settings :ships :license-filter license]
+               not)))
