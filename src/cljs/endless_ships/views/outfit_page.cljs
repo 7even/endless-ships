@@ -24,6 +24,8 @@
   [:div
    [:br]
    (render-ammo weapon)
+   (render-attribute weapon :missile-strength "missile strength")
+   (render-attribute weapon :anti-missile "anti-missile")
    (render-attribute weapon :range "range")
    (render-attribute weapon (comp :per-second :shield-damage) "shield damage / second")
    (render-attribute weapon (comp :per-second :hull-damage) "hull damage / second")
@@ -47,8 +49,7 @@
    (render-attribute weapon (comp :per-shot :slowing-damage) "slowing damage / shot")
    (render-attribute weapon (comp :per-shot :firing-energy) "firing energy / shot")
    (render-attribute weapon (comp :per-shot :firing-heat) "firing heat / shot")
-   (render-attribute weapon :inaccuracy "inaccuracy")
-   (render-attribute weapon :anti-missile "anti-missile")])
+   (render-attribute weapon :inaccuracy "inaccuracy")])
 
 (defn outfit-page [outfit-name]
   (let [outfit @(rf/subscribe [::subs/outfit outfit-name])

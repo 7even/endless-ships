@@ -29,6 +29,8 @@
                  ^{:key type} [:div
                                [:h2 (:header type-attrs)]
                                [table type (utils/columns-for type) ordering rows]
-                               (when-let [footer (:footer type-attrs)]
-                                 footer)])))
+                               (doall
+                                (map-indexed (fn [idx item]
+                                               ^{:key idx} [:p item])
+                                             (:footer type-attrs)))])))
         doall)])

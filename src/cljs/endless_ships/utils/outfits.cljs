@@ -176,9 +176,11 @@
                                              "Hull damage"           {:value (partial damage :hull-damage)}
                                              "Hull damage / space"   {:value #(/ (damage :hull-damage %)
                                                                                  (:outfit-space %))}
+                                             "* Missile Strength"      {:value #(get-in % [:weapon :missile-strength])}
                                              "Range"                 {:value #(get-in % [:weapon :range])}
                                              "Fire rate"             {:value #(get-in % [:weapon :shots-per-second])
-                                                                      :orderable? false})}
+                                                                      :orderable? false})
+                         :footer ["* Missile strength: how hard a projectile is for an anti-missile to destroy. If this is 0, the projectile cannot be destroyed by anti-missile."]}
              :turrets {:header "Turrets"
                        :filter #(and (= (:category %) "Turrets")
                                      (or (some? (damage :shield-damage %))
@@ -200,12 +202,13 @@
                             :initial-ordering {:column-name "Effectiveness *"
                                                :order :desc}
                             :columns (array-map "Outfit sp."        {:value :outfit-space}
+                                                "Anti-missile *"    {:value #(get-in % [:weapon :anti-missile])}
                                                 "Effectiveness *"   {:value anti-missile-effectiveness}
-                                                "Anti-missile"      {:value #(get-in % [:weapon :anti-missile])}
                                                 "Range"             {:value #(get-in % [:weapon :range])}
                                                 "Fire rate"         {:value #(get-in % [:weapon :shots-per-second])
                                                                      :orderable? false})
-                            :footer "* Effectiveness is an average number of missiles with missile strength = 16 (e.g. Heavy Rockets) destroyed per second"}
+                            :footer ["* Anti-missile: weapon's ability to shoot down missiles. The anti-missile succeeds if a random integer less than this value is greater than a random integer less than the missile's strength."
+                                     "* Effectiveness: average number of missiles destroyed per second. Note: this number is calculated for cases when the turret is used against missiles with missile strength = 16 (e.g. Heavy Rockets); it may be drastically different against missiles with different strength, so this is not an absolute metric of turret's effectiveness."]}
              :hand-to-hand {:header "Hand to Hand"
                             :filter #(= (:category %) "Hand to Hand")
                             :initial-ordering {:column-name "Capture attack"
@@ -215,10 +218,12 @@
                                                 "Illegal"         {:value :illegal})}))
 
 (defn columns-for [type]
-  (->> (conj (get-in types [type :columns])
-             ["Licenses" {:value :licenses
-                          :orderable? false}])
-       (concat [["Name" {:value :name}]
-                ["Cost" {:value :cost}]])
-       (apply concat)
-       (apply array-map)))
+  (let [custom-columns (get-in types [type :columns])
+        all-columns (concat [["Name" {:value :name}]
+                             ["Cost" {:value :cost}]]
+                            custom-columns
+                            [["Licenses" {:value :licenses
+                                          :orderable? false}]])]
+    (->> all-columns
+         (apply concat)
+         (apply array-map))))
