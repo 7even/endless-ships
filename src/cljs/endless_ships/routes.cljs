@@ -33,6 +33,8 @@
   (let [history (pushy/pushy dispatch-route parse-url)]
     (pushy/start! history)))
 
+(rf/reg-fx ::start! start!)
+
 (defn ship-link [name]
   (let [url (url-for :ship :ship/name (kebabize name))]
     [:a {:href url} (nbspize name)]))

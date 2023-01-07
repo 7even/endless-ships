@@ -63,28 +63,29 @@
        (into #{})
        (reduce toggle-filter (sorted-map))))
 
-(rf/reg-event-db ::data-loaded
-                 (fn [db [_ data]]
-                   (-> db
-                       (assoc :loading? false
-                              :ships (index-by-name (:ships data))
-                              :ship-modifications (group-modifications (:ship-modifications data))
-                              :outfits (index-by-name (:outfits data))
-                              :outfitters (process-outfitters (:outfitters data))
-                              :version (:version data))
-                       (update-in [:settings :ships]
-                                  merge
-                                  {:race-filter (->> (:ships data)
-                                                     (map :race)
-                                                     initial-filter)
-                                   :category-filter (->> (:ships data)
-                                                         (map :category)
-                                                         initial-filter)
-                                   :license-filter (->> (:ships data)
-                                                        (map :licenses)
-                                                        (apply concat)
-                                                        (keep identity)
-                                                        initial-filter)}))))
+(rf/reg-event-fx ::data-loaded
+                 (fn [{:keys [db]} [_ data]]
+                   {:db (-> db
+                            (assoc :loading? false
+                                   :ships (index-by-name (:ships data))
+                                   :ship-modifications (group-modifications (:ship-modifications data))
+                                   :outfits (index-by-name (:outfits data))
+                                   :outfitters (process-outfitters (:outfitters data))
+                                   :version (:version data))
+                            (update-in [:settings :ships]
+                                       merge
+                                       {:race-filter (->> (:ships data)
+                                                          (map :race)
+                                                          initial-filter)
+                                        :category-filter (->> (:ships data)
+                                                              (map :category)
+                                                              initial-filter)
+                                        :license-filter (->> (:ships data)
+                                                             (map :licenses)
+                                                             (apply concat)
+                                                             (keep identity)
+                                                             initial-filter)}))
+                    :endless-ships.routes/start! nil}))
 
 (rf/reg-event-db ::data-failed-to-load
                  (fn [db _]
@@ -92,9 +93,36 @@
                           :loading? false
                           :loading-failed? true)))
 
-(rf/reg-event-db ::navigate-to
-                 (fn [db [_ route]]
-                   (assoc db :route route)))
+(defn- page-title [db [handler route-params]]
+  (case handler
+    :ships "Ships"
+    :ship (let [ship (get-in db
+                             [:ships
+                              (-> route-params
+                                  :ship/name
+                                  kebabize)])]
+            (:name ship))
+    :ship-modification (let [ship-modification (get-in db
+                                                       [:ship-modifications
+                                                        (:ship/name route-params)
+                                                        (:ship/modification route-params)])]
+                         (:modification ship-modification))
+    :outfits "Outfits"
+    :outfit (let [outfit (get-in db
+                                 [:outfits
+                                  (-> route-params
+                                      :outfit/name
+                                      kebabize)])]
+              (:name outfit))))
+
+(rf/reg-fx ::set-page-title
+           (fn [title]
+             (set! js/document.title title)))
+
+(rf/reg-event-fx ::navigate-to
+                 (fn [{:keys [db]} [_ route]]
+                   {:db (assoc db :route route)
+                    ::set-page-title (str (page-title db route) " | Endless Sky encyclopedia")}))
 
 (defn- toggle-ordering [db entity-type column]
   (update-in db

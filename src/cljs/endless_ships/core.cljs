@@ -11,7 +11,6 @@
 
 (defn init []
   (rf/dispatch-sync [::events/initialize])
-  (routes/start!)
   (render))
 
 (defn load []
