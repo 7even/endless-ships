@@ -224,7 +224,7 @@
                                              "Hull damage"           {:value (partial damage :hull-damage)}
                                              "Hull damage / space"   {:value #(/ (damage :hull-damage %)
                                                                                  (:outfit-space %))}
-                                             "* Missile Strength"      {:value #(get-in % [:weapon :missile-strength])}
+                                             "* Missile Strength"    {:value #(get-in % [:weapon :missile-strength])}
                                              "Range"                 {:value #(get-in % [:weapon :range])}
                                              "Fire rate"             {:value #(get-in % [:weapon :shots-per-second])
                                                                       :orderable? false})
