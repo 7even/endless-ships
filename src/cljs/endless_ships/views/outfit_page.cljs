@@ -75,7 +75,11 @@
               (render-attribute outfit :cost "cost")
               (render-attribute outfit :outfit-space "outfit space needed")
               (render-attribute outfit :weapon-capacity "weapon capacity needed")
-              (render-attribute outfit :engine-capacity "engine capacity needed")]]
+              (render-attribute outfit :engine-capacity "engine capacity needed")
+              (when (contains? outfit :gun-ports)
+                (render-attribute outfit (comp - :gun-ports) "gun ports needed"))
+              (when (contains? outfit :turret-mounts)
+                (render-attribute outfit (comp - :turret-mounts) "turret mounts needed"))]]
             [:div.col-md-4
              (when (contains? outfit :hyperdrive)
                [:p.italic "Allows you to make hyperjumps."])
@@ -83,6 +87,8 @@
                [:p.italic "Lets you jump to any nearby system."])
              (when (= (:installable outfit) -1)
                [:p.italic "This is not an installable item."])
+             (when (contains? outfit :minable)
+               [:p.italic "This item is mined from asteroids."])
              [:ul
               (render-attribute outfit :mass "mass")
               (render-attribute outfit :thrust "thrust")
@@ -155,6 +161,8 @@
               (render-attribute outfit :torpedo-capacity "torpedo capacity")
               (render-attribute outfit :typhoon-capacity "typhoon capacity")
               (render-attribute outfit :emp-torpedo-capacity "EMP torpedo capacity")
+              (render-attribute outfit :firestorm-torpedo-capacity "firestorm torpedo capacity")
+              (render-attribute outfit :firelight-missile-capacity "firelight missile capacity")
               (when (contains? outfit :weapon)
                 [weapon-attributes (:weapon outfit)])]
              (when (contains? outfit :unplunderable)
