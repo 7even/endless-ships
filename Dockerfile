@@ -11,7 +11,6 @@ COPY . .
 RUN git submodule set-url resources/game https://github.com/endless-sky/endless-sky.git
 RUN git submodule update --init
 RUN cd resources/game \
- && git checkout master \
  && git checkout $(git tag --list "v*" --sort=-v:refname | head -n 1)
 
 # Build
@@ -20,5 +19,6 @@ RUN boot build
 # Copy build results to the final image
 FROM nginx:alpine
 COPY --from=boot /app/build /usr/share/nginx/html
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
