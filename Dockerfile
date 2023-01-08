@@ -5,7 +5,7 @@ RUN npm install -g yarn shadow-cljs
 
 # Copy source files into the docker container
 WORKDIR /app
-COPY . ./
+COPY . .
 
 # Update game data to the latest release
 RUN git submodule set-url resources/game https://github.com/endless-sky/endless-sky.git

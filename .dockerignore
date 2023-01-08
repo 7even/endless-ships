@@ -2,10 +2,12 @@
 /.nrepl-port
 /build
 /ga.json
-data.edn
+/public/data.edn
 /.shadow-cljs
 /public/js
 /node_modules
 /Dockerfile
 /.dockerignore
 /README.md
+/.gitignore
+/.projectile
