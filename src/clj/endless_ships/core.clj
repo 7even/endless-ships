@@ -20,7 +20,9 @@
    "drak ships.txt" :drak
    "ships.txt" :human
    "indigenous.txt" :indigenous
-   "sheragi ships.txt" :sheragi})
+   "sheragi ships.txt" :sheragi
+   ;; fixme: there is no guarantee this file will contain only Korath ships
+   "deprecated ships.txt" :korath})
 
 (def outfits-data
   (->> outfits
