@@ -111,16 +111,27 @@
                {})
        (sort-by last >))
   ;; get government colors in CSS format
-  (->> endless-ships.parser/data
-       (filter #(= (first %) "government"))
-       (map (fn [[_ [name] {[[colors]] "color"}]]
-              [name colors]))
-       (filter #(some? (second %)))
-       (map (fn [[government colors]]
-              [government (->> colors
-                               (map (partial * 255))
-                               (map int)
-                               (map (partial format "%02x"))
-                               clojure.string/join
-                               (str "#"))]))
-       (into {})))
+  (let [preset-colors (->> endless-ships.parser/data
+                           (filter #(= (first %) "color"))
+                           (reduce (fn [acc [_ [name r g b]]]
+                                     (assoc acc name [r g b]))
+                                   {}))]
+    (->> endless-ships.parser/data
+         (filter #(= (first %) "government"))
+         (map (fn [[_ [name] {[[color]] "color"}]]
+                [name color]))
+         (filter #(some? (second %)))
+         (reduce (fn [acc [government color]]
+                   (let [real-color (if (and (= (count color) 1)
+                                             (string? (first color)))
+                                      (get preset-colors (first color))
+                                      color)]
+                     (assoc acc
+                            government
+                            (->> real-color
+                                 (map (partial * 255))
+                                 (map int)
+                                 (map (partial format "%02x"))
+                                 clojure.string/join
+                                 (str "#")))))
+                 {}))))

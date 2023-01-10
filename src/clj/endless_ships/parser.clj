@@ -88,6 +88,11 @@
                {})
        (sort-by last >))
 
+  ;; all systems with their positions
+  (->> data
+       (filter #(= (first %) "system"))
+       (map (juxt #(get-in % [1 0]) #(get-in % [2 "pos" 0 0]))))
+
   ;; parsing errors
   (->> data
        (filter #(keyword? (first %)))))
