@@ -100,8 +100,7 @@
                                                 "Thr. energy"      {:value :afterburner-energy}
                                                 "Thr. heat"        {:value :afterburner-heat})}
              :reactors {:header "Reactors"
-                        :filter #(and (or (contains? % :energy-generation)
-                                          (contains? % :solar-collection))
+                        :filter #(and (contains? % :energy-generation)
                                       (= (:category %) "Power"))
                         :initial-ordering {:column-name "Energy per space"
                                            :order :desc}
