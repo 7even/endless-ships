@@ -17,7 +17,14 @@
    "Coalition"          "coalition"
    "Heliarch"           "coalition"
    "Remnant"            "remnant"
-   "Remnant Capital"    "remnant"})
+   "Remnant Capital"    "remnant"
+   "Scin Adjutant"      "gegno"
+   "Scin Architect"     "gegno"
+   "Scin Hoplologist"   "gegno"
+   "Vi Lord"            "gegno"
+   "Vi Centurion"       "gegno"
+   "Vi Evocati"         "gegno"
+   "Gegno Civilian"     "gegno"})
 
 (defn license-label [license]
   (let [style (get license-label-styles license)]

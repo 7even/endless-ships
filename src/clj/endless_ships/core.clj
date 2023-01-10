@@ -21,6 +21,7 @@
    "ships.txt" :human
    "indigenous.txt" :indigenous
    "sheragi ships.txt" :sheragi
+   "gegno ships.txt" :gegno
    ;; fixme: there is no guarantee this file will contain only Korath ships
    "deprecated ships.txt" :korath})
 
