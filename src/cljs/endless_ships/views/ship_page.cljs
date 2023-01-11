@@ -16,7 +16,7 @@
                  (= (:name ship) "Shuttle")
                  "=0.png"
 
-                 (#{"Archon" "Hallucination"} (:name ship))
+                 (#{"Archon" "Hallucination" "vyu-Ira"} (:name ship))
                  "-0.png"
 
                  (last (:sprite ship))
