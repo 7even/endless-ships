@@ -95,7 +95,8 @@
           [submunition-name submunition-count] :submunition
           :as weapon-attrs} :weapon
          :as outfit}]
-     (if (#{"Guns" "Secondary Weapons" "Turrets"} category)
+     (if (and (contains? #{"Guns" "Secondary Weapons" "Turrets"} category)
+              (some? reload))
        (let [shots-per-second (if (= reload 1)
                                 "continuous"
                                 (->> reload
