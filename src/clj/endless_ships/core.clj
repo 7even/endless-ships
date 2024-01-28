@@ -30,7 +30,8 @@
   (->> outfits
        (remove #(#{"deprecated outfits.txt"
                    "nanobots.txt"
-                   "transport missions.txt"} (:file %)))
+                   "transport missions.txt"
+                   "vyrmeid.txt"} (:file %)))
        (map #(dissoc % :file))))
 
 (defn- assoc-outfits-cost [ship]
