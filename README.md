@@ -37,7 +37,7 @@ $ cd endless-ships
 $ git submodule update --init
 ```
 
-The generator uses [Boot](http://boot-clj.com/) so you need to [install](https://github.com/boot-clj/boot#install) it (`brew install boot-clj` on OS X). It installs all the other Clojure dependencies upon first launch.
+The generator uses [Boot](https://boot-clj.github.io/) so you need to [install](https://github.com/boot-clj/boot#install) it (`brew install boot-clj` on OS X). It installs all the other Clojure dependencies upon first launch.
 
 The client-side part of the site is being compiled using [yarn](https://yarnpkg.com) so you need to [install](https://yarnpkg.com/en/docs/install) it as well (`brew install yarn` on OS X).
 
