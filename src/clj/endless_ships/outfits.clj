@@ -1,6 +1,7 @@
 (ns endless-ships.outfits
   (:require [clojure.string :as str]
-            [endless-ships.parser :refer [->map data]]))
+            [endless-ships.parser :refer [->map data]])
+  (:import [java.lang Integer]))
 
 (defn- update-if-present [m k f]
   (if (contains? m k)
