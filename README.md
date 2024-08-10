@@ -6,6 +6,8 @@ The generator works by parsing the game's sources (specifically `data/*.txt` fil
 
 ## Installation (docker)
 
+*Does not work at the moment (contributions are welcome).*
+
 You can install, build, and run this quickly with [Docker](https://www.docker.com/).
 
 Clone the project:
