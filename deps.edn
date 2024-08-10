@@ -1,0 +1,5 @@
+{:aliases {:clj {:extra-deps {org.clojure/clojure                 {:mvn/version "1.8.0"}
+                              instaparse/instaparse               {:mvn/version "1.4.5"}
+                              camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.0"}
+                              buddy/buddy-core                    {:mvn/version "1.6.0"}}
+                 :extra-paths ["src/clj" "resources"]}}}
