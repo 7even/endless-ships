@@ -1,5 +1,6 @@
-{:aliases {:clj {:extra-deps {org.clojure/clojure                 {:mvn/version "1.8.0"}
+{:aliases {:clj {:extra-deps {org.clojure/clojure                 {:mvn/version "1.11.4"}
                               instaparse/instaparse               {:mvn/version "1.4.5"}
                               camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.0"}
                               buddy/buddy-core                    {:mvn/version "1.6.0"}}
-                 :extra-paths ["src/clj" "resources"]}}}
+                 :extra-paths ["src/clj" "resources"]}
+           :build {:exec-fn endless-ships.core/build}}}

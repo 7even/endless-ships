@@ -108,7 +108,7 @@
 
 (defn build
   "Builds the site into build/ directory."
-  []
+  [_]
   (sh "rm" "-rf" "./build")
   (sh "yarn" "install")
   (sh "shadow-cljs" "release" "main")
