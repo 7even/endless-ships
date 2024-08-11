@@ -7,7 +7,8 @@ data = (0-indented-block / <newline> / <comment>)+
 4-indented-block = <tab> <tab> <tab> <tab> line (5-indented-block / 6-indented-block / <newline> / <comment>)*
 5-indented-block = <tab> <tab> <tab> <tab> <tab> line (6-indented-block / <newline> / <comment>)*
 6-indented-block = <tab> <tab> <tab> <tab> <tab> <tab> line (7-indented-block / <newline> / <comment>)*
-7-indented-block = <tab> <tab> <tab> <tab> <tab> <tab> <tab> line
+7-indented-block = <tab> <tab> <tab> <tab> <tab> <tab> <tab> line (8-indented-block / <newline> / <comment>)*
+8-indented-block = <tab> <tab> <tab> <tab> <tab> <tab> <tab> <tab> line
 
 line = <space>? token ((<space> / <tab>) token)* <#'[ \t]*#.*'>? <newline>
 
