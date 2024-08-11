@@ -1,6 +1,7 @@
 (ns endless-ships.core
   (:require [buddy.core.codecs :refer [bytes->hex]]
             [buddy.core.hash :refer [sha1]]
+            [clojure.java.io :as io]
             [clojure.java.shell :refer [sh]]
             clojure.pprint
             [clojure.set :refer [rename-keys]]
@@ -109,10 +110,13 @@
 (defn build
   "Builds the site into build/ directory."
   [_]
-  (sh "rm" "-rf" "./build")
+  (->> (io/file "./build")
+       file-seq
+       reverse
+       (run! io/delete-file))
   (sh "yarn" "install")
   (sh "shadow-cljs" "release" "main")
-  (sh "mkdir" "-p" "./build/js")
+  (io/make-parents "./build/js/main.js")
   (let [edn-filename (filename-with-hash "data.edn" edn)
         js (-> (slurp "./public/js/main.js")
                (str/replace "data.edn" edn-filename))
@@ -122,9 +126,13 @@
     (spit (str "./build/" edn-filename) edn)
     (spit (str "./build/js/" js-filename) js)
     (spit "./build/index.html" html)
-    (sh "cp" "./public/app.css" "./public/ga.json" "./build")
-    (if (.exists (clojure.java.io/as-file "ga.json"))
-      (sh "cp" "./ga.json" "./build"))))
+    (io/copy (io/file "./public/app.css")
+             (io/file "./build/app.css"))
+    (io/copy (io/file "./public/ga.json")
+             (io/file "./build/ga.json"))
+    (if (.exists (io/file "./ga.json"))
+      (io/copy (io/file "./ga.json")
+               (io/file "./build/ga.json")))))
 
 (comment
   ;; generate data for frontend development
