@@ -110,10 +110,11 @@
 (defn build
   "Builds the site into build/ directory."
   [_]
-  (->> (io/file "./build")
-       file-seq
-       reverse
-       (run! io/delete-file))
+  (when (.exists (io/file "./build"))
+    (->> (io/file "./build")
+         file-seq
+         reverse
+         (run! io/delete-file)))
   (sh "yarn" "install")
   (sh "shadow-cljs" "release" "main")
   (io/make-parents "./build/js/main.js")
