@@ -8,7 +8,6 @@ WORKDIR /app
 COPY . .
 
 # Update game data to the latest release
-RUN git submodule set-url resources/game https://github.com/endless-sky/endless-sky.git
 RUN git submodule update --init
 RUN cd resources/game \
  && git checkout $(git tag --list "v*" --sort=-v:refname | head -n 1)

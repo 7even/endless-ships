@@ -32,6 +32,8 @@
    :4-indented-block transform-block
    :5-indented-block transform-block
    :6-indented-block transform-block
+   :7-indented-block transform-block
+   :8-indented-block transform-block
    :string identity
    :integer #(Long/parseLong %)
    :float #(Float/parseFloat (str/replace % "," "."))})
