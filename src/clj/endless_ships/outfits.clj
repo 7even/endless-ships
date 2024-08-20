@@ -92,7 +92,7 @@
 (defn- normalize-weapon-attrs [outfits]
   (map
    (fn [{category :category
-         {:keys [reload velocity velocity-override lifetime shield-damage hull-damage]
+         {:keys [reload velocity velocity-override lifetime] ; shield-damage hull-damage]
           [submunition-name submunition-count] :submunition
           :as weapon-attrs} :weapon
          :as outfit}]
