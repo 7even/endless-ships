@@ -8,7 +8,8 @@
             [clojure.string :as str]
             [endless-ships.outfits :refer [outfits]]
             [endless-ships.outfitters :refer [outfitters]]
-            [endless-ships.ships :refer [modifications ships]]))
+            [endless-ships.ships :refer [modifications ships]]
+            [endless-ships.parser]))
 
 (def file->race
   {"kestrel.txt" :human
