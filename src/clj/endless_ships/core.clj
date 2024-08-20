@@ -134,7 +134,7 @@
              (io/file "./build/app.css"))
     (io/copy (io/file "./public/ga.json")
              (io/file "./build/ga.json"))
-    (if (.exists (io/file "./ga.json"))
+    (when (.exists (io/file "./ga.json"))
       (io/copy (io/file "./ga.json")
                (io/file "./build/ga.json")))))
 
