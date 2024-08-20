@@ -7,3 +7,7 @@ data.edn
 /public/js
 /node_modules
 /.cpcache
+# Calva related
+/.clj-kondo/.cache
+/.lsp/.cache
+/.calva/output-window
