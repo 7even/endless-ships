@@ -1,5 +1,5 @@
 (ns endless-ships.outfitters
-  (:require [endless-ships.parser :refer [->map data]]))
+  (:require [endless-ships.parser :refer [data]]))
 
 (defn- find-object-with-name [objects name]
   (some (fn [object]
