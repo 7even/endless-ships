@@ -1,6 +1,5 @@
 (ns endless-ships.ships
-  (:require [clojure.set :refer [rename-keys]]
-            [endless-ships.parser :refer [->map data]]))
+  (:require [endless-ships.parser :refer [->map data]]))
 
 (defn- add-key-if [cond key value]
   (if cond
