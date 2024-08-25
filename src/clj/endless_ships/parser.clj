@@ -3,7 +3,7 @@
             [clojure.java.io :refer [file resource]]
             [clojure.string :as str]
             [instaparse.core :as insta])
-  (:import [java.lang Float Integer]))
+  (:import [java.lang Float]))
 
 (def files
   "All files containing game data."

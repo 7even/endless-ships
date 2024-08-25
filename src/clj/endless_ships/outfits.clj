@@ -1,6 +1,7 @@
 (ns endless-ships.outfits
   (:require [clojure.string :as str]
-            [endless-ships.parser :refer [->map data]]))
+            [endless-ships.parser :refer [->map data]])
+  (:import [java.lang Integer]))
 
 (defn- update-if-present [m k f]
   (if (contains? m k)
@@ -91,7 +92,7 @@
 (defn- normalize-weapon-attrs [outfits]
   (map
    (fn [{category :category
-         {:keys [reload velocity velocity-override lifetime shield-damage hull-damage]
+         {:keys [reload velocity velocity-override lifetime] ; shield-damage hull-damage]
           [submunition-name submunition-count] :submunition
           :as weapon-attrs} :weapon
          :as outfit}]

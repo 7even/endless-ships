@@ -1,6 +1,5 @@
 (ns endless-ships.ships
-  (:require [clojure.set :refer [rename-keys]]
-            [endless-ships.parser :refer [->map data]]))
+  (:require [endless-ships.parser :refer [->map data]]))
 
 (defn- add-key-if [cond key value]
   (if cond
@@ -28,7 +27,8 @@
           :file file}
          (add-key-if (contains? ship "sprite")
                      :sprite
-                     [sprite (not (empty? animation))])
+                     [sprite #_{:clj-kondo/ignore [:not-empty?]}
+                             (not (empty? animation))])
          (add-key-if (contains? attrs "licenses")
                      :licenses
                      (-> license-attrs keys vec))
