@@ -24,7 +24,9 @@
    "Vi Lord"            "gegno"
    "Vi Centurion"       "gegno"
    "Vi Evocati"         "gegno"
-   "Gegno Civilian"     "gegno"})
+   "Gegno Civilian"     "gegno"
+   "Gegno Driller"      "gegno"
+   "Hicemus Conflict"   "incipias" })
 
 (defn license-label [license]
   (let [style (get license-label-styles license)]

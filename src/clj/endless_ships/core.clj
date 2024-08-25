@@ -27,6 +27,8 @@
    "sheragi ships.txt" :sheragi
    "gegno ships.txt" :gegno
    "rulei ships.txt" :vyu-rulei
+   "incipias ships.txt" :incipias
+   "bunrodea ships.txt" :bunrodea
    ;; fixme: there is no guarantee this file will contain only Korath ships
    "deprecated ships.txt" :korath})
 
@@ -174,4 +176,8 @@
                                  (map (partial format "%02x"))
                                  clojure.string/join
                                  (str "#")))))
-                 {}))))
+                 {})))
+  ;; get all licenses from ships & outfits
+  (-> (sorted-set)
+      (into (mapcat :licenses ships-data))
+      (into (mapcat :licenses outfits-data))))

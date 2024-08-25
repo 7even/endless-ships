@@ -70,6 +70,14 @@
     background-color: #ccc;
 }
 
+.label-incipias {
+    background-color: #7f00e5;
+}
+
+.label-bunrodea {
+    background-color: #59a54c;
+}
+
 p.italic {
     font-style: italic;
 }
