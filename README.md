@@ -41,7 +41,7 @@ $ git submodule update --init
 
 The generator uses [tools.deps](https://clojure.org/guides/deps_and_cli/) so you need to [install](https://clojure.org/guides/install_clojure) it (`brew install clojure` on OS X). It installs all the other Clojure dependencies upon first launch.
 
-The client-side part of the site is being compiled using [yarn](https://yarnpkg.com) so you need to [install](https://yarnpkg.com/en/docs/install) it as well (`brew install yarn` on OS X).
+The client-side part of the site is being compiled using [npm](https://www.npmjs.com/) so you need to [install](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) it as well (`brew install node` on OS X).
 
 ## Generating the site
 

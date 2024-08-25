@@ -1,7 +1,7 @@
 # Prepare the boot build image and dependencies
 FROM clojure:temurin-21-alpine AS build
 RUN apk add --update git npm
-RUN npm install -g yarn shadow-cljs
+RUN npm install -g shadow-cljs
 
 # Copy source files into the docker container
 WORKDIR /app

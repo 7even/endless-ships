@@ -115,7 +115,7 @@
          file-seq
          reverse
          (run! io/delete-file)))
-  (sh "yarn" "install")
+  (sh "npm" "install")
   (sh "shadow-cljs" "release" "main")
   (io/make-parents "./build/js/main.js")
   (let [edn-filename (filename-with-hash "data.edn" edn)
