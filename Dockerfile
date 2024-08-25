@@ -1,5 +1,5 @@
 # Prepare the clojure build image and dependencies
-FROM clojure:temurin-21-alpine AS build
+FROM docker.io/clojure:temurin-21-alpine AS build
 RUN apk add --update git npm
 RUN npm install -g shadow-cljs
 
@@ -21,7 +21,7 @@ RUN cd resources/game && git checkout master
 RUN clojure -J-Xmx8g -X:clj:build
 
 # Copy build results to the final image
-FROM nginx:alpine
+FROM docker.io/nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
