@@ -29,6 +29,7 @@
    "rulei ships.txt" :vyu-rulei
    "incipias ships.txt" :incipias
    "bunrodea ships.txt" :bunrodea
+   "successor ships.txt" :successor
    ;; fixme: there is no guarantee this file will contain only Korath ships
    "deprecated ships.txt" :korath})
 
