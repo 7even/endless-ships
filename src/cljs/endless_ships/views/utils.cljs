@@ -42,7 +42,7 @@
 (defn kebabize [s]
   (-> s
       (str/replace #"\s+" "-")
-      (str/replace #"[\?']" "")
+      (str/replace #"[\?':]" "")
       str/lower-case))
 
 (defn format-number [num]
