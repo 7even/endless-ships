@@ -8,7 +8,8 @@
             [clojure.string :as str]
             [endless-ships.outfits :refer [outfits]]
             [endless-ships.outfitters :refer [outfitters]]
-            [endless-ships.ships :refer [modifications ships]]))
+            [endless-ships.ships :refer [modifications ships]]
+            [endless-ships.parser]))
 
 (def file->race
   {"kestrel.txt" :human
@@ -134,7 +135,7 @@
              (io/file "./build/app.css"))
     (io/copy (io/file "./public/ga.json")
              (io/file "./build/ga.json"))
-    (if (.exists (io/file "./ga.json"))
+    (when (.exists (io/file "./ga.json"))
       (io/copy (io/file "./ga.json")
                (io/file "./build/ga.json")))))
 
