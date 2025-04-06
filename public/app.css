@@ -82,6 +82,14 @@
     background-color: #1cc9bb;
 }
 
+.label-avgi {
+    background-color: #00b7d6;
+}
+
+.label-aberrant {
+    background-color: #6666b2;
+}
+
 p.italic {
     font-style: italic;
 }

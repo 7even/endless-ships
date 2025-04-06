@@ -14,6 +14,7 @@
   {"kestrel.txt" :human
    "hai ships.txt" :hai
    "pug.txt" :pug
+   "pug ships.txt" :pug
    "wanderer ships.txt" :wanderer
    "quarg ships.txt" :quarg
    "remnant ships.txt" :remnant
@@ -30,6 +31,8 @@
    "incipias ships.txt" :incipias
    "bunrodea ships.txt" :bunrodea
    "successor ships.txt" :successor
+   "avgi ships.txt" :avgi
+   "aberrant ships.txt" :aberrant
    ;; fixme: there is no guarantee this file will contain only Korath ships
    "deprecated ships.txt" :korath})
 
@@ -68,7 +71,7 @@
                                :required-crew :bunks :description
                                :guns :turrets :drones :fighters
                                :self-destruct :ramscoop])
-                 (assoc :race (get file->race (:file %) :other))
+                 (assoc :race (-> % :file file->race))
                  (dissoc :file)
                  (rename-keys {:cost :empty-hull-cost})
                  assoc-outfits-cost))))

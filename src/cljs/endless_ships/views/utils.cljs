@@ -28,7 +28,10 @@
    "Gegno Driller"      "gegno"
    "Hicemus Conflict"   "incipias"
    "Successor"          "successor"
-   "High Houses"        "successor"})
+   "High Houses"        "successor"
+   "Avgi Atomics"       "avgi"
+   "Avgi Torch"         "avgi"
+   "Twilight Guard"     "avgi"})
 
 (defn license-label [license]
   (let [style (get license-label-styles license)]

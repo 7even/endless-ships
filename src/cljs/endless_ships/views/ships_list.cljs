@@ -16,7 +16,7 @@
                    [:input {:type "checkbox"
                             :checked checked?
                             :on-change #(rf/dispatch [toggling-event item])}]
-                   (str/capitalize (name item))]]))
+                   (-> item name str/capitalize)]]))
 
 (defn ships-filter []
   (let [height (ra/atom nil)]
