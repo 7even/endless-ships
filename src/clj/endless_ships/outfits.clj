@@ -92,6 +92,7 @@
   (map
    (fn [{category :category
          {:keys [reload velocity velocity-override lifetime shield-damage hull-damage]
+          :or {lifetime 0}
           [submunition-name submunition-count] :submunition
           :as weapon-attrs} :weapon
          :as outfit}]
@@ -110,7 +111,9 @@
                            total-lifetime (+ (or lifetime 0)
                                              (get-in submunition [:weapon :lifetime]))]
                        (* final-velocity total-lifetime))
-                     (* velocity lifetime))
+                     (* (or velocity
+                            velocity-override)
+                        lifetime))
              converted-weapon-attrs (reduce (fn [attrs [attr-name convertor]]
                                               (update-if-present attrs attr-name convertor))
                                             weapon-attrs
