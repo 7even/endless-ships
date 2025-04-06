@@ -1,0 +1,31 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+	"name": "endless-ships",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+
+	"features": {},
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode":{
+			"extensions": [
+				"betterthantomorrow.calva"
+			]
+		}
+	}
+	/*
+  // unprivileged podman trick, comment if you want to use Docker. Also amend
+  // uid/gid if these don't match yours
+	,"runArgs": [
+		"--userns=keep-id:uid=1000,gid=1000"
+	],
+	"containerUser": "vscode",
+	"updateRemoteUserUID": true,
+	"containerEnv": {
+		"HOME": "/home/vscode"
+	}
+	*/
+}
