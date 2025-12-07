@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "clojure-mcp": {
+      "type": "stdio",
+      "command": "./mcp-nrepl.bb",
+      "args": [],
+      "env": {}
+    }
+  }
+}
