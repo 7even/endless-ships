@@ -1,9 +1,9 @@
 (ns endless-ships.events
-  (:require [re-frame.core :as rf]
+  (:require [ajax.edn :as ajax]
             [day8.re-frame.http-fx]
-            [ajax.edn :as ajax]
+            [endless-ships.utils.outfits :as outfits]
             [endless-ships.views.utils :refer [kebabize]]
-            [endless-ships.utils.outfits :as outfits]))
+            [re-frame.core :as rf]))
 
 (def initial-outfit-settings
   (reduce (fn [settings [name {:keys [initial-ordering]}]]
@@ -37,13 +37,15 @@
                   :on-failure [::data-failed-to-load]}}))
 
 (defn- index-by-name [coll]
-  (reduce (fn [indexed {:keys [name] :as item}]
+  (reduce (fn [indexed {:keys [name]
+                        :as item}]
             (assoc indexed (kebabize name) item))
           {}
           coll))
 
 (defn- group-modifications [modifications]
-  (reduce (fn [grouped {:keys [name modification] :as mod}]
+  (reduce (fn [grouped {:keys [name modification]
+                        :as mod}]
             (assoc-in grouped [(kebabize name) (kebabize modification)] mod))
           {}
           modifications))
