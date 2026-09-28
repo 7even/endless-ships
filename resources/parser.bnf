@@ -16,7 +16,7 @@ line = <space>? token ((<space> / <tab>) token)* <#'[ \t]*#.*'>? <newline>
 string = #'[a-zA-Z0-9=?\(\)><*/+\-\'_!%]+' | <'"'> #'[^"]*' <'"'> | <'`'> #'[^`]*' <'`'>
 space = #'[, ]+'
 tab = '\t'
-newline = #'[ \t]*\n'
+newline = #'[ \t,]*\n'
 <number> = integer | float
 integer = #'-?[0-9]+'
 float = #'-?[0-9]*[\.,][0-9]*'
