@@ -1,0 +1,7 @@
+{:max-line-length 96
+ :split-keypairs-over-multiple-lines? true
+ :sort-ns-references? true
+ :extra-indents {re-frame.core/reg-sub [[:inner 0]]
+                 re-frame.core/reg-event-db [[:inner 0]]
+                 re-frame.core/reg-event-fx [[:inner 0]]
+                 re-frame.core/reg-fx [[:inner 0]]}}
