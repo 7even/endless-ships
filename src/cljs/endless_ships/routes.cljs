@@ -6,12 +6,13 @@
             [endless-ships.views.utils :refer [kebabize nbspize]]))
 
 (def name-pattern
-  #"[A-Za-z0-9\-\(\)\,\"]+")
+  #"[A-Za-z0-9\-\(\)\,\"_.]+")
 
 (def routes
   ["/" {"" :ships
-        ["ships/" :ship/name] :ship
-        ["ships/" :ship/name "/" [name-pattern :ship/modification]] :ship-modification
+        ["ships/" [name-pattern :ship/name]] :ship
+        ["ships/" [name-pattern :ship/name]
+         "/" [name-pattern :ship/modification]] :ship-modification
         "outfits" :outfits
         ["outfits/" [name-pattern :outfit/name]] :outfit}])
 

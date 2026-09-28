@@ -31,6 +31,7 @@
    "incipias ships.txt" :incipias
    "bunrodea ships.txt" :bunrodea
    "successor ships.txt" :successor
+   "predecessors.txt" :successor
    "avgi ships.txt" :avgi
    "aberrant ships.txt" :aberrant
    ;; fixme: there is no guarantee this file will contain only Korath ships

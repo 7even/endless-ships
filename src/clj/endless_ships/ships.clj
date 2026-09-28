@@ -14,7 +14,7 @@
                        [[_ {[[_ license-attrs]] "licenses"
                             [[_ weapon-attrs]] "weapon"
                             :as attrs}]] "attributes"
-                       [[_ outfit-attrs]] "outfits"
+                       outfit-blocks "outfits"
                        gun-points "gun"
                        turret-points "turret"
                        drone-points "drone"
@@ -34,12 +34,18 @@
            (add-key-if (contains? attrs "licenses")
                        :licenses
                        (-> license-attrs keys vec))
+           ;; like the game, sum up outfits from all `outfits` blocks
            (add-key-if (contains? ship "outfits")
                        :outfits
-                       (map (fn [[outfit-name [[[quantity]]]]]
-                              {:name outfit-name
-                               :quantity (or quantity 1)})
-                            outfit-attrs))
+                       (->> outfit-blocks
+                            (map second)
+                            (apply merge-with into)
+                            (map (fn [[outfit-name occurrences]]
+                                   {:name outfit-name
+                                    :quantity (->> occurrences
+                                                   (map (fn [[[quantity]]]
+                                                          (or quantity 1)))
+                                                   (reduce +))}))))
            (add-key-if (> (count gun-points) 0)
                        :guns
                        (count gun-points))
