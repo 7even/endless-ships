@@ -9,13 +9,8 @@ COPY . .
 
 # Update game data to the latest release
 RUN git submodule update --init
-
-## Temporarily use master branch
-RUN cd resources/game && git checkout master
-
-## Replace with the following lines when the next stable game release (after 0.10.8) comes out:
-# RUN cd resources/game \
-#  && git checkout $(git tag --list "v*" --sort=-v:refname | head -n 1)
+RUN cd resources/game \
+ && git checkout $(git tag --list "v*" --sort=-v:refname | head -n 1)
 
 # Build
 RUN clojure -J-Xmx8g -X:clj:build
