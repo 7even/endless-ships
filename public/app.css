@@ -2,6 +2,15 @@
     margin-top: 10px;
 }
 
+/* Bootstrap 3 sets a focus ring on plain :focus, so clicking a link or a button
+   leaves one behind. Keep it for keyboard navigation only. */
+a:focus:not(:focus-visible),
+.btn:focus:not(:focus-visible),
+.btn:active:focus:not(:focus-visible),
+.btn.active:focus:not(:focus-visible) {
+    outline: none;
+}
+
 .filters-group {
     margin-bottom: 20px;
 }
