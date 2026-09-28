@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]
             [endless-ships.subs :as subs]
             [endless-ships.views.utils :refer [render-attribute render-percentage
-                                               render-description nbspize kebabize]]
+                                               render-description nbspize kebabize
+                                               game-image-url]]
             [endless-ships.utils.ships :refer [total-cost or-zero]]
             [endless-ships.routes :as routes]))
 
@@ -10,26 +11,6 @@
   (if (some? license2)
     [:p.italic (str "This ship requires " license1 " and " license2 " licenses.")]
     [:p.italic (str "This ship requires a " license1 " license.")]))
-
-(defn- image-url [ship]
-  (let [suffix (cond
-                 (= (:name ship) "Shuttle")
-                 "=0.png"
-
-                 (#{"Archon" "Hallucination" "vyu-Ir" "Embershade"} (:name ship))
-                 "-0.png"
-
-                 (last (:sprite ship))
-                 "-00.png"
-
-                 :else
-                 ".png")
-        filename (-> ship
-                     :sprite
-                     first
-                     js/window.encodeURI
-                     (str suffix))]
-    (str "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" filename)))
 
 (defn ship-modifications [ship-name selected-modification-slug modification-names]
   [:div.panel.panel-default
@@ -79,6 +60,7 @@
 (defn ship-page [ship-name ship-modification]
   (let [ship @(rf/subscribe [::subs/ship ship-name])
         outfits @(rf/subscribe [::subs/outfits])
+        game-commit (:hash @(rf/subscribe [::subs/game-version]))
         modification-names @(rf/subscribe [::subs/ship-modifications-names ship-name])
         selected-modification (if (some? ship-modification)
                                 @(rf/subscribe [::subs/ship-modification ship-name ship-modification])
@@ -122,7 +104,9 @@
            (when (some? (:licenses ship-with-modification))
              (render-licenses (:licenses ship-with-modification)))]
           [:div.media-right
-           [:img.ship-sprite {:src (image-url ship-with-modification)}]]]]]
+           (when (some? (:sprite ship-with-modification))
+             [:img.ship-sprite {:src (game-image-url game-commit
+                                                     (:sprite ship-with-modification))}])]]]]
        (when (seq modification-names)
          (ship-modifications (:name ship) ship-modification modification-names))]
       [:div.col-md-6

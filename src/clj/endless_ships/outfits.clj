@@ -1,5 +1,6 @@
 (ns endless-ships.outfits
   (:require [clojure.string :as str]
+            [endless-ships.images :refer [image-file]]
             [endless-ships.parser :refer [->map data]]))
 
 (defn- update-if-present [m k f]
@@ -171,7 +172,11 @@
               (reduce (fn [attrs [attr-name convertor]]
                         (update-if-present attrs attr-name convertor))
                       outfit
-                      attribute-convertors)))))
+                      attribute-convertors)))
+       (map (fn [{:keys [thumbnail] :as outfit}]
+              (if-let [thumbnail-file (some-> thumbnail image-file)]
+                (assoc outfit :thumbnail thumbnail-file)
+                (dissoc outfit :thumbnail))))))
 
 (comment
   ;; outfit counts by category

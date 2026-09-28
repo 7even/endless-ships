@@ -37,6 +37,17 @@
   (let [style (get license-label-styles license)]
     ^{:key license} [:span.label {:class (str "label-" style)} license]))
 
+(def ^:private game-repo-url
+  "https://raw.githubusercontent.com/endless-sky/endless-sky/")
+
+(defn game-image-url
+  "Returns the URL of an image file (relative to images/) at the given game commit."
+  [commit path]
+  (str game-repo-url
+       commit
+       "/images/"
+       (js/window.encodeURI path)))
+
 (def nbsp "\u00a0")
 
 (defn nbspize [s]

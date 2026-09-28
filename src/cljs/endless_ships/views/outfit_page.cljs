@@ -2,7 +2,7 @@
   (:require [re-frame.core :as rf]
             [endless-ships.subs :as subs]
             [endless-ships.views.utils :refer [render-attribute render-description
-                                               kebabize nbspize]]
+                                               kebabize nbspize game-image-url]]
             [endless-ships.routes :as routes]))
 
 (defn- render-license [outfit]
@@ -11,10 +11,6 @@
       [:p.italic
        {:style {:margin-top 20}}
        (str "This outfit requires a " license " license.")])))
-
-(defn- image-url [outfit]
-  (let [filename (str (-> outfit :thumbnail js/window.encodeURI) ".png")]
-    (str "https://raw.githubusercontent.com/endless-sky/endless-sky/master/images/" filename)))
 
 (defn- render-ammo [outfit]
   (when (contains? outfit :ammo)
@@ -53,6 +49,7 @@
 
 (defn outfit-page [outfit-name]
   (let [outfit @(rf/subscribe [::subs/outfit outfit-name])
+        game-commit (:hash @(rf/subscribe [::subs/game-version]))
         installations @(rf/subscribe [::subs/outfit-installations (:name outfit)])
         planets @(rf/subscribe [::subs/outfit-planets (:name outfit)])]
     [:div.app
@@ -169,7 +166,7 @@
                [:p.italic "This outfit cannot be plundered."])]]]
           [:div.media-right
            (when (contains? outfit :thumbnail)
-             [:img {:src (image-url outfit)}])]]]]]]
+             [:img {:src (game-image-url game-commit (:thumbnail outfit))}])]]]]]]
      [:div.row
       [:div.col-md-6
        [:div.panel.panel-default
