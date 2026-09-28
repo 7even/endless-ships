@@ -3,4 +3,6 @@
                               camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.0"}
                               buddy/buddy-core                    {:mvn/version "1.6.0"}}
                  :extra-paths ["src/clj" "resources"]}
-           :build {:exec-fn endless-ships.core/build}}}
+           :build {:exec-fn endless-ships.core/build
+                   ;; parsing the game data needs more than 2 GB
+                   :jvm-opts ["-Xmx4g"]}}}

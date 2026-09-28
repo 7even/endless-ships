@@ -13,7 +13,7 @@ RUN cd resources/game \
  && git checkout $(git tag --list "v*" --sort=-v:refname | head -n 1)
 
 # Build
-RUN clojure -J-Xmx8g -X:clj:build
+RUN clojure -X:clj:build
 
 # Copy build results to the final image
 FROM docker.io/nginx:alpine
