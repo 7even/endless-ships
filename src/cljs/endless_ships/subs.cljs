@@ -46,9 +46,14 @@
             (fn [item1 item2]
               (let [item1-prop (ordering-prop item1)
                     item2-prop (ordering-prop item2)]
-                (if (= (:order ordering) :asc)
-                  (compare item1-prop item2-prop)
-                  (compare item2-prop item1-prop))))
+                ;; NaN values (e.g. 0/0 per-space ratios) always go last
+                (cond
+                  (and (js/Number.isNaN item1-prop)
+                       (js/Number.isNaN item2-prop)) 0
+                  (js/Number.isNaN item1-prop) 1
+                  (js/Number.isNaN item2-prop) -1
+                  (= (:order ordering) :asc) (compare item1-prop item2-prop)
+                  :else (compare item2-prop item1-prop))))
             (constantly 0))
           coll)))
 
