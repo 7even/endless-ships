@@ -163,7 +163,9 @@
               (when (contains? outfit :weapon)
                 [weapon-attributes (:weapon outfit)])]
              (when (contains? outfit :unplunderable)
-               [:p.italic "This outfit cannot be plundered."])]]]
+               [:p.italic "This outfit cannot be plundered."])
+             (when (:deprecated? outfit)
+               [:p.italic "This outfit is deprecated and only remains on some older ships."])]]]
           [:div.media-right
            (when (contains? outfit :thumbnail)
              [:img {:src (game-image-url game-commit (:thumbnail outfit))}])]]]]]]

@@ -1,0 +1,8 @@
+#kaocha/v1
+{:tests [{:id :unit
+          :test-paths ["test/unit"]
+          :source-paths ["src/clj" "src/cljc"]}
+         ;; parses the whole game, takes about a minute
+         {:id :game-data
+          :test-paths ["test/game_data"]
+          :source-paths ["src/clj" "src/cljc"]}]}

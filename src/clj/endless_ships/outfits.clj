@@ -1,5 +1,6 @@
 (ns endless-ships.outfits
   (:require [clojure.string :as str]
+            [endless-ships.attributes :refer [->attributes]]
             [endless-ships.images :refer [image-file]]
             [endless-ships.parser :refer [->map data]]))
 
@@ -154,6 +155,7 @@
                    :as attrs}]]
               (merge (->map attrs)
                      {:name name
+                      :attributes (->attributes attrs)
                       :category category
                       :licenses (->> license-attrs
                                      (map #(-> % (get 1) keys))

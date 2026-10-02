@@ -2,7 +2,11 @@
                               instaparse/instaparse               {:mvn/version "1.4.5"}
                               camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.0"}
                               buddy/buddy-core                    {:mvn/version "1.6.0"}}
-                 :extra-paths ["src/clj" "resources"]}
+                 :extra-paths ["src/clj" "src/cljc" "resources"]}
            :build {:exec-fn endless-ships.core/build
                    ;; parsing the game data needs more than 2 GB
-                   :jvm-opts ["-Xmx4g"]}}}
+                   :jvm-opts ["-Xmx4g"]}
+           :test {:extra-paths ["test/unit" "test/game_data"]
+                  :extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
+                  :main-opts ["-m" "kaocha.runner"]
+                  :jvm-opts ["-Xmx4g"]}}}

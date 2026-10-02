@@ -137,6 +137,7 @@
      (rf/subscribe [::outfits-ordering outfit-type])])
   (fn [[outfits ordering] [_ outfit-type]]
     (->> (vals outfits)
+         (remove :deprecated?)
          (filter (get-in outfits/types [outfit-type :filter]))
          (sort-with-settings (outfits/columns-for outfit-type) ordering)
          (map :name))))
