@@ -96,14 +96,19 @@
   "Adds `add attributes` of a ship variant to the attributes it has or inherits from
   the base ship, like the game does in Ship::FinishLoading. Displayed attributes
   (kebab-case keys) are updated as well."
-  [{:keys [added-attributes] :as modification} base]
+  [{:keys [added-attributes]
+    :as modification} base]
   (let [own-attributes? (contains? modification :attributes)
         attributes (if own-attributes?
                      (:attributes modification)
                      (:attributes base))]
     (reduce-kv (fn [ship attr-name value]
                  (let [k (->kebab-case-keyword attr-name)
-                       current (get (if own-attributes? modification base) k 0)]
+                       current (get (if own-attributes?
+                                      modification
+                                      base)
+                                    k
+                                    0)]
                    (assoc ship
                           k
                           (+ current value))))

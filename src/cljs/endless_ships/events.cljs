@@ -1,6 +1,7 @@
 (ns endless-ships.events
   (:require [ajax.edn :as ajax]
             [day8.re-frame.http-fx]
+            [endless-ships.utils.configurator :as configurator]
             [endless-ships.utils.outfits :as outfits]
             [endless-ships.views.utils :refer [kebabize]]
             [re-frame.core :as rf]))
@@ -22,13 +23,18 @@
           :ship-modifications {}
           :outfits {}
           :outfitters []
+          :attribute-minimums {}
+          :outfit-categories []
           :version {}
           :settings (merge {:ships {:ordering {:column-name "Name"
                                                :order :asc}
                                     :filters-collapsed? true
                                     :race-filter {}
                                     :category-filter {}
-                                    :license-filter {}}}
+                                    :license-filter {}}
+                            :configurator {:search ""
+                                           :only-sold? true
+                                           :open-category nil}}
                            initial-outfit-settings)}
      :http-xhrio {:method :get
                   :uri "/data.edn"
@@ -73,6 +79,8 @@
                     :ship-modifications (group-modifications (:ship-modifications data))
                     :outfits (index-by-name (:outfits data))
                     :outfitters (process-outfitters (:outfitters data))
+                    :attribute-minimums (:attribute-minimums data)
+                    :outfit-categories (:outfit-categories data)
                     :version (:version data))
              (update-in [:settings :ships]
                         merge
@@ -110,6 +118,15 @@
                                                         (:ship/modification route-params)])]
                          (:modification ship-modification))
     :outfits "Outfits"
+    :configurator "Configurator"
+    :configurator-ship (let [{:keys [name modification]}
+                             (-> db
+                                 (assoc :route [handler route-params])
+                                 configurator/configuration
+                                 :ship)]
+                         (if (some? name)
+                           (str (or modification name) " configurator")
+                           "Configurator"))
     :outfit (let [outfit (get-in db
                                  [:outfits
                                   (-> route-params
@@ -164,3 +181,44 @@
     (update-in db
                [:settings :ships :license-filter license]
                not)))
+
+(defn- configurator-url
+  "Returns the URL of the current configurator ship with the given outfits."
+  [db outfits]
+  (let [[_ {ship-slug :ship/name
+            modification-slug :ship/modification}] (:route db)]
+    (configurator/url ship-slug modification-slug outfits)))
+
+(rf/reg-event-fx ::change-configurator-outfit
+  (fn [{:keys [db]} [_ outfit-name delta]]
+    (let [{:keys [outfits]} (configurator/configuration db)]
+      {:endless-ships.routes/set-url
+       (configurator-url db
+                         (configurator/change-quantity outfits outfit-name delta))})))
+
+(rf/reg-event-fx ::reset-configurator-outfits
+  (fn [{:keys [db]} _]
+    {:endless-ships.routes/set-url (configurator-url db nil)}))
+
+(rf/reg-event-fx ::remove-configurator-outfits
+  (fn [{:keys [db]} _]
+    {:endless-ships.routes/set-url (configurator-url db [])}))
+
+(rf/reg-event-db ::set-configurator-search
+  (fn [db [_ search]]
+    (assoc-in db [:settings :configurator :search] search)))
+
+(rf/reg-event-db ::toggle-configurator-category
+  (fn [db [_ category]]
+    (update-in db
+               [:settings :configurator]
+               (fn [{:keys [open-category]
+                     :as settings}]
+                 (assoc settings
+                        :open-category (when (not= open-category category)
+                                         category)
+                        :search "")))))
+
+(rf/reg-event-db ::toggle-configurator-only-sold
+  (fn [db]
+    (update-in db [:settings :configurator :only-sold?] not)))

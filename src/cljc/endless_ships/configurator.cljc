@@ -13,6 +13,11 @@
   (/ value
      (double attribute-precision)))
 
+(defn value
+  "Returns the value of an attribute in normal units from precise attributes."
+  [attributes attr-name]
+  (from-precise (get attributes attr-name 0)))
+
 (defn add-outfit
   "Adds `quantity` instances of an outfit's attributes to precise ship attributes."
   [ship-attributes outfit-attributes quantity]

@@ -274,3 +274,53 @@
     (->> all-columns
          (apply concat)
          (apply array-map))))
+
+(defn- per-space? [label]
+  (some? (re-find #"(per|/) space$" label)))
+
+(defn key-stats
+  "Returns [label value] pairs of the columns shown for the outfit on the outfits page
+  (columns of all outfit types it belongs to, except values per outfit space);
+  falls back to the outfit space."
+  [outfit]
+  (let [stats (->> (vals types)
+                   (filter #((:filter %) outfit))
+                   (mapcat :columns)
+                   (remove (comp per-space? first))
+                   (map (fn [[label {:keys [value]}]]
+                          [label (value outfit)]))
+                   (remove (fn [[_ value]]
+                             (or (nil? value)
+                                 (js/Number.isNaN value))))
+                   (reduce (fn [stats [label value]]
+                             (if (some #(= (first %) label) stats)
+                               stats
+                               (conj stats [label value])))
+                           []))]
+    (if (and (empty? stats)
+             (contains? outfit :outfit-space))
+      [["Outfit sp." (:outfit-space outfit)]]
+      stats)))
+
+(defn primary-type
+  "Returns the first outfit type (as on the outfits page) the outfit belongs to."
+  [outfit]
+  (->> types
+       (filter (fn [[_ {:keys [filter]}]]
+                 (filter outfit)))
+       ffirst))
+
+(defn sort-by-initial-ordering
+  "Sorts outfits of one type the way the type's table on the outfits page is sorted
+  initially; outfits without a value go last."
+  [type outfits]
+  (let [{:keys [column-name order]} (get-in types [type :initial-ordering])
+        value (get-in (columns-for type) [column-name :value])
+        comparable (fn [outfit]
+                     (let [v (value outfit)]
+                       (if (or (nil? v)
+                               (js/Number.isNaN v))
+                         ##-Inf
+                         v)))]
+    (cond->> (sort-by comparable outfits)
+      (= order :desc) reverse)))

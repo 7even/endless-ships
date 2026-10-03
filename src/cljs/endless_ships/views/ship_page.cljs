@@ -4,6 +4,7 @@
             [endless-ships.views.utils :refer [render-attribute render-percentage
                                                render-description nbspize kebabize
                                                game-image-url]]
+            [endless-ships.utils.configurator :as configurator]
             [endless-ships.utils.ships :refer [total-cost or-zero]]
             [endless-ships.routes :as routes]))
 
@@ -76,7 +77,11 @@
      [:div.row
       [:div.col-md-6
        [:div.panel.panel-default
-        [:div.panel-heading (:name ship)]
+        [:div.panel-heading.panel-heading-with-button
+         (:name ship)
+         [:a.btn.btn-default.btn-xs
+          {:href (configurator/url ship-name ship-modification nil)}
+          "Open in configurator"]]
         [:div.panel-body
          [:div.media
           [:div.media-body

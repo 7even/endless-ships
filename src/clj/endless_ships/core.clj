@@ -7,7 +7,7 @@
             [clojure.set :refer [rename-keys]]
             [clojure.string :as str]
             [endless-ships.attributes :refer [attribute-minimums]]
-            [endless-ships.outfits :refer [outfits]]
+            [endless-ships.outfits :refer [outfit-categories outfits]]
             [endless-ships.outfitters :refer [outfitters]]
             [endless-ships.ships :refer [modifications ships]]))
 
@@ -112,6 +112,7 @@
               :outfits outfits-data
               :outfitters outfitters
               :attribute-minimums attribute-minimums
+              :outfit-categories outfit-categories
               :version game-version}]
     (with-out-str (clojure.pprint/pprint data))))
 
