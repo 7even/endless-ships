@@ -96,9 +96,18 @@
                          :minimum 0.0}}))))
 
 (deftest precise-floats-test
-  (testing "single-precision floats from the parser are converted like the game's doubles"
-    (is (= (get (c/add-outfit {} {"heat dissipation" (float 0.42)} 1) "heat dissipation")
-           4200))))
+  (let [precise #(get (c/add-outfit {} {"x" %} 1)
+                      "x")]
+    (testing "single-precision floats from the parser are converted like the game's doubles"
+      (is (= (precise (float 0.42))
+             4200)))
+    (testing "numbers are built from their digits like the game parses them"
+      ;; 0.57 * 10000 is 5699.999…, but the game gets 57 * 10^-2 * 10000 = 5700.000…1
+      (is (= (map precise [0.57 1.13 -0.57 2.01])
+             [5700 11300 -5700 20100])))
+    (testing "integers and exponents"
+      (is (= (map precise [3 -12 1.0E7 1.5E-3])
+             [30000 -120000 100000000000 15])))))
 
 (defn- stats [attributes mass]
   (c/ship-stats (c/add-outfit {} attributes 1)

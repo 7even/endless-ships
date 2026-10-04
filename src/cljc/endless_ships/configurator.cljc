@@ -1,19 +1,38 @@
 (ns endless-ships.configurator
   "Checks whether outfits fit into a ship the same way the game does
-  (see Outfit::CanAdd in the game sources).")
+  (see Outfit::CanAdd in the game sources)."
+  (:require [clojure.string :as str]))
 
 (def ^:private attribute-precision
   "The game stores attributes as integers multiplied by this number."
   10000)
 
+(defn- game-number
+  "Rebuilds a number from its decimal form the way the game parses numbers (DataNode::Value):
+  all its digits times a power of ten. This is often a step off the correctly rounded double
+  (0.57 becomes 0.5700000000000001), which matters once the value is truncated to precision.
+  It also undoes single-precision floats from our parser (0.42 is read as 0.41999998)."
+  [value]
+  (let [[_ int-digits fraction-digits exponent]
+        (re-matches #"-?(\d+)(?:\.(\d*))?(?:[eE]([-+]?\d+))?"
+                    (str value))
+        digits (str int-digits fraction-digits)
+        power (- (if (some? exponent)
+                   #?(:clj (Long/parseLong (str/replace exponent "+" ""))
+                      :cljs (js/parseInt exponent 10))
+                   0)
+                 (count fraction-digits))
+        magnitude (* #?(:clj (Double/parseDouble digits)
+                        :cljs (js/parseFloat digits))
+                     (Math/pow 10 power))]
+    (if (neg? value)
+      (- magnitude)
+      magnitude)))
+
 (defn- precise [value]
-  ;; the parser reads decimals as single-precision floats (0.42 becomes 0.41999998),
-  ;; while the game uses doubles, so on the JVM floats go through their decimal form
-  (let [value #?(:clj (if (instance? Float value)
-                        (Double/parseDouble (str value))
-                        value)
-                 :cljs value)]
-    (long (* value attribute-precision))))
+  ;; like the game, the extra digits are cut off, not rounded
+  (long (* (game-number value)
+           attribute-precision)))
 
 (defn- from-precise [value]
   (/ value
