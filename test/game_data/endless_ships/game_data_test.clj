@@ -59,6 +59,13 @@
   (testing "hardpoints without coordinates are inherited from the base ship"
     (is (empty? (c/violations attribute-minimums
                               (stock-attributes (ship "Tubfalet" "Tubfalet (Crippler)"))))))
+  (testing "mass in add attributes of a variant is added to the base ship's mass"
+    (is (= (- (:mass (ship "Schist" "Schist (Heavy Load)"))
+              (:mass (ship "Schist")))
+           57))
+    (is (= (- (:mass (ship "Deep River" "Deep River 0"))
+              (:mass (ship "Deep River")))
+           -620)))
   (testing "stock Korath Raider is overloaded with missiles (checked in the game)"
     (let [attributes (stock-attributes (ship "Korath Raider"))
           missile (get-in outfits-by-name ["Firelight Missile" :attributes])]

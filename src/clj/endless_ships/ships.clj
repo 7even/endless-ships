@@ -30,7 +30,15 @@
         ;; the base ship's hardpoints, so their number comes from the base ship
         ;; (see Ship::FinishLoading in the game sources)
         own-hardpoints? (some #(number? (ffirst %))
-                              (concat gun-points turret-points))]
+                              (concat gun-points turret-points))
+        ;; mass isn't an attribute, but `add attributes` change it as well
+        ;; (Outfit::Add in the game sources); the last block wins like for attributes
+        added-mass (->> add-blocks
+                        (filter #(= (first %) ["attributes"]))
+                        (keep #(get-in % [1 "mass"]))
+                        last
+                        peek
+                        ffirst)]
     (merge (->map attrs)
            {:name ship-name
             :modification ship-modification
@@ -46,6 +54,9 @@
                             (filter #(= (first %) ["attributes"]))
                             (map (comp ->attributes second))
                             (apply merge)))
+           (add-key-if (some? added-mass)
+                       :added-mass
+                       added-mass)
            (add-key-if (some? sprite-file)
                        :sprite
                        sprite-file)
@@ -96,25 +107,27 @@
   "Adds `add attributes` of a ship variant to the attributes it has or inherits from
   the base ship, like the game does in Ship::FinishLoading. Displayed attributes
   (kebab-case keys) are updated as well."
-  [{:keys [added-attributes]
+  [{:keys [added-attributes added-mass]
     :as modification} base]
   (let [own-attributes? (contains? modification :attributes)
         attributes (if own-attributes?
                      (:attributes modification)
-                     (:attributes base))]
+                     (:attributes base))
+        current #(get (if own-attributes?
+                        modification
+                        base)
+                      %
+                      0)]
     (reduce-kv (fn [ship attr-name value]
-                 (let [k (->kebab-case-keyword attr-name)
-                       current (get (if own-attributes?
-                                      modification
-                                      base)
-                                    k
-                                    0)]
+                 (let [k (->kebab-case-keyword attr-name)]
                    (assoc ship
                           k
-                          (+ current value))))
-               (-> modification
-                   (dissoc :added-attributes)
-                   (assoc :attributes (merge-with + attributes added-attributes)))
+                          (+ (current k) value))))
+               (cond-> (-> modification
+                           (dissoc :added-attributes :added-mass)
+                           (assoc :attributes (merge-with + attributes added-attributes)))
+                 (some? added-mass) (assoc :mass (+ (current :mass)
+                                                    added-mass)))
                added-attributes)))
 
 (def modifications
@@ -126,6 +139,7 @@
                        (= (-> % second count) 2)))
          (map process-ship)
          (map (fn [modification]
-                (if (contains? modification :added-attributes)
+                (if (or (contains? modification :added-attributes)
+                        (contains? modification :added-mass))
                   (add-attributes modification (ships-by-name (:name modification)))
                   modification))))))
