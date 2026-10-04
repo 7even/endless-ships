@@ -71,3 +71,62 @@
                                   (c/add-outfit attributes missile -1)
                                   missile
                                   1))))))))
+
+(defn- round
+  "Cuts off decimals the way the game's Format::Number shows numbers: 2 decimal places below
+  1,000, 1 below 10,000 and none above; extra digits are truncated, not rounded."
+  [x]
+  (let [places (cond
+                 (>= (Math/abs (double x)) 10000) 0
+                 (>= (Math/abs (double x)) 1000) 1
+                 :else 2)
+        scale (Math/pow 10 places)]
+    (/ (* (Math/signum (double x))
+          (Math/floor (+ (* (Math/abs (double x)) scale)
+                         1e-10)))
+       scale)))
+
+(deftest reference-stats-test
+  ;; values from the game's info display of a stock Falcon (game v0.11.3)
+  (let [falcon (ship "Falcon")
+        stats (c/configuration-stats falcon
+                                     (:outfits falcon)
+                                     (stock-attributes falcon)
+                                     outfits-by-name)
+        rows (->> (:energy-heat stats)
+                  (map (juxt :label identity))
+                  (into {}))]
+    (is (= (->> [:shields :shield-regen :hull :mass :cargo-space :required-crew :bunks
+                 :fuel-capacity :max-speed]
+                (map (juxt identity #(round (get stats %))))
+                (into {}))
+           {:shields 12800.0
+            :shield-regen 30.6
+            :hull 3700.0
+            :mass 1810.0
+            :cargo-space 130.0
+            :required-crew 55.0
+            :bunks 91.0
+            :fuel-capacity 600.0
+            :max-speed 367.89}))
+    (is (= (map round (:acceleration stats))
+           [129.71 139.02]))
+    (is (= (map round (:turning stats))
+           [52.56 56.33]))
+    (testing "the game shows thrusting and turning together as moving"
+      (is (= (round (+ (get-in rows ["thrusting" :energy])
+                       (get-in rows ["turning" :energy])))
+             -288.0))
+      (is (= (round (+ (get-in rows ["thrusting" :heat])
+                       (get-in rows ["turning" :heat])))
+             636.0)))
+    (is (= (->> ["idle" "firing" "charging shields"]
+                (map (fn [label]
+                       [label
+                        (round (get-in rows [label :energy]))
+                        (round (get-in rows [label :heat]))])))
+           [["idle" 846.0 360.0]
+            ["firing" -649.6 2366.0]
+            ["charging shields" -30.6 0.0]]))
+    (is (= (map round ((juxt :energy :heat) (:capacity stats)))
+           [19200.0 4561.2]))))

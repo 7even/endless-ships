@@ -203,6 +203,90 @@ img.ship-sprite {
     padding-bottom: 2px;
 }
 
+.table > tbody > tr.configurator-stats-header > td {
+    color: #777;
+    font-size: 12px;
+    /* the line height of regular rows, so that rows of both columns stay aligned */
+    line-height: 20px;
+    text-transform: uppercase;
+}
+
+.configurator-stats-total td {
+    font-weight: bold;
+}
+
+/* the tables are not direct children of the panel, so Bootstrap's .panel > .table rules
+   don't apply to them */
+.configurator-stats-columns .table {
+    margin-bottom: 0;
+}
+
+.configurator-stats-columns .table > * > tr > .text-right {
+    white-space: nowrap;
+    /* equal-width digits, so values don't shift when they change */
+    font-variant-numeric: tabular-nums;
+}
+
+.configurator-stats-columns .table > tbody:first-child > tr:first-child > td,
+.configurator-stats-columns .table > thead:first-child > tr:first-child > th {
+    border-top: 0;
+}
+
+/* Bootstrap draws 2px borders under the header and between table bodies */
+.configurator-stats-columns .table > thead > tr > th {
+    border-bottom-width: 1px;
+}
+
+.configurator-stats-columns .table > tbody + tbody {
+    border-top-width: 1px;
+}
+
+/* a fixed width of the energy and heat columns keeps the table from jumping when the
+   number of digits changes: 3.8em fits the widest realistic value "-9,999.9" (the game
+   drops decimals from 10,000 on); the width includes the cell's padding (border-box) */
+.configurator-stats-columns .table > thead > tr > th.text-right {
+    width: calc(3.8em + 10px);
+}
+
+.configurator-stats-columns .table > thead > tr > th.text-right:last-child {
+    width: calc(3.8em + 20px);
+}
+
+.configurator-stats-columns .table > * > tr > td:first-child,
+.configurator-stats-columns .table > * > tr > th:first-child {
+    padding-left: 15px;
+}
+
+.configurator-stats-columns .table > * > tr > td:last-child,
+.configurator-stats-columns .table > * > tr > th:last-child {
+    padding-right: 15px;
+}
+
+.configurator-stats-columns > div + div {
+    border-top: 1px solid #ddd;
+}
+
+@media (min-width: 768px) {
+    .configurator-stats-columns {
+        display: flex;
+    }
+
+    /* the energy column is as wide as its (fixed-width) content, the rest goes to the left
+       column, so changing values don't move the border between them */
+    .configurator-stats-columns > div:first-child {
+        flex: 1;
+    }
+
+    .configurator-stats-columns > div:last-child {
+        flex: none;
+    }
+
+    .configurator-stats-columns > div + div {
+        border-top: 0;
+        border-left: 1px solid #ddd;
+    }
+}
+
 .configurator-quantity {
     display: inline-block;
     min-width: 3em;

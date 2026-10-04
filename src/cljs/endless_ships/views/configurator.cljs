@@ -3,7 +3,8 @@
             [endless-ships.events :as events]
             [endless-ships.routes :as routes]
             [endless-ships.subs :as subs]
-            [endless-ships.views.utils :refer [format-number game-image-url license-label]]
+            [endless-ships.views.utils :refer [format-game-number format-number game-image-url
+                                               license-label]]
             [re-frame.core :as rf]))
 
 (defn- violations-alert [violations stock?]
@@ -80,6 +81,125 @@
                [:span.configurator-bar-free (format-number free)]
                [:span.configurator-bar-slash "/"]
                [:span.configurator-bar-total (format-number capacity)]]]]]))]]]))
+
+(defn- format-range
+  "Formats [value with full cargo, value with no cargo] like the game does."
+  [[full empty]]
+  (if (= (format-game-number full)
+         (format-game-number empty))
+    (format-game-number empty)
+    (str (format-game-number full) " – " (format-game-number empty))))
+
+(defn- with-rate [value rate]
+  (if (pos? rate)
+    (str (format-game-number value) " (" (format-game-number rate) "/s)")
+    (format-game-number value)))
+
+(defn- stat-row
+  ([label value]
+   (stat-row label value nil))
+  ([label value class]
+   [:tr {:class class}
+    [:td label]
+    [:td.text-right value]]))
+
+(defn- flight-check-alert []
+  (let [{:keys [overheating? no-energy?]} @(rf/subscribe [::subs/configurator-stats])]
+    (when (or overheating? no-energy?)
+      [:div.alert.alert-danger
+       (when overheating?
+         [:div
+          [:strong "Overheating:"]
+          " idle heat exceeds the maximum heat of the ship."])
+       (when no-energy?
+         [:div
+          [:strong "No energy:"]
+          " energy generation and storage don't cover the idle consumption."])])))
+
+(def ^:private damage-types
+  (array-map :shield-damage "shield damage"
+             :hull-damage "hull damage"
+             :heat-damage "heat damage"
+             :ion-damage "ion damage"
+             :disruption-damage "disruption damage"
+             :slowing-damage "slowing damage"))
+
+(defn- characteristics []
+  (let [{:keys [shields shield-regen hull hull-repair mass cargo-space required-crew bunks
+                fuel-capacity max-speed max-speed-afterburner acceleration
+                acceleration-afterburner turning damage energy-heat net-change capacity
+                overheating? no-energy?]}
+        @(rf/subscribe [::subs/configurator-stats])]
+    [:div.panel.panel-default
+     [:div.panel-heading "Characteristics"]
+     [:div.configurator-stats-columns
+      [:div
+       [:table.table.table-condensed.configurator-stats
+        [:tbody
+         (stat-row "shields" (with-rate shields shield-regen))
+         (stat-row "hull" (with-rate hull hull-repair))
+         (stat-row "mass" (str (format-game-number mass) " tons"))
+         (stat-row "cargo space" (str (format-game-number cargo-space) " tons"))
+         (stat-row "required crew / bunks"
+                   (str (format-game-number required-crew) " / " (format-game-number bunks))
+                   (when (> required-crew bunks)
+                     "danger"))
+         (stat-row "fuel capacity" (format-game-number fuel-capacity))]
+        [:tbody
+         [:tr.configurator-stats-header
+          [:td {:col-span 2}
+           (if (pos? cargo-space)
+             "movement (full cargo – no cargo)"
+             "movement")]]
+         (stat-row "max speed" (format-game-number max-speed))
+         (when (some? max-speed-afterburner)
+           (stat-row "w/ afterburner" (format-game-number max-speed-afterburner)))
+         (stat-row "acceleration" (format-range acceleration))
+         (when (some? acceleration-afterburner)
+           (stat-row "w/ afterburner" (format-range acceleration-afterburner)))
+         (stat-row "turning" (format-range turning))]]]
+      [:div
+       [:table.table.table-condensed.configurator-stats
+        [:thead
+         [:tr
+          [:th]
+          [:th.text-right "energy"]
+          [:th.text-right "heat"]]]
+        [:tbody
+         (for [{:keys [label energy heat]} energy-heat]
+           ^{:key label}
+           [:tr
+            [:td label]
+            [:td.text-right (format-game-number energy)]
+            [:td.text-right (format-game-number heat)]])
+         [:tr.configurator-stats-total
+          [:td "net change"]
+          [:td.text-right {:class (when (neg? (:energy net-change))
+                                    "text-danger")}
+           (format-game-number (:energy net-change))]
+          [:td.text-right (format-game-number (:heat net-change))]]
+         [:tr
+          [:td "capacity"]
+          [:td.text-right {:class (when no-energy?
+                                    "text-danger")}
+           (format-game-number (:energy capacity))]
+          [:td.text-right {:class (when overheating?
+                                    "text-danger")}
+           (format-game-number (:heat capacity))]]]
+        [:tbody
+         [:tr.configurator-stats-header
+          [:td {:col-span 3}
+           "firepower (per second)"]]
+         (for [[damage-type label] damage-types
+               :let [value (get damage damage-type)]
+               ;; shields and hull are always shown, the rarer types only when present
+               :when (or (contains? #{:shield-damage :hull-damage} damage-type)
+                         (pos? value))]
+           ^{:key damage-type}
+           [:tr
+            [:td label]
+            [:td.text-right {:col-span 2}
+             (format-game-number value)]])]]]]]))
 
 (defn- quantity-buttons [outfit-name quantity can-add?]
   [:span.btn-group.btn-group-xs
@@ -228,6 +348,8 @@
                [violations-alert violations stock?]
                [unknown-outfits-alert unknown-outfits]
                [summary ship stock?]
+               [flight-check-alert]
+               [characteristics]
                [resources violations]]
               [:div.col-md-6
                [outfits-panel]]])]))

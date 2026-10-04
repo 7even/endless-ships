@@ -94,3 +94,108 @@
                                :minimum 0.0}
             "gun ports" {:value -2.0
                          :minimum 0.0}}))))
+
+(deftest precise-floats-test
+  (testing "single-precision floats from the parser are converted like the game's doubles"
+    (is (= (get (c/add-outfit {} {"heat dissipation" (float 0.42)} 1) "heat dissipation")
+           4200))))
+
+(defn- stats [attributes mass]
+  (c/ship-stats (c/add-outfit {} attributes 1)
+                mass
+                {:energy 30
+                 :heat 60}))
+
+(deftest ship-stats-test
+  (testing "shields and hull with multipliers and regeneration per second"
+    (let [result (stats {"shields" 1000
+                         "shield multiplier" 0.5
+                         "shield generation" 2
+                         "hull" 500}
+                        100)]
+      (is (= (:shields result)
+             1500.0))
+      (is (= (:shield-regen result)
+             120.0))
+      (is (= (:hull result)
+             500.0))))
+  (testing "movement depends on mass, drag is limited by the mass"
+    (let [result (stats {"thrust" 10
+                         "drag" 2
+                         "turn" 300
+                         "cargo space" 100}
+                        100)]
+      (is (= (:max-speed result)
+             300.0))
+      (is (= (:acceleration result)
+             [180.0 360.0]))
+      (is (= (:turning result)
+             [90.0 180.0])))
+    (is (= (:max-speed (stats {"thrust" 10
+                               "drag" 1000}
+                              100))
+           6.0)))
+  (testing "energy and heat balance"
+    (let [result (stats {"energy generation" 2
+                         "energy consumption" 0.5
+                         "heat generation" 1
+                         "cooling" 0.5
+                         "thrusting energy" 1
+                         "thrust" 1}
+                        100)]
+      (is (= (map (juxt :label :energy) (:energy-heat result))
+             [["idle" 90.0]
+              ["thrusting" -60.0]
+              ["turning" 0.0]
+              ["firing" -30]
+              ["charging shields" 0.0]]))
+      (is (= (:net-change result)
+             {:energy 0.0
+              :heat 90.0}))))
+  (testing "a ship without heat dissipation overheats if it generates heat"
+    (is (:overheating? (stats {"heat generation" 1}
+                              100)))
+    (is (not (:overheating? (stats {"heat generation" 1
+                                    "heat dissipation" 1}
+                                   100)))))
+  (testing "only automatons may need no crew"
+    (is (= (:required-crew (stats {} 100))
+           1.0))
+    (is (= (:required-crew (stats {"automaton" 1} 100))
+           0.0))))
+
+(deftest configuration-stats-test
+  (let [outfits {"Blaster" {:mass 5
+                            :weapon {:shield-damage {:per-second 10.0}
+                                     :hull-damage {:per-second 6.0}
+                                     :firing-energy {:per-second 3.0}}}
+                 "Ion Cannon" {:mass 3
+                               :weapon {:ion-damage {:per-second 1.5}}}
+                 "Anti-Missile" {:mass 2
+                                 :weapon {:anti-missile 8}}}
+        result (c/configuration-stats {:mass 100}
+                                      [{:name "Blaster"
+                                        :quantity 2}
+                                       {:name "Ion Cannon"
+                                        :quantity 1}
+                                       {:name "Anti-Missile"
+                                        :quantity 1}]
+                                      (c/add-outfit {} {} 1)
+                                      outfits)]
+    (testing "outfit masses are added to the hull's mass"
+      (is (= (:mass result)
+             115)))
+    (testing "damage is summed over all weapons by type"
+      (is (= (:damage result)
+             {:shield-damage 20.0
+              :hull-damage 12.0
+              :heat-damage 0
+              :ion-damage 1.5
+              :disruption-damage 0
+              :slowing-damage 0})))
+    (testing "firing energy is summed over all weapons"
+      (is (= (->> (:energy-heat result)
+                  (filter #(= (:label %) "firing"))
+                  first
+                  :energy)
+             -6.0)))))

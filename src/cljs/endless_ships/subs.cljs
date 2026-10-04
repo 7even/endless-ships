@@ -364,3 +364,14 @@
                                            :max (when (< addable unlimited)
                                                   addable)
                                            :can-add? (pos? addable)}))))}))))))
+
+(rf/reg-sub ::configurator-stats
+  (fn []
+    [(rf/subscribe [::configuration])
+     (rf/subscribe [::outfits])
+     (rf/subscribe [::configurator-attributes])])
+  (fn [[{:keys [ship outfits]} all-outfits attributes]]
+    (c/configuration-stats ship
+                           outfits
+                           attributes
+                           #(get all-outfits (kebabize %)))))
