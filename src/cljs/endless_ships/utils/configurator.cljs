@@ -66,7 +66,9 @@
                        (get-in db [:ship-modifications ship-slug modification-slug]))
         ship (merge base modification)
         param (:outfits query)]
-    (when (some? base)
+    (when (and (some? base)
+               (or (nil? modification-slug)
+                   (some? modification)))
       (if (some? param)
         (let [items (map (fn [[slug quantity]]
                            {:slug slug
@@ -86,6 +88,30 @@
         {:ship ship
          :outfits (vec (:outfits ship))
          :unknown-outfits []}))))
+
+(defn not-found
+  "Returns what the configurator URL refers to but the game data doesn't have:
+  `{:missing :ship}` or `{:missing :modification}` with the base ship and the URL of its
+  configurator with the same outfits (`:outfits?` tells if the URL has any, otherwise the base
+  ship is stock); nil when everything is found."
+  [db]
+  (let [[_ {ship-slug :ship/name
+            modification-slug :ship/modification
+            query :query}] (:route db)
+        base (get-in db [:ships ship-slug])]
+    (cond
+      (nil? ship-slug) nil
+      (nil? base) {:missing :ship}
+      (and (some? modification-slug)
+           (nil? (get-in db [:ship-modifications ship-slug modification-slug])))
+      (let [param (:outfits query)]
+        {:missing :modification
+         :ship base
+         :outfits? (some? param)
+         ;; the outfits go as they are, unknown ones included: the configurator reports them
+         :base-url (str (url ship-slug nil nil)
+                        (when (some? param)
+                          (str "?outfits=" (js/encodeURIComponent param))))}))))
 
 (defn change-quantity
   "Adds `delta` to the quantity of an outfit (appending it if it's not installed yet)

@@ -157,6 +157,10 @@
   (fn [db]
     (configurator/configuration db)))
 
+(rf/reg-sub ::configurator-not-found
+  (fn [db]
+    (configurator/not-found db)))
+
 (rf/reg-sub ::configurator-settings
   (fn [db]
     (get-in db [:settings :configurator])))

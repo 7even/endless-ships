@@ -332,8 +332,26 @@
                                (get installed category)))))
               categories)]]))
 
+(defn- not-found-message
+  "A message about a ship or modification from the URL missing in the game data; it doesn't say
+  it was removed, since the URL may just be mistyped."
+  [{:keys [missing ship outfits? base-url]}]
+  (case missing
+    :ship [:p
+           "Ship not found. Pick one from the "
+           [:a {:href (routes/url-for :ships)} "list of ships"]
+           "."]
+    :modification [:p
+                   "Modification not found. "
+                   [:a {:href base-url}
+                    "Open the base " (:name ship)
+                    (when outfits?
+                      " with the same outfits")]
+                   "."]))
+
 (defn configurator-page [ship-slug]
   (let [{:keys [ship unknown-outfits]} @(rf/subscribe [::subs/configuration])
+        not-found @(rf/subscribe [::subs/configurator-not-found])
         violations @(rf/subscribe [::subs/configurator-violations])
         stock? @(rf/subscribe [::subs/configurator-stock?])]
     [:div.app
@@ -342,7 +360,7 @@
                          "To try out different outfits on a ship, open it from the "
                          [:a {:href (routes/url-for :ships)} "list of ships"]
                          " and click \"Open in configurator\"."]
-       (nil? ship) [:p "Unknown ship."]
+       (some? not-found) [not-found-message not-found]
        :else [:div.row
               [:div.col-md-6
                [violations-alert violations stock?]
