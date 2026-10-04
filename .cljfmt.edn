@@ -4,4 +4,5 @@
  :extra-indents {re-frame.core/reg-sub [[:inner 0]]
                  re-frame.core/reg-event-db [[:inner 0]]
                  re-frame.core/reg-event-fx [[:inner 0]]
-                 re-frame.core/reg-fx [[:inner 0]]}}
+                 re-frame.core/reg-fx [[:inner 0]]
+                 re-frame.core/reg-cofx [[:inner 0]]}}

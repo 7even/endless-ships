@@ -56,7 +56,7 @@
 (defn kebabize [s]
   (-> s
       (str/replace #"\s+" "-")
-      (str/replace #"[\?':]" "")
+      (str/replace #"[\?':\.]" "")
       str/lower-case))
 
 (defn format-number [num]
@@ -69,6 +69,36 @@
                         formatter (NumberFormat. Format/DECIMAL)]
                     (.format formatter (str rounded)))
     :else num))
+
+(defn format-game-number
+  "Formats a number like the game's Format::Number: 2 decimal places below 1,000, 1 below
+  10,000 and none above; extra digits are cut off, not rounded; trailing zeros are trimmed."
+  [num]
+  (cond
+    (js/Number.isNaN num) "???"
+    (zero? num) "0"
+    (= num ##Inf) "infinity"
+    (= num ##-Inf) "-infinity"
+    :else (let [magnitude (js/Math.abs num)
+                places (cond
+                         (>= magnitude 10000) 0
+                         (>= magnitude 1000) 1
+                         :else 2)
+                scale (js/Math.pow 10 places)
+                ;; like the game, add an epsilon to account for floating-point errors
+                scaled (js/Math.floor (+ (* magnitude scale)
+                                         1e-10))
+                whole (js/Math.floor (/ scaled scale))
+                decimals (-> (js/Math.round (- scaled
+                                               (* whole scale)))
+                             str
+                             (.padStart places "0")
+                             (str/replace #"0+$" ""))]
+            (str (when (neg? num)
+                   "-")
+                 (.toLocaleString whole "en-US")
+                 (when (seq decimals)
+                   (str "." decimals))))))
 
 (defn render-attribute [m prop label]
   (let [v (prop m)]

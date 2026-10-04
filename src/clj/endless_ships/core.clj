@@ -6,7 +6,8 @@
             clojure.pprint
             [clojure.set :refer [rename-keys]]
             [clojure.string :as str]
-            [endless-ships.outfits :refer [outfits]]
+            [endless-ships.attributes :refer [attribute-minimums]]
+            [endless-ships.outfits :refer [outfit-categories outfits]]
             [endless-ships.outfitters :refer [outfitters]]
             [endless-ships.ships :refer [modifications ships]]))
 
@@ -39,10 +40,14 @@
 
 (def outfits-data
   (->> outfits
-       (remove #(#{"deprecated outfits.txt"
-                   "nanobots.txt"
+       (remove #(#{"nanobots.txt"
                    "transport missions.txt"
                    "vyrmeid.txt"} (:file %)))
+       ;; deprecated outfits are still installed on some ships,
+       ;; so they are kept in the data but hidden from outfit lists
+       (map #(cond-> %
+               (= (:file %) "deprecated outfits.txt")
+               (assoc :deprecated? true)))
        (map #(dissoc % :file))))
 
 (defn- assoc-outfits-cost [ship]
@@ -65,7 +70,7 @@
   (->> ships
        (filter #(some? (file->race (:file %))))
        (map #(-> %
-                 (select-keys [:name :sprite :licenses :file
+                 (select-keys [:name :sprite :licenses :file :attributes
                                :cost :category :hull :shields :mass
                                :engine-capacity :weapon-capacity :fuel-capacity
                                :outfits :outfit-space :cargo-space
@@ -106,6 +111,8 @@
               :ship-modifications modifications-data
               :outfits outfits-data
               :outfitters outfitters
+              :attribute-minimums attribute-minimums
+              :outfit-categories outfit-categories
               :version game-version}]
     (with-out-str (clojure.pprint/pprint data))))
 

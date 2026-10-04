@@ -114,3 +114,324 @@ img.ship-sprite {
     float: right;
     padding: 10px 15px;
 }
+
+.panel-heading-with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* keeps the panel heading as tall as without the button */
+.panel-heading-with-button .btn {
+    margin: -2px 0;
+}
+
+.configurator-save-form {
+    display: flex;
+    gap: 8px;
+}
+
+.configurator-save-form > .btn-group {
+    flex: none;
+}
+
+/* long configuration names are cut off, the full one is in the title */
+.btn.configurator-saved-as {
+    max-width: 16em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table.configurator-saved > tbody > tr > td {
+    vertical-align: middle;
+}
+
+/* the panel padding for the outer cells, like Bootstrap does for tables right in a panel */
+.panel > .table.configurator-saved > tbody > tr > td:first-child {
+    padding-left: 15px;
+}
+
+.panel > .table.configurator-saved > tbody > tr > td:last-child {
+    padding-right: 15px;
+}
+
+.table.configurator-resources > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.configurator-bar {
+    width: 60%;
+}
+
+.configurator-resources td.configurator-resource-part {
+    padding-left: 20px;
+}
+
+.configurator-resources .progress {
+    position: relative;
+    min-width: 100px;
+    margin-bottom: 0;
+    box-shadow: none;
+}
+
+.configurator-resources .progress-bar {
+    background-color: #bce8f1;
+    box-shadow: none;
+}
+
+.configurator-resources .overloaded .progress-bar {
+    background-color: #ebccd1;
+}
+
+/* "free / total" on top of the bar; equal halves keep the slash exactly in the middle */
+.configurator-bar-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    font-size: 12px;
+    line-height: 20px;
+    color: #333;
+}
+
+.configurator-bar-free,
+.configurator-bar-total {
+    flex: 1;
+}
+
+.configurator-bar-free {
+    text-align: right;
+}
+
+.configurator-bar-slash {
+    padding: 0 3px;
+}
+
+.configurator-resources .overloaded,
+.configurator-resources .overloaded .configurator-bar-label {
+    color: #a94442;
+}
+
+.list-group-item.configurator-installed {
+    display: flex;
+    align-items: center;
+}
+
+/* keeps the row as tall as a row without buttons */
+.configurator-installed .btn-group {
+    margin: -2px 0 -2px auto;
+}
+
+/* the "+" and "−" glyphs sit 1px below the middle of the button
+   (selectors are as specific as Bootstrap's size rules, which come later) */
+.btn-group-xs > .btn.configurator-glyph-button,
+.btn-xs.configurator-glyph-button {
+    padding-top: 0;
+    padding-bottom: 2px;
+}
+
+.table > tbody > tr.configurator-stats-header > td {
+    color: #777;
+    font-size: 12px;
+    /* the line height of regular rows, so that rows of both columns stay aligned */
+    line-height: 20px;
+    text-transform: uppercase;
+}
+
+.configurator-stats-total td {
+    font-weight: bold;
+}
+
+/* the tables are not direct children of the panel, so Bootstrap's .panel > .table rules
+   don't apply to them */
+.configurator-stats-columns .table {
+    margin-bottom: 0;
+}
+
+.configurator-stats-columns .table > * > tr > .text-right {
+    white-space: nowrap;
+    /* equal-width digits, so values don't shift when they change */
+    font-variant-numeric: tabular-nums;
+}
+
+.configurator-stats-columns .table > tbody:first-child > tr:first-child > td,
+.configurator-stats-columns .table > thead:first-child > tr:first-child > th {
+    border-top: 0;
+}
+
+/* Bootstrap draws 2px borders under the header and between table bodies */
+.configurator-stats-columns .table > thead > tr > th {
+    border-bottom-width: 1px;
+}
+
+.configurator-stats-columns .table > tbody + tbody {
+    border-top-width: 1px;
+}
+
+/* a fixed width of the energy and heat columns keeps the table from jumping when the
+   number of digits changes: 3.8em fits the widest realistic value "-9,999.9" (the game
+   drops decimals from 10,000 on); the width includes the cell's padding (border-box) */
+.configurator-stats-columns .table > thead > tr > th.text-right {
+    width: calc(3.8em + 10px);
+}
+
+.configurator-stats-columns .table > thead > tr > th.text-right:last-child {
+    width: calc(3.8em + 20px);
+}
+
+.configurator-stats-columns .table > * > tr > td:first-child,
+.configurator-stats-columns .table > * > tr > th:first-child {
+    padding-left: 15px;
+}
+
+.configurator-stats-columns .table > * > tr > td:last-child,
+.configurator-stats-columns .table > * > tr > th:last-child {
+    padding-right: 15px;
+}
+
+.configurator-stats-columns > div + div {
+    border-top: 1px solid #ddd;
+}
+
+@media (min-width: 768px) {
+    .configurator-stats-columns {
+        display: flex;
+    }
+
+    /* the energy column is as wide as its (fixed-width) content, the rest goes to the left
+       column, so changing values don't move the border between them */
+    .configurator-stats-columns > div:first-child {
+        flex: 1;
+    }
+
+    .configurator-stats-columns > div:last-child {
+        flex: none;
+    }
+
+    .configurator-stats-columns > div + div {
+        border-top: 0;
+        border-left: 1px solid #ddd;
+    }
+}
+
+.configurator-quantity {
+    display: inline-block;
+    min-width: 3em;
+}
+
+.list-group-item.configurator-category {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5;
+    color: #777;
+}
+
+.configurator-category.addable,
+.configurator-category.open {
+    cursor: pointer;
+}
+
+.configurator-category.addable:hover,
+.configurator-category.open:hover {
+    background-color: #ececec;
+}
+
+.configurator-category-icon {
+    position: relative;
+    /* the "+" and "×" glyphs sit 2px below the middle of the line */
+    top: -2px;
+    font-size: 18px;
+    line-height: 20px;
+    visibility: hidden;
+}
+
+.configurator-category.addable:hover .configurator-category-icon,
+.configurator-category.addable:focus-visible .configurator-category-icon,
+.configurator-category.open .configurator-category-icon {
+    visibility: visible;
+}
+
+/* the list of outfits to add spans the full width of the panel */
+.list-group-item.configurator-catalog {
+    padding: 0;
+    background-color: #fafafa;
+}
+
+.configurator-catalog-filters {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+}
+
+.configurator-catalog-filters .form-control {
+    flex: 1;
+}
+
+.configurator-catalog-filters .checkbox {
+    margin: 0 0 0 15px;
+    white-space: nowrap;
+}
+
+.configurator-catalog-empty {
+    margin: 0;
+    padding: 0 15px 10px;
+}
+
+.list-group.configurator-catalog-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    margin: 0;
+    border-top: 1px solid #ddd;
+}
+
+.configurator-catalog-list .list-group-item.list-group-item {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+}
+
+.configurator-catalog-list .list-group-item:first-child {
+    border-top: 0;
+}
+
+.configurator-catalog-list .list-group-item:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+}
+
+.list-group-item.configurator-catalog-type {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #f5f5f5;
+    color: #777;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.configurator-outfit-stats {
+    font-size: 12px;
+    color: #777;
+}
+
+/* each "label value" pair wraps as a whole, with the separator at the end of the line */
+.configurator-outfit-stats span {
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.configurator-outfit-stats span:not(:last-child)::after {
+    content: " ·";
+}
+
+.configurator-max {
+    float: right;
+    margin-right: 10px;
+    color: #777;
+}
+
+.configurator-unavailable a {
+    color: #999;
+}

@@ -1,6 +1,7 @@
 (ns endless-ships.events
   (:require [ajax.edn :as ajax]
             [day8.re-frame.http-fx]
+            [endless-ships.utils.configurator :as configurator]
             [endless-ships.utils.outfits :as outfits]
             [endless-ships.views.utils :refer [kebabize]]
             [re-frame.core :as rf]))
@@ -13,8 +14,64 @@
           {}
           outfits/types))
 
+;; saved configurations live in the browser's localStorage, which may be unavailable
+;; (e.g. disabled cookies), so every access is guarded and the site works without it
+(def ^:private saved-configurations-key
+  "saved-configurations")
+
+(defn- saved-configuration-valid? [saved]
+  (and (map? saved)
+       (every? string?
+               ((juxt :id :name :ship :url :saved-at) saved))))
+
+(defn- parse-saved-configurations [json]
+  (let [saved (try
+                (js/JSON.parse json)
+                (catch :default _
+                  nil))]
+    (if (array? saved)
+      (->> (js->clj saved :keywordize-keys true)
+           (filter saved-configuration-valid?)
+           vec)
+      [])))
+
+(rf/reg-cofx ::saved-configurations
+  (fn [cofx _]
+    (assoc cofx
+           :saved-configurations
+           (try
+             (parse-saved-configurations (.getItem js/localStorage saved-configurations-key))
+             (catch :default _
+               [])))))
+
+;; without a writable localStorage the configurator doesn't offer saving at all;
+;; the only way to find out whether it's writable (e.g. Safari's private mode can read
+;; but not write) is to try, so this writes and removes a test item; it's injected
+;; only into ::initialize, so the check runs once at startup and the result is kept in db
+(rf/reg-cofx ::storage-available?
+  (fn [cofx _]
+    (assoc cofx
+           :storage-available?
+           (try
+             (.setItem js/localStorage "storage-test" "")
+             (.removeItem js/localStorage "storage-test")
+             true
+             (catch :default _
+               false)))))
+
+(rf/reg-fx ::store-saved-configurations
+  (fn [saved]
+    (try
+      (.setItem js/localStorage
+                saved-configurations-key
+                (js/JSON.stringify (clj->js saved)))
+      (catch :default _
+        nil))))
+
 (rf/reg-event-fx ::initialize
-  (fn [{db :db} _]
+  [(rf/inject-cofx ::saved-configurations)
+   (rf/inject-cofx ::storage-available?)]
+  (fn [{:keys [saved-configurations storage-available?]} _]
     {:db {:loading? true
           :loading-failed? false
           :route [:ships {}]
@@ -22,13 +79,20 @@
           :ship-modifications {}
           :outfits {}
           :outfitters []
+          :attribute-minimums {}
+          :outfit-categories []
           :version {}
+          :saved-configurations saved-configurations
+          :storage-available? storage-available?
           :settings (merge {:ships {:ordering {:column-name "Name"
                                                :order :asc}
                                     :filters-collapsed? true
                                     :race-filter {}
                                     :category-filter {}
-                                    :license-filter {}}}
+                                    :license-filter {}}
+                            :configurator {:search ""
+                                           :only-sold? true
+                                           :open-category nil}}
                            initial-outfit-settings)}
      :http-xhrio {:method :get
                   :uri "/data.edn"
@@ -73,6 +137,8 @@
                     :ship-modifications (group-modifications (:ship-modifications data))
                     :outfits (index-by-name (:outfits data))
                     :outfitters (process-outfitters (:outfitters data))
+                    :attribute-minimums (:attribute-minimums data)
+                    :outfit-categories (:outfit-categories data)
                     :version (:version data))
              (update-in [:settings :ships]
                         merge
@@ -110,6 +176,15 @@
                                                         (:ship/modification route-params)])]
                          (:modification ship-modification))
     :outfits "Outfits"
+    :configurator "Configurator"
+    :configurator-ship (let [{:keys [name modification]}
+                             (-> db
+                                 (assoc :route [handler route-params])
+                                 configurator/configuration
+                                 :ship)]
+                         (if (some? name)
+                           (str (or modification name) " configurator")
+                           "Configurator"))
     :outfit (let [outfit (get-in db
                                  [:outfits
                                   (-> route-params
@@ -164,3 +239,74 @@
     (update-in db
                [:settings :ships :license-filter license]
                not)))
+
+(defn- configurator-url
+  "Returns the URL of the current configurator ship with the given outfits."
+  [db outfits]
+  (let [[_ {ship-slug :ship/name
+            modification-slug :ship/modification}] (:route db)]
+    (configurator/url ship-slug modification-slug outfits)))
+
+(rf/reg-event-fx ::change-configurator-outfit
+  (fn [{:keys [db]} [_ outfit-name delta]]
+    (let [{:keys [outfits]} (configurator/configuration db)]
+      {:endless-ships.routes/set-url
+       (configurator-url db
+                         (configurator/change-quantity outfits outfit-name delta))})))
+
+(rf/reg-event-fx ::reset-configurator-outfits
+  (fn [{:keys [db]} _]
+    {:endless-ships.routes/set-url (configurator-url db nil)}))
+
+(rf/reg-event-fx ::remove-configurator-outfits
+  (fn [{:keys [db]} _]
+    {:endless-ships.routes/set-url (configurator-url db [])}))
+
+(defn- store-saved-configurations [db saved]
+  {:db (assoc db :saved-configurations saved)
+   ::store-saved-configurations saved})
+
+;; changes start from the stored list rather than the one in db: another tab may have saved
+;; something since this one was opened
+
+;; the saved URL always lists the outfits, even stock ones: a saved configuration
+;; stays the same when a game update changes the ship's stock outfits
+(rf/reg-event-fx ::save-configuration
+  [(rf/inject-cofx ::saved-configurations)]
+  (fn [{:keys [db saved-configurations]} [_ configuration-name]]
+    (let [{:keys [ship]} (configurator/configuration db)]
+      (store-saved-configurations db
+                                  (conj saved-configurations
+                                        {:id (str (random-uuid))
+                                         :name configuration-name
+                                         :ship (or (:modification ship)
+                                                   (:name ship))
+                                         :url (configurator/explicit-url db)
+                                         :saved-at (.toISOString (js/Date.))})))))
+
+(rf/reg-event-fx ::delete-saved-configuration
+  [(rf/inject-cofx ::saved-configurations)]
+  (fn [{:keys [db saved-configurations]} [_ id]]
+    (store-saved-configurations db
+                                (->> saved-configurations
+                                     (remove #(= (:id %) id))
+                                     vec))))
+
+(rf/reg-event-db ::set-configurator-search
+  (fn [db [_ search]]
+    (assoc-in db [:settings :configurator :search] search)))
+
+(rf/reg-event-db ::toggle-configurator-category
+  (fn [db [_ category]]
+    (update-in db
+               [:settings :configurator]
+               (fn [{:keys [open-category]
+                     :as settings}]
+                 (assoc settings
+                        :open-category (when (not= open-category category)
+                                         category)
+                        :search "")))))
+
+(rf/reg-event-db ::toggle-configurator-only-sold
+  (fn [db]
+    (update-in db [:settings :configurator :only-sold?] not)))

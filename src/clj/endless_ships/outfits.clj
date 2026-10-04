@@ -1,5 +1,7 @@
 (ns endless-ships.outfits
-  (:require [clojure.string :as str]
+  (:require [clojure.java.io :refer [file resource]]
+            [clojure.string :as str]
+            [endless-ships.attributes :refer [->attributes]]
             [endless-ships.images :refer [image-file]]
             [endless-ships.parser :refer [->map data]]))
 
@@ -20,6 +22,19 @@
       (if (float-is-round? float-num)
         (int float-num)
         float-num))))
+
+(def outfit-categories
+  "Outfit categories in the order the game shows them, read from `category \"outfit\"`
+  in data/categories.txt (the parsed data loses the order of child nodes)."
+  (let [lines (-> "game/data/categories.txt" resource file slurp str/split-lines)
+        categories (->> lines
+                        (drop-while #(not= % "category \"outfit\""))
+                        rest
+                        (take-while #(str/starts-with? % "\t"))
+                        (keep #(second (re-matches #"\t\"([^\"]+)\"\s*" %))))]
+    (when (empty? categories)
+      (throw (ex-info "Outfit categories not found in data/categories.txt" {})))
+    (vec categories)))
 
 (def attribute-convertors
   (let [times-3600 (comp round-to-5-digits (partial * 3600))
@@ -154,6 +169,7 @@
                    :as attrs}]]
               (merge (->map attrs)
                      {:name name
+                      :attributes (->attributes attrs)
                       :category category
                       :licenses (->> license-attrs
                                      (map #(-> % (get 1) keys))

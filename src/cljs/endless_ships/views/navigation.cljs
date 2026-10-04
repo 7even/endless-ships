@@ -8,10 +8,17 @@
   (let [[route] @(rf/subscribe [::subs/route])]
     [:ul.nav.nav-tabs
      [:li {:role :presentation
-           :class (when (= route :ships) :active)}
+           :class (when (= route :ships)
+                    :active)}
       [:a {:href (routes/url-for :ships)}
        "Ships"]]
      [:li {:role :presentation
-           :class (when (= route :outfits) :active)}
+           :class (when (= route :outfits)
+                    :active)}
       [:a {:href (routes/url-for :outfits)}
-       "Outfits"]]]))
+       "Outfits"]]
+     [:li {:role :presentation
+           :class (when (contains? #{:configurator :configurator-ship} route)
+                    :active)}
+      [:a {:href (routes/url-for :configurator)}
+       "Configurator"]]]))
