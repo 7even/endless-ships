@@ -333,8 +333,7 @@
      [:span.configurator-max "max " (format-number max)])
    (routes/outfit-link name)
    " "
-   (for [license licenses]
-     (license-label license))
+   (interpose " " (map license-label licenses))
    [:small.text-muted " " (format-number cost)]
    (when (seq stats)
      [:div.configurator-outfit-stats

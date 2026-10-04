@@ -360,14 +360,17 @@
      (rf/subscribe [::sold-outfit-names])])
   (fn [[all-outfits minimums attributes {:keys [search only-sold?]} sold-outfit-names]
        [_ category]]
-    (let [search (str/lower-case (str/trim search))]
-      (->> (vals all-outfits)
-           (filter #(= (:category %) category))
-           (filter addable-outfit?)
+    (let [search (str/lower-case (str/trim search))
+          category-outfits (->> (vals all-outfits)
+                                (filter #(= (:category %) category))
+                                (filter addable-outfit?))
+          ;; types come from the whole category, so groups don't change while searching
+          primary-types (outfits/primary-types category-outfits)]
+      (->> category-outfits
            (filter #(str/includes? (str/lower-case (:name %)) search))
            (filter #(or (not only-sold?)
                         (contains? sold-outfit-names (:name %))))
-           (group-by outfits/primary-type)
+           (group-by #(get primary-types (:name %)))
            ;; groups follow the order of types on the outfits page, untyped outfits go last
            (sort-by (fn [[type]]
                       (if (some? type)
@@ -384,7 +387,7 @@
                                           {:name (:name outfit)
                                            :cost (:cost outfit)
                                            :licenses (:licenses outfit)
-                                           :stats (outfits/key-stats outfit)
+                                           :stats (outfits/key-stats outfit type)
                                            :max (when (< addable unlimited)
                                                   addable)
                                            :can-add? (pos? addable)}))))}))))))

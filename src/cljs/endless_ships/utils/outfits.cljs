@@ -280,10 +280,13 @@
 
 (defn key-stats
   "Returns [label value] pairs of the columns shown for the outfit on the outfits page
-  (columns of all outfit types it belongs to, except values per outfit space);
-  falls back to the outfit space."
-  [outfit]
-  (let [stats (->> (vals types)
+  (columns of all outfit types it belongs to, the primary type's first, except values per
+  outfit space); falls back to the outfit space."
+  [outfit primary-type]
+  (let [stats (->> types
+                   ;; sort-by is stable, so the other types keep their order
+                   (sort-by #(not= (key %) primary-type))
+                   vals
                    (filter #((:filter %) outfit))
                    (mapcat :columns)
                    (remove (comp per-space? first))
@@ -302,13 +305,30 @@
       [["Outfit sp." (:outfit-space outfit)]]
       stats)))
 
-(defn primary-type
-  "Returns the first outfit type (as on the outfits page) the outfit belongs to."
+(defn- matching-types
+  "Returns the outfit types (as on the outfits page) the outfit belongs to, in their order."
   [outfit]
   (->> types
        (filter (fn [[_ {:keys [filter]}]]
                  (filter outfit)))
-       ffirst))
+       (map first)))
+
+(defn primary-types
+  "Picks one type for each of the outfits (of one category) by name. An outfit can belong
+  to several types (e.g. Ion Torch is both a gun and a reverse thruster), so it gets the one
+  most common among the outfits, falling back to the order of types on a tie."
+  [outfits]
+  (let [type-counts (->> outfits
+                         (mapcat matching-types)
+                         frequencies)]
+    (->> outfits
+         (map (fn [outfit]
+                [(:name outfit)
+                 ;; sort-by is stable, so equally common types keep their order
+                 (->> (matching-types outfit)
+                      (sort-by #(- (get type-counts %)))
+                      first)]))
+         (into {}))))
 
 (defn sort-by-initial-ordering
   "Sorts outfits of one type the way the type's table on the outfits page is sorted
