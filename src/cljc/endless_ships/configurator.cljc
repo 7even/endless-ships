@@ -321,8 +321,9 @@
      :capacity {:energy (a "energy capacity")
                 :heat (* 60 heat-dissipation max-heat)}
      :overheating? overheating?
-     ;; Ship::FlightCheck "no energy!": generation and storage don't cover the idle consumption
-     ;; (the game adds per-frame rates to the battery capacity, so it's only a rough check)
+     ;; Ship::FlightCheck "no energy!": nothing generates or stores enough energy, e.g. a ship
+     ;; without outfits (the game adds per-frame rates to the battery capacity, so it's only
+     ;; a rough check)
      :no-energy? (<= (+ (- (a "energy generation")
                            (a "energy consumption"))
                         (a "fuel energy")

@@ -210,7 +210,7 @@
        (when no-energy?
          [:div
           [:strong "No energy:"]
-          " energy generation and storage don't cover the idle consumption."])])))
+          " nothing generates or stores enough energy to power the ship."])])))
 
 (def ^:private damage-types
   (array-map :shield-damage "shield damage"
