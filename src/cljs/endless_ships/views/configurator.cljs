@@ -5,7 +5,8 @@
             [endless-ships.subs :as subs]
             [endless-ships.views.utils :refer [format-game-number format-number game-image-url
                                                license-label]]
-            [re-frame.core :as rf]))
+            [re-frame.core :as rf]
+            [reagent.core :as ra]))
 
 (defn- violations-alert [violations stock?]
   (when (seq violations)
@@ -25,27 +26,122 @@
     [:div.alert.alert-warning
      "Unknown outfits in the link were ignored: " (str/join ", " slugs)]))
 
+(defn- copy-to-clipboard
+  "Copies text to the clipboard, returning a promise of whether it worked. The Clipboard API
+  needs HTTPS, so on plain HTTP it falls back to the deprecated execCommand."
+  [text]
+  (if (some? (.-clipboard js/navigator))
+    (-> (.writeText (.-clipboard js/navigator) text)
+        (.then (constantly true))
+        (.catch (constantly false)))
+    (let [textarea (js/document.createElement "textarea")]
+      (set! (.-value textarea) text)
+      ;; keeps the page from scrolling to the textarea
+      (set! (.. textarea -style -position) "fixed")
+      (set! (.. textarea -style -opacity) "0")
+      (.appendChild js/document.body textarea)
+      (.select textarea)
+      (let [copied? (try
+                      (js/document.execCommand "copy")
+                      (catch :default _
+                        false))]
+        (.removeChild js/document.body textarea)
+        (js/Promise.resolve copied?)))))
+
+(defn- copy-link-button
+  "Copies the current URL; the button shows the outcome for a couple of seconds since copying
+  has no visible effect otherwise."
+  []
+  (let [status (ra/atom nil)
+        timeout (atom nil)
+        show-status (fn [copied?]
+                      ;; a previous click's timeout would reset this status too early
+                      (js/clearTimeout @timeout)
+                      (reset! status
+                              (if copied?
+                                "Copied"
+                                "Copy failed"))
+                      (reset! timeout
+                              (js/setTimeout #(reset! status nil)
+                                             2000)))]
+    (fn []
+      [:button.btn.btn-default
+       {:on-click #(-> (copy-to-clipboard js/location.href)
+                       (.then show-status))}
+       (or @status "Copy link")])))
+
+(defn- save-form [default-name on-close]
+  (let [configuration-name (ra/atom default-name)
+        save #(let [trimmed (str/trim @configuration-name)]
+                (when (seq trimmed)
+                  (rf/dispatch [::events/save-configuration trimmed])
+                  (on-close)))]
+    (fn []
+      [:div.configurator-save-form
+       [:input.form-control.input-sm
+        {:type "text"
+         :value @configuration-name
+         :placeholder "Configuration name"
+         :auto-focus true
+         :on-change #(reset! configuration-name (.. % -target -value))
+         :on-key-down #(case (.-key %)
+                         "Enter" (save)
+                         "Escape" (on-close)
+                         nil)}]
+       [:span.btn-group.btn-group-sm
+        [:button.btn.btn-primary
+         {:disabled (str/blank? @configuration-name)
+          :on-click save}
+         "Save"]
+        [:button.btn.btn-default
+         {:on-click on-close}
+         "Cancel"]]])))
+
+(defn- save-button [saving?]
+  (let [saved @(rf/subscribe [::subs/current-saved-configuration])]
+    (if (some? saved)
+      [:button.btn.btn-default.configurator-saved-as
+       {:disabled true
+        :title (str "Saved as " (:name saved))}
+       "Saved as " (:name saved)]
+      [:button.btn.btn-default
+       {:disabled @saving?
+        :on-click #(reset! saving? true)}
+       "Save"])))
+
 (defn- summary [ship stock?]
-  (let [{:keys [hull outfits total]} @(rf/subscribe [::subs/configurator-cost])
-        game-commit (:hash @(rf/subscribe [::subs/game-version]))
-        {:keys [name modification sprite]} ship]
-    [:div.panel.panel-default
-     [:div.panel-heading
-      (if (some? modification)
-        (routes/ship-modification-link name modification)
-        (routes/ship-link name))]
-     [:div.panel-body
-      [:div.media
-       [:div.media-body
-        [:ul
-         [:li "hull cost: " (format-number hull)]
-         [:li "outfits cost: " (format-number outfits)]
-         [:li [:strong "total cost: " (format-number total)]]]
-        (when stock?
-          [:p.italic "These are the stock outfits of the ship."])]
-       [:div.media-right
-        (when (some? sprite)
-          [:img.ship-sprite {:src (game-image-url game-commit sprite)}])]]]]))
+  (let [saving? (ra/atom false)]
+    (fn [ship stock?]
+      (let [{:keys [hull outfits total]} @(rf/subscribe [::subs/configurator-cost])
+            game-commit (:hash @(rf/subscribe [::subs/game-version]))
+            storage-available? @(rf/subscribe [::subs/storage-available?])
+            {:keys [name modification sprite]} ship]
+        [:div.panel.panel-default
+         [:div.panel-heading.panel-heading-with-button
+          (if (some? modification)
+            (routes/ship-modification-link name modification)
+            (routes/ship-link name))
+          [:div.btn-group.btn-group-xs
+           [copy-link-button]
+           (when storage-available?
+             [save-button saving?])]]
+         (when @saving?
+           [:div.panel-body
+            [save-form
+             (or modification name)
+             #(reset! saving? false)]])
+         [:div.panel-body
+          [:div.media
+           [:div.media-body
+            [:ul
+             [:li "hull cost: " (format-number hull)]
+             [:li "outfits cost: " (format-number outfits)]
+             [:li [:strong "total cost: " (format-number total)]]]
+            (when stock?
+              [:p.italic "These are the stock outfits of the ship."])]
+           [:div.media-right
+            (when (some? sprite)
+              [:img.ship-sprite {:src (game-image-url game-commit sprite)}])]]]]))))
 
 (defn- percentage [used capacity]
   (cond
@@ -349,6 +445,38 @@
                       " with the same outfits")]
                    "."]))
 
+(defn- local-date
+  "Formats an ISO timestamp (stored in UTC) as YYYY-MM-DD in the browser's time zone."
+  [timestamp]
+  (let [date (js/Date. timestamp)
+        pad #(.padStart (str %) 2 "0")]
+    (str (.getFullYear date)
+         "-"
+         (pad (inc (.getMonth date)))
+         "-"
+         (pad (.getDate date)))))
+
+(defn- saved-configurations []
+  (let [saved @(rf/subscribe [::subs/saved-configurations])]
+    (when (seq saved)
+      [:div.panel.panel-default
+       [:div.panel-heading "Saved configurations"]
+       [:table.table.table-condensed.configurator-saved
+        [:tbody
+         (for [{:keys [id name ship url saved-at]} saved]
+           ^{:key id}
+           [:tr
+            [:td [:a {:href url} name]]
+            [:td ship]
+            [:td.text-muted (local-date saved-at)]
+            [:td.text-right
+             [:button.btn.btn-default.btn-xs.configurator-glyph-button
+              {:title "Delete"
+               :on-click #(rf/dispatch [::events/delete-saved-configuration id])}
+              "×"]]])]]
+       [:div.panel-footer.text-muted
+        "Saved in this browser only. To share a configuration, copy its link."]])))
+
 (defn configurator-page [ship-slug]
   (let [{:keys [ship unknown-outfits]} @(rf/subscribe [::subs/configuration])
         not-found @(rf/subscribe [::subs/configurator-not-found])
@@ -356,10 +484,13 @@
         stock? @(rf/subscribe [::subs/configurator-stock?])]
     [:div.app
      (cond
-       (nil? ship-slug) [:p
-                         "To try out different outfits on a ship, open it from the "
-                         [:a {:href (routes/url-for :ships)} "list of ships"]
-                         " and click \"Open in configurator\"."]
+       (nil? ship-slug) [:div.row
+                         [:div.col-md-6
+                          [:p
+                           "To try out different outfits on a ship, open it from the "
+                           [:a {:href (routes/url-for :ships)} "list of ships"]
+                           " and click \"Open in configurator\"."]
+                          [saved-configurations]]]
        (some? not-found) [not-found-message not-found]
        :else [:div.row
               [:div.col-md-6

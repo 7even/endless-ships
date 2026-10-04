@@ -89,6 +89,30 @@
          :outfits (vec (:outfits ship))
          :unknown-outfits []}))))
 
+(defn explicit-url
+  "Returns the URL of the configuration open in the configurator listing its outfits, even when
+  they are the stock ones."
+  [db]
+  (let [[_ {ship-slug :ship/name
+            modification-slug :ship/modification}] (:route db)]
+    (url ship-slug
+         modification-slug
+         (:outfits (configuration db)))))
+
+(defn- configuration-key
+  "Identifies a configuration by its URL regardless of the order of outfits in it."
+  [configuration-url]
+  (let [[path param] (str/split configuration-url #"\?outfits=" 2)]
+    [path
+     (->> (parse-outfits (or param ""))
+          (reduce (fn [quantities [slug quantity]]
+                    (update quantities slug (fnil + 0) quantity))
+                  {}))]))
+
+(defn same-configuration? [configuration-url other-url]
+  (= (configuration-key configuration-url)
+     (configuration-key other-url)))
+
 (defn not-found
   "Returns what the configurator URL refers to but the game data doesn't have:
   `{:missing :ship}` or `{:missing :modification}` with the base ship and the URL of its

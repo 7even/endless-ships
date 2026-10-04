@@ -126,6 +126,35 @@ img.ship-sprite {
     margin: -2px 0;
 }
 
+.configurator-save-form {
+    display: flex;
+    gap: 8px;
+}
+
+.configurator-save-form > .btn-group {
+    flex: none;
+}
+
+/* long configuration names are cut off, the full one is in the title */
+.btn.configurator-saved-as {
+    max-width: 16em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table.configurator-saved > tbody > tr > td {
+    vertical-align: middle;
+}
+
+/* the panel padding for the outer cells, like Bootstrap does for tables right in a panel */
+.panel > .table.configurator-saved > tbody > tr > td:first-child {
+    padding-left: 15px;
+}
+
+.panel > .table.configurator-saved > tbody > tr > td:last-child {
+    padding-right: 15px;
+}
+
 .table.configurator-resources > tbody > tr > td {
     vertical-align: middle;
 }

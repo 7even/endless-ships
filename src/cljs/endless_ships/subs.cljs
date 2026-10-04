@@ -157,6 +157,26 @@
   (fn [db]
     (configurator/configuration db)))
 
+(rf/reg-sub ::saved-configurations
+  (fn [db]
+    (->> (:saved-configurations db)
+         (sort-by :saved-at)
+         reverse)))
+
+(rf/reg-sub ::storage-available?
+  (fn [db]
+    (:storage-available? db)))
+
+;; the latest saved configuration with the same ship and outfits as the open one
+(rf/reg-sub ::current-saved-configuration
+  (fn [db]
+    (when (some? (configurator/configuration db))
+      (let [current-url (configurator/explicit-url db)]
+        (->> (:saved-configurations db)
+             (filter #(configurator/same-configuration? (:url %) current-url))
+             (sort-by :saved-at)
+             last)))))
+
 (rf/reg-sub ::configurator-not-found
   (fn [db]
     (configurator/not-found db)))
