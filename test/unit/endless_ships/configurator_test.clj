@@ -107,6 +107,10 @@
               "\t\t`\"Benga\" Atomic Thruster` 2\n"
               "\t\tHyperdrive\n"))))
 
+(deftest ship-variant-definition-backtick-test
+  (is (= (c/ship-variant-definition {:name "Aerie"} [{:name "Laser`" :quantity 1}])
+         "ship Aerie \"Aerie (Configurator)\"\n\toutfits\n\t\t\"Laser`\"\n")))
+
 (deftest precise-floats-test
   (let [precise #(get (c/add-outfit {} {"x" %} 1)
                       "x")]
