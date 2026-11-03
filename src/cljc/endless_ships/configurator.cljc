@@ -129,6 +129,30 @@
              {}
              ship-attributes))
 
+(defn- quote-token [text]
+  (cond
+    (str/includes? text "\"") (str "`" text "`")
+    (or (empty? text)
+        (re-find #"\s|`" text)) (str "\"" text "\"")
+    :else text))
+
+(defn ship-variant-definition
+  "Formats a configured ship as an Endless Sky ship variant definition."
+  [ship outfits]
+  (let [ship-name (:name ship)
+        outfit-lines (->> outfits
+                          (map (fn [{:keys [name quantity]}]
+                                 (str "\t\t" (quote-token name)
+                                      (when-not (= quantity 1)
+                                        (str " " quantity)))))
+                          (str/join "\n"))]
+    (str "ship " (quote-token ship-name) " "
+         (quote-token (str ship-name " (Configurator)"))
+         "\n\toutfits"
+         (when (seq outfit-lines)
+           (str "\n" outfit-lines))
+         "\n")))
+
 (def ^:private maximum-temperature
   "Entity::MAXIMUM_TEMPERATURE in the game sources."
   100)

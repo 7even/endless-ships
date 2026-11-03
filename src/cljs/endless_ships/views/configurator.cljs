@@ -1,5 +1,6 @@
 (ns endless-ships.views.configurator
   (:require [clojure.string :as str]
+            [endless-ships.configurator :as configurator]
             [endless-ships.events :as events]
             [endless-ships.routes :as routes]
             [endless-ships.subs :as subs]
@@ -48,10 +49,9 @@
         (.removeChild js/document.body textarea)
         (js/Promise.resolve copied?)))))
 
-(defn- copy-link-button
-  "Copies the current URL; the button shows the outcome for a couple of seconds since copying
-  has no visible effect otherwise."
-  []
+(defn- copy-button
+  "Copies text; the button shows the outcome for a couple of seconds since copying has no visible effect otherwise."
+  [label text]
   (let [status (ra/atom nil)
         timeout (atom nil)
         show-status (fn [copied?]
@@ -66,9 +66,17 @@
                                              2000)))]
     (fn []
       [:button.btn.btn-default
-       {:on-click #(-> (copy-to-clipboard js/location.href)
+       {:on-click #(-> (copy-to-clipboard text)
                        (.then show-status))}
-       (or @status "Copy link")])))
+       (or @status label)])))
+
+(defn- copy-link-button []
+  [copy-button "Copy link" js/location.href])
+
+(defn- copy-definition-button [ship]
+  (let [{:keys [outfits]} @(rf/subscribe [::subs/configuration])]
+    [copy-button "Copy definition"
+     (configurator/ship-variant-definition ship outfits)]))
 
 (defn- save-form [default-name on-close]
   (let [configuration-name (ra/atom default-name)
@@ -122,6 +130,7 @@
             (routes/ship-modification-link name modification)
             (routes/ship-link name))
           [:div.btn-group.btn-group-xs
+           [copy-definition-button ship]
            [copy-link-button]
            (when storage-available?
              [save-button saving?])]]
