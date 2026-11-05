@@ -136,21 +136,29 @@
         (re-find #"\s|`" text)) (str "\"" text "\"")
     :else text))
 
+(defn- outfit-quantities [outfits]
+  (into {}
+        (map (juxt :name :quantity))
+        outfits))
+
 (defn ship-variant-definition
   "Formats a configured ship as an Endless Sky ship variant definition."
   [ship outfits]
   (let [ship-name (:name ship)
-        outfit-lines (->> outfits
-                          (map (fn [{:keys [name quantity]}]
-                                 (str "\t\t" (quote-token name)
-                                      (when-not (= quantity 1)
-                                        (str " " quantity)))))
-                          (str/join "\n"))]
+        outfit-lines (when-not (= (outfit-quantities outfits)
+                                  (outfit-quantities (:outfits ship)))
+                       (->> outfits
+                            (map (fn [{:keys [name quantity]}]
+                                   (str "\t\t" (quote-token name)
+                                        (when-not (= quantity 1)
+                                          (str " " quantity)))))
+                            (str/join "\n")))]
     (str "ship " (quote-token ship-name) " "
          (quote-token (str ship-name " (Configurator)"))
-         "\n\toutfits"
-         (when (seq outfit-lines)
-           (str "\n" outfit-lines))
+         (when (some? outfit-lines)
+           (str "\n\toutfits"
+                (when (seq outfit-lines)
+                  (str "\n" outfit-lines))))
          "\n")))
 
 (def ^:private maximum-temperature

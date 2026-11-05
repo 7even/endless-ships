@@ -64,7 +64,7 @@
                       (reset! timeout
                               (js/setTimeout #(reset! status nil)
                                              2000)))]
-    (fn []
+    (fn [label text]
       [:button.btn.btn-default
        {:on-click #(-> (copy-to-clipboard text)
                        (.then show-status))}

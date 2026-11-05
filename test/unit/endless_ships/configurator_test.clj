@@ -97,7 +97,9 @@
 
 (deftest ship-variant-definition-test
   (is (= (c/ship-variant-definition
-          {:name "Aerie"}
+          {:name "Aerie"
+           :outfits [{:name "Stock Laser"
+                      :quantity 1}]}
           [{:name "\"Benga\" Atomic Thruster"
             :quantity 2}
            {:name "Hyperdrive"
@@ -106,6 +108,19 @@
               "\toutfits\n"
               "\t\t`\"Benga\" Atomic Thruster` 2\n"
               "\t\tHyperdrive\n"))))
+
+(deftest ship-variant-definition-inherits-stock-outfits-test
+  (is (= (c/ship-variant-definition
+           {:name "Aerie"
+            :outfits [{:name "Hyperdrive"
+                         :quantity 1}
+                        {:name "Laser"
+                         :quantity 2}]}
+           [{:name "Laser"
+              :quantity 2}
+            {:name "Hyperdrive"
+              :quantity 1}])
+          "ship Aerie \"Aerie (Configurator)\"\n")))
 
 (deftest ship-variant-definition-backtick-test
   (is (= (c/ship-variant-definition {:name "Aerie"} [{:name "Laser`" :quantity 1}])
