@@ -172,7 +172,10 @@
                       :attributes (->attributes attrs)
                       :category category
                       :licenses (->> license-attrs
-                                     (map #(-> % (get 1) keys))
+                               (keep (fn [license]
+                                 (when (and (sequential? license)
+                                (map? (get license 1)))
+                                   (keys (get license 1)))))
                                      (apply concat)
                                      vec)
                       :weapon (-> weapon-attrs
